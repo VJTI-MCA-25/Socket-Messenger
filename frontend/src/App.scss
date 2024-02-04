@@ -1,0 +1,23 @@
+@use "./utilities/variables" as var;
+
+@at-root {
+	html {
+		font-family: var.$font;
+		color: var.$lightText;
+		background-color: var.$darkBg;
+
+		color-scheme: light dark;
+		font-synthesis: none;
+		text-rendering: optimizeLegibility;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+}
+
+main {
+	height: 100vh;
+	width: 100vw;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}

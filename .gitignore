@@ -1,0 +1,7 @@
+node_modules
+firebase-config.js
+serviceAccountKey.json
+.env
+*.log
+package-lock.json
+.eslintrc.*js

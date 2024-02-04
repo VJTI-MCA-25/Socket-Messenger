@@ -1,0 +1,73 @@
+.signup-container {
+	.inputs {
+		padding: 2rem 2rem 2rem 5rem !important;
+		position: relative;
+
+		.eye {
+			position: absolute;
+			top: 50%;
+			right: 1rem;
+			transform: translateY(-50%);
+			cursor: pointer;
+			z-index: 1;
+		}
+
+		a {
+			cursor: pointer !important;
+		}
+
+		$offset: 1.5rem;
+
+		&::after,
+		&::before {
+			content: "";
+			display: block;
+			background-color: #fff3;
+			position: absolute;
+		}
+
+		&::after {
+			width: 100%;
+			height: 2px;
+			left: 0;
+			bottom: $offset;
+		}
+
+		&::before {
+			height: 100%;
+			width: 2px;
+			top: 0;
+			left: $offset;
+		}
+	}
+
+	.icons {
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 5rem;
+		.icon {
+			font-size: 2.2rem;
+			cursor: pointer;
+			transition: all 200ms ease-out;
+			position: relative;
+			&:hover {
+				@extend .blue-text, .text-lighten-2 !optional;
+				color: #26a69a;
+				transform: translateY(-10px);
+			}
+		}
+	}
+
+	.submit-button {
+		padding-right: 2rem !important;
+	}
+
+	.error-line {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		color: #cc0000;
+	}
+}

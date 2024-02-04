@@ -1,0 +1,44 @@
+{
+	"UserNotAuthorizedError": {
+		"code": 401,
+		"message": "User not authorized"
+	},
+	"UserNotFoundError": {
+		"code": 404,
+		"message": "User not found"
+	},
+	"UserAlreadyExistsError": {
+		"code": 409,
+		"message": "User already exists"
+	},
+	"UserNotCreatedError": {
+		"code": 500,
+		"message": "User not created"
+	},
+	"UserDataNotFoundError": {
+		"code": 404,
+		"message": "User data not found"
+	},
+	"UserDataAlreadyExistsError": {
+		"code": 409,
+		"message": "User data already exists"
+	},
+	"MissingParametersError": {
+		"message": "Missing parameters",
+		"code": 400
+	},
+	"UserEmailNotVerifiedError": {
+		"message": "User email not verified",
+		"code": 401,
+		"statusText": "auth/email-not-verified"
+	},
+	"UnknownError": {
+		"message": "Unknown error",
+		"code": 500
+	},
+	"UserDoesNotExistsForEmailError": {
+		"message": "User does not exists for the email provided",
+		"code": 404,
+		"statusText": "auth/user-for-email-not-found"
+	}
+}
