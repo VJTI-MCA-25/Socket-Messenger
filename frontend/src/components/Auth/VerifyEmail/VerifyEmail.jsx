@@ -31,7 +31,6 @@ const VerifyEmail = () => {
 		}, 1000);
 		if (timer <= 0) {
 			clearInterval(interval);
-			console.log(interval);
 		}
 		return () => clearInterval(interval);
 	}, [timer]);

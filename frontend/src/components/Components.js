@@ -1,7 +1,16 @@
-export { default as Home } from "./Home/Home";
-export { default as Login } from "./Auth/Login/Login";
-export { default as Signup } from "./Auth/Signup/Signup";
-export { default as Error } from "./Error/Error";
-export { default as Sidenav } from "./Sidenav/Sidenav";
-export { default as Friends } from "./Friends/Friends";
+export { Home } from "./Home/Home";
+export { Error } from "./Error/Error";
+export { Sidenav } from "./Sidenav/Sidenav";
+export { Friends } from "./Friends/Friends";
+
 export { Misc } from "./Misc/MiscComponents";
+
+import { Login } from "./Auth/Login/Login";
+import { Signup } from "./Auth/Signup/Signup";
+import { VerifyEmail } from "./Auth/VerifyEmail/VerifyEmail";
+
+export const Auth = {
+	Login,
+	Signup,
+	VerifyEmail,
+};

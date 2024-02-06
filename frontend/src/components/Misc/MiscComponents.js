@@ -1,5 +1,1 @@
-import { VerifyEmail } from "./VerifyEmail/VerifyEmail";
-
-export const Misc = {
-	VerifyEmail,
-};
+export const Misc = {};

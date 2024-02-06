@@ -42,4 +42,4 @@ MaxNav.propTypes = {
 	slideNav: PropTypes.func.isRequired,
 };
 
-export default MaxNav;
+export { MaxNav };

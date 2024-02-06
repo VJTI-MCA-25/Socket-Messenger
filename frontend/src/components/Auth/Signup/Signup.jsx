@@ -150,4 +150,4 @@ function Signup() {
 	);
 }
 
-export default Signup;
+export { Signup };

@@ -1,6 +1,12 @@
 import { createTransport } from "nodemailer";
 import { auth } from "./initialize.js";
 
+/**
+ * Sends a verification email to the user
+ * @param {string} email The email of the user to send the verification email to
+ * @param {string} continueUrl The redirect URL after the user clicks the verification link
+ * @returns {<Promise>Object | Error} Returns the info object from the sendMail function or an error
+ */
 async function sendVerificationEmail(email, continueUrl) {
 	let actionCodeSettings = {
 		url: continueUrl,
