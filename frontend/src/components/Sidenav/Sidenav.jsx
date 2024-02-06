@@ -1,8 +1,8 @@
 import { useLayoutEffect, useState } from "react";
 import PropTypes from "prop-types";
 
-import MaxNav from "./MaxNav/MaxNav";
-import MinNav from "./MinNav/MinNav";
+import { MaxNav } from "./MaxNav/MaxNav";
+import { MinNav } from "./MinNav/MinNav";
 
 import { useSpring, useTrail, useSpringRef, useChain, useTransition } from "@react-spring/web";
 
@@ -88,4 +88,4 @@ Sidenav.propTypes = {
 	selectedOption: PropTypes.string,
 };
 
-export default Sidenav;
+export { Sidenav };

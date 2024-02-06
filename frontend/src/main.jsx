@@ -2,7 +2,7 @@
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider, Outlet, redirect } from "react-router-dom";
 
-import { Home, Error, Login, Signup, Friends, Misc } from "./components/Components";
+import { Home, Error, Auth, Friends } from "./components/Components";
 
 import { checkLogin } from "./services/authFunctions";
 
@@ -51,15 +51,15 @@ const router = createBrowserRouter([
 					},
 					{
 						path: "login",
-						element: <Login />,
+						element: <Auth.Login />,
 					},
 					{
 						path: "signup",
-						element: <Signup />,
+						element: <Auth.Signup />,
 					},
 					{
 						path: "verify",
-						element: <Misc.VerifyEmail />,
+						element: <Auth.VerifyEmail />,
 					},
 				],
 			},

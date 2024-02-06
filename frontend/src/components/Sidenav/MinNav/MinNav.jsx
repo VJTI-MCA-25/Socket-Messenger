@@ -46,4 +46,4 @@ MinNav.propTypes = {
 	setActiveOption: PropTypes.func.isRequired,
 };
 
-export default MinNav;
+export { MinNav };

@@ -2,8 +2,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
-import { Misc } from "../../Components";
-
 import { animated, useSpring, useTrail } from "@react-spring/web";
 
 // Font Awesome
@@ -150,4 +148,4 @@ function Signup() {
 	);
 }
 
-export default Signup;
+export { Signup };
