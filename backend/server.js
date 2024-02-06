@@ -36,12 +36,8 @@ app.put("/api/users/create", async (req, res) => {
 			lastUpdatedAt: Timestamp.now(),
 		});
 
-		// Create access token
-		const accessToken = await auth.createCustomToken(userRecord.uid);
-
 		// Send response
 		return res.status(201).send({
-			accessToken,
 			uid: userRecord.uid,
 		});
 	} catch (error) {

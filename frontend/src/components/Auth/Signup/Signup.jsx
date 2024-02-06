@@ -60,11 +60,10 @@ function Signup() {
 		try {
 			// Attempt to create a new user
 			const res = await createUser(email, password);
-			console.log(res);
 
 			// If user creation is successful, navigate to the home page
 			if (res.status === 201) {
-				navigate("/");
+				navigate("/auth/verify", { state: { email, uid: res.data.uid } });
 			}
 		} catch (error) {
 			console.error(error);
