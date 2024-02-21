@@ -1,0 +1,94 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Helvetica';
+}
+
+html , body {
+    height: 100%;
+    width: 100%;
+}
+
+div{
+    /* position: relative; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 1px solid red;
+    height: 85%;
+    margin: 20px;
+    padding: 10px;
+}
+/* for conatiner */
+span{
+    margin: 10px 0;
+    box-sizing: content-box;
+}
+
+#message-box{
+    /* position: relative; */
+    border: 1px solid red;
+    padding: 20px;
+    height: 80%;
+    justify-content: flex-start;
+    overflow-y: scroll;
+}
+
+#msg{
+    font-family: 'Montserrat';
+    padding: 10px;
+    height: max-content;
+    margin: 0;
+    margin-bottom: 10px;
+    border: 1px solid blue;
+    border-radius: 10px;
+}
+#user{
+    font-size: 20px;
+    text-transform: capitalize;
+    font-weight: bold;
+}
+#text-msg{
+    font-family: 'Calibri';
+    font-size: 18px;
+    margin-top: 10px;padding: 10px;
+    width: 100%;
+    border: 1px solid;
+    height: max-content;
+}
+
+
+form{
+    /* position: relative; */
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: min-content;
+    padding: 10px;
+    flex-direction: column;
+    border: 1px solid black;
+}
+
+div .form-row{
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    /* border: 1px green solid; */
+    border: none;
+    justify-content: space-between;
+}
+
+input{
+    width: 70%;
+    border-radius: 5px;
+    border: 1px solid black;;
+    padding: 15px;
+    font-size: 15px;
+}
+
+button{
+    width: 15%;
+    font-size: 20px;
+    border-radius: 10px;
+}
