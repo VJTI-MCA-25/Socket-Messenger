@@ -15,12 +15,13 @@ function logger(error) {
 
 // Main error handler
 /**
- * 
- * @param {Object} res The http response object 
- * @param {Error} error The error object 
- * 
+ * @function errorHandler
+ *
+ * @param {Object} res The http response object
+ * @param {Error} error The error object
+ *
  * This function sends the error response to the client and logs the error.
- * 
+ *
  * @returns {null}
  */
 function errorHandler(res, error, extraInfo = {}, log = false) {
@@ -45,24 +46,25 @@ function errorHandler(res, error, extraInfo = {}, log = false) {
 
 // Functions
 /**
- * 
+ * @async @function decodeAndVerify
+ *
  * @param {String} accessToken The accessToken provided by the client
  * @param {String} uid The uid of the user
- * 
+ *
  * This function verifies the accessToken and uid. It returns a Promise which resolves to an array of two elements:
  * - statusNumber: Number
  * - decodedToken: Object
- * 
+ *
  * statusNumber is a number from -1 to 2. It is the sum of the following:
  * - -1 if the userData does not exist
  * -  0 if the uid in the decodedToken **does not** match the uid provided or the userData does not exist
  * -  1 if the uid in the decodedToken matches the uid provided and the email is **not** verified
  * -  2 if the uid in the decodedToken matches the uid provided and the email is verified
- * 
- * 
+ *
+ *
  * @throws {FirebaseAuthError} If accessToken is invalid
  * @throws {MissingParametersError} If accessToken or uid is not provided
- * 
+ *
  * @returns {Promise<[Number, Object]>} [isVerified, decodedToken]
  */
 async function decodeAndVerify(accessToken, uid) {
@@ -70,7 +72,7 @@ async function decodeAndVerify(accessToken, uid) {
 	try {
 		const decodedToken = await auth.verifyIdToken(accessToken);
 		let verifyStatus = 0;
-		
+
 		if (decodedToken.uid === uid) verifyStatus = 1;
 		if (decodedToken.email_verified) verifyStatus = 2;
 
@@ -78,18 +80,17 @@ async function decodeAndVerify(accessToken, uid) {
 		if (!userDataExists) verifyStatus = -1;
 
 		return [verifyStatus, decodedToken];
-		
 	} catch (error) {
 		throw error;
 	}
 }
 
 /**
- * 
+ * @async @function doesUserDataExists
  * @param {string} uid The uid of the user
- * 
+ *
  * This function checks if the userData exists in the database. It returns a Promise which resolves to a boolean value.
- * 
+ *
  * @throws {MissingParametersError} If uid is not provided
  * @returns {Promise<boolean>}
  */
@@ -103,4 +104,33 @@ async function doesUserDataExists(uid) {
 	}
 }
 
-export { errorHandler, decodeAndVerify, doesUserDataExists, logger };
+/**
+ * @async @function validateDisplayName
+ * @param {String} displayName The displayName to validate
+ * @throws {MissingParametersError} If displayName is not provided
+ * @returns {String} The code specifying the the validation result
+ *
+ * This function validates the displayName and returns a code specifying the result of the validation.
+ *
+ * The code can be one of the following:
+ *
+ * - "auth/display-name-available"
+ * - "auth/display-name-taken"
+ * - "auth/display-name-invalid"
+ *
+ */
+async function validateDisplayName(displayName) {
+	let emptyName = !displayName;
+	let tooLong = displayName.length > 20;
+	let tooShort = displayName.length < 6;
+	let repeatUnderscore = /__+/g.test(displayName);
+	let invalidChars = !/^[a-z0-9_]*$|^null$/gi.test(displayName);
+
+	if (emptyName && tooLong && tooShort && repeatUnderscore && invalidChars) return "auth/display-name-invalid";
+
+	const displayNameSnapshot = await usersRef.where("displayName", "==", displayName).get();
+	if (!displayNameSnapshot.empty) return "auth/display-name-taken";
+	return "auth/display-name-available";
+}
+
+export { errorHandler, decodeAndVerify, doesUserDataExists, logger, validateDisplayName };

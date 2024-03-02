@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { sendVerificationMail } from "../../../services/authFunctions";
@@ -14,6 +12,8 @@ const VerifyEmail = () => {
 	const state = useLocation().state;
 	const email = state?.email;
 	const uid = state?.uid;
+
+	console.log(state);
 
 	/**
 	 * isLinkSent
@@ -41,7 +41,8 @@ const VerifyEmail = () => {
 			if (checkCookie()) {
 				setIsLinkSent((prev) => (prev === 0 ? 1 : prev));
 			} else {
-				sendLink();
+				// sendLink();
+				console.log("Link Sent");
 				setIsLinkSent(2);
 			}
 		}

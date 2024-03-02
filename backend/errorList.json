@@ -9,7 +9,8 @@
 	},
 	"UserAlreadyExistsError": {
 		"code": 409,
-		"message": "User already exists"
+		"message": "User already exists",
+		"statusText": "auth/email-already-exists"
 	},
 	"UserNotCreatedError": {
 		"code": 500,
@@ -40,5 +41,10 @@
 		"message": "User does not exists for the email provided",
 		"code": 404,
 		"statusText": "auth/user-for-email-not-found"
+	},
+	"InvalidEmailError": {
+		"message": "Invalid email",
+		"code": 400,
+		"statusText": "auth/invalid-email"
 	}
 }

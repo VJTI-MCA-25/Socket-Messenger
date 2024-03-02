@@ -87,7 +87,7 @@ function Signup() {
 	return (
 		<animated.div style={appearRight}>
 			<div className="row signup-container">
-				<div className="col s6 inputs">
+					<div className="col s12 m8 l6 inputs">
 					<form onSubmit={handleSubmit}>
 						<div className="row">
 							<h3>Sign Up</h3>

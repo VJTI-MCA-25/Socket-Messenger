@@ -69,9 +69,7 @@ function checkLogin() {
 
 async function sendVerificationMail(email, uid, continueUrl) {
 	try {
-		const response = axios({
-			method: "POST",
-			url: "http://localhost:3000/api/users/send-verification-mail",
+		const response = await axios.post("http://localhost:3000/api/users/send-verification-mail", {
 			data: {
 				email,
 				uid,

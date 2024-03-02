@@ -9,7 +9,6 @@ const MaxNav = ({ maxNavSlide, activeOptionsList, isNavOpen, slideNav }) => {
 	function handleClick(func) {
 		return () => {
 			func ? func() : null;
-			isNavOpen ? slideNav() : null;
 		};
 	}
 

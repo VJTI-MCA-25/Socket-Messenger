@@ -85,7 +85,7 @@ function Login() {
 	return (
 		<animated.div style={appearRight}>
 			<div className="row login-container">
-				<div className="col s6 inputs ">
+				<div className="col s12 m8 l6 inputs ">
 					<div className="box">
 						<form onSubmit={handleLogin}>
 							<div className="row">
