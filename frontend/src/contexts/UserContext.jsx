@@ -25,12 +25,9 @@ function UserContextProvider({ children }) {
 					setUser({ ...userRes, userData });
 				} catch (error) {
 					setUser(null);
-					//? This was causing a redirect from /auth/verify to /error
-					if (error.statusText !== "auth/email-not-verified") {
-						navigate("error", {
-							state: { error: { code: error.code || 424, message: error.message || "Firebase Failure" } },
-						});
-					}
+					navigate("error", {
+						state: { error: { code: error.code || 424, message: error.message || "Firebase Failure" } },
+					});
 				}
 			} else {
 				// If user is not authenticated, set user to null

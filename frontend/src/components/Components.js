@@ -7,10 +7,8 @@ export { Misc } from "./Misc/MiscComponents";
 
 import { Login } from "./Auth/Login/Login";
 import { Signup } from "./Auth/Signup/Signup";
-import { VerifyEmail } from "./Auth/VerifyEmail/VerifyEmail";
 
 export const Auth = {
 	Login,
 	Signup,
-	VerifyEmail,
 };

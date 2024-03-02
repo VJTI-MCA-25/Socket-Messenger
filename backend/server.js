@@ -60,8 +60,8 @@ app.get("/api/users/verify/:uid", async (req, res) => {
 
 		if (verifiedStatus === -1) return errorHandler(res, el.UserDataNotFoundError);
 		if (verifiedStatus === 0) return errorHandler(res, el.UserNotAuthorizedError);
-		if (verifiedStatus === 1) return errorHandler(res, el.UserEmailNotVerifiedError, { uid });
 
+		if (verifiedStatus === 1) return res.status(200).send("auth/email-not-verified");
 		if (verifiedStatus === 2) return res.status(200).send("auth/user-verified");
 
 		return errorHandler(res, el.UnknownError);
@@ -81,9 +81,8 @@ app.get("/api/users/get-data/:uid", async (req, res) => {
 
 		if (verifiedStatus === -1) return errorHandler(res, el.UserDataNotFoundError);
 		if (verifiedStatus === 0) return errorHandler(res, el.UserNotAuthorizedError);
-		if (verifiedStatus === 1) return errorHandler(res, el.UserEmailNotVerifiedError);
 
-		if (verifiedStatus === 2) {
+		if (verifiedStatus === 2 || verifiedStatus === 1) {
 			const userDataSnapshot = await usersRef.doc(uid).get();
 			const userData = userDataSnapshot.data();
 			return res.status(200).send({ uid, ...userData });

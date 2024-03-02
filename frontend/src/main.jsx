@@ -57,10 +57,6 @@ const router = createBrowserRouter([
 						path: "signup",
 						element: <Auth.Signup />,
 					},
-					{
-						path: "verify",
-						element: <Auth.VerifyEmail />,
-					},
 				],
 			},
 			...["login", "signin"].map((path) => ({

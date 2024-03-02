@@ -27,7 +27,7 @@ const usersRef = db.collection("users");
 app.use(
 	cors({
 		origin: "http://localhost:5173",
-		methods: ["GET", "POST"],
+		methods: ["GET", "POST", "PUT"],
 		credentials: true,
 		exposedHeaders: ["Authorization", "Content-Type"],
 		allowedHeaders: ["Authorization", "Content-Type"],

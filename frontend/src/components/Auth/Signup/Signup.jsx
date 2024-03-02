@@ -24,7 +24,6 @@ function Signup() {
 	const [password, setPassword] = useState(state ? state.password : "");
 
 	const [passwordVisibility, setPasswordVisibility] = useState(false);
-	const [showScreen, setShowScreen] = useState(false);
 
 	const navigate = useNavigate();
 
@@ -61,7 +60,7 @@ function Signup() {
 
 			// If user creation is successful, navigate to the home page
 			if (res.status === 201) {
-				navigate("/auth/verify", { state: { email, uid: res.data.uid } });
+				navigate("/channels");
 			}
 		} catch (error) {
 			console.error(error);
@@ -87,7 +86,7 @@ function Signup() {
 	return (
 		<animated.div style={appearRight}>
 			<div className="row signup-container">
-				<div className="col s6 inputs">
+				<div className="col s12 m8 l6 inputs">
 					<form onSubmit={handleSubmit}>
 						<div className="row">
 							<h3>Sign Up</h3>

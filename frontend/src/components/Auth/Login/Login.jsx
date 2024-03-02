@@ -73,7 +73,7 @@ function Login() {
 					setErrorLine("Invalid credentials");
 					break;
 				case "auth/email-not-verified":
-					navigate("/auth/verify", { state: { email, uid: error?.uid } });
+					navigate("/channels", { state: { emailVerification: false } });
 					break;
 				default:
 					navigate("/error", { state: { error: { code: error.code, message: error.message } } });
@@ -85,7 +85,7 @@ function Login() {
 	return (
 		<animated.div style={appearRight}>
 			<div className="row login-container">
-				<div className="col s6 inputs ">
+				<div className="col s12 m8 l6 inputs ">
 					<div className="box">
 						<form onSubmit={handleLogin}>
 							<div className="row">
