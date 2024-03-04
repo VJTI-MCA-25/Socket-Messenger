@@ -1,1 +1,5 @@
-export const Misc = {};
+import { DisplayName } from "./DisplayName/DisplayName";
+
+export const Misc = {
+	DisplayName,
+};

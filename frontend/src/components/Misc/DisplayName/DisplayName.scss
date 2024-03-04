@@ -1,0 +1,24 @@
+@use "../../../utilities/variables" as *;
+
+.preloader-wrapper {
+	position: absolute !important;
+}
+
+.status {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 1rem;
+	position: absolute;
+	font-size: 16px;
+	svg {
+		font-size: 1.5rem;
+		&.fa-check {
+			color: $success;
+		}
+
+		&.fa-xmark {
+			color: $danger;
+		}
+	}
+}
