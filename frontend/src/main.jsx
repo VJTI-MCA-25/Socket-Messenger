@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider, Outlet, redirect } from "react-router-dom";
 
 import { Home, Error, Auth, Friends, Misc } from "./components/Components";
+import { Home, Error, Auth, Friends, Misc } from "./components/Components";
 
 import { preEntryChecks } from "./services/authFunctions";
 
@@ -66,6 +67,16 @@ const router = createBrowserRouter([
 				path: "auth?/" + path,
 				loader: async () => redirect("/auth/signup"),
 			})),
+			{
+				path: "display-name",
+				loader: async () => {
+					let report = await preEntryChecks();
+					if (!report.isLoggedIn) return redirect("/auth/login");
+					if (report.isDisplayNameSet) return redirect("/channels");
+					return report;
+				},
+				element: <Misc.DisplayName />,
+			},
 			{
 				path: "display-name",
 				loader: async () => {
