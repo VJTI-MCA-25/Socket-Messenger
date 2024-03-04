@@ -10,7 +10,6 @@ import { UserContext } from "../../../contexts/UserContext";
 import "./DisplayName.scss";
 
 const DisplayName = () => {
-	const isRedirect = useLocation().state?.redirect;
 	const navigate = useNavigate();
 
 	const [input, setInput] = useState("");
@@ -18,10 +17,6 @@ const DisplayName = () => {
 	const [status, setStatus] = useState(null);
 
 	const user = useContext(UserContext);
-
-	useEffect(() => {
-		if (!isRedirect) navigate("/channels");
-	}, []);
 
 	useEffect(() => {
 		const timer = setTimeout(async () => {

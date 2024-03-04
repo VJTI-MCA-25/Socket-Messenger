@@ -8,12 +8,6 @@ import { UserContext } from "../../contexts/UserContext";
 const Home = () => {
 	const user = useContext(UserContext);
 	const navigate = useNavigate();
-	const report = useLoaderData();
-
-	useEffect(() => {
-		if (!user) navigate("/auth/login");
-		if (report.isDisplayNameSet) navigate("/display-name", { state: { redirect: true } });
-	}, [user]);
 
 	if (user !== null) {
 		return (

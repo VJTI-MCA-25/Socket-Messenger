@@ -1,5 +1,5 @@
 // Imports
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { animated, useSpring, useTrail } from "@react-spring/web";

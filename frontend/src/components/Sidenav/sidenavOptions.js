@@ -28,6 +28,7 @@ const maxSidenavOptions = {
 		},
 		{
 			name: "logout",
+			to: "/auth/login",
 			icon: faArrowRightFromBracket,
 			classes: "logout-icon-max",
 			text: "Logout",

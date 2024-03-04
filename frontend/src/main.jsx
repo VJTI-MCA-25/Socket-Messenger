@@ -3,7 +3,6 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider, Outlet, redirect } from "react-router-dom";
 
 import { Home, Error, Auth, Friends, Misc } from "./components/Components";
-import { Home, Error, Auth, Friends, Misc } from "./components/Components";
 
 import { preEntryChecks } from "./services/authFunctions";
 
@@ -26,7 +25,8 @@ const router = createBrowserRouter([
 				loader: async () => {
 					let report = await preEntryChecks();
 					if (!report.isLoggedIn) return redirect("/auth/login");
-					return report;
+					else if (!report.isDisplayNameSet) return redirect("/display-name");
+					else return null;
 				},
 				children: [
 					{
@@ -51,6 +51,11 @@ const router = createBrowserRouter([
 					},
 					{
 						path: "login",
+						loader: async () => {
+							let report = await preEntryChecks();
+							if (report.isLoggedIn) return redirect("/channels");
+							else return null;
+						},
 						element: <Auth.Login />,
 					},
 					{
@@ -72,18 +77,8 @@ const router = createBrowserRouter([
 				loader: async () => {
 					let report = await preEntryChecks();
 					if (!report.isLoggedIn) return redirect("/auth/login");
-					if (report.isDisplayNameSet) return redirect("/channels");
-					return report;
-				},
-				element: <Misc.DisplayName />,
-			},
-			{
-				path: "display-name",
-				loader: async () => {
-					let report = await preEntryChecks();
-					if (!report.isLoggedIn) return redirect("/auth/login");
-					if (report.isDisplayNameSet) return redirect("/channels");
-					return report;
+					else if (report.isDisplayNameSet) return redirect("/channels");
+					else return null;
 				},
 				element: <Misc.DisplayName />,
 			},
