@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { checkDisplayName, setData } from "../../../services/userFunctions";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
@@ -10,7 +10,6 @@ import { UserContext } from "../../../contexts/UserContext";
 import "./DisplayName.scss";
 
 const DisplayName = () => {
-	const isRedirect = useLocation().state?.redirect;
 	const navigate = useNavigate();
 
 	const [input, setInput] = useState("");
@@ -20,10 +19,6 @@ const DisplayName = () => {
 	const user = useContext(UserContext);
 
 	useEffect(() => {
-		if (!isRedirect) navigate("/channels");
-	}, []);
-
-	useEffect(() => {
 		const timer = setTimeout(async () => {
 			if (!input) return setLoading(false);
 			try {
@@ -31,7 +26,6 @@ const DisplayName = () => {
 				if (res == "user/display-name-available") setStatus("available");
 				else setStatus("taken");
 			} catch (error) {
-				console.log(error.statusText === "user/invalid-display-name");
 				if (error.statusText === "user/invalid-display-name") setStatus("invalid");
 				else setStatus("error");
 			}

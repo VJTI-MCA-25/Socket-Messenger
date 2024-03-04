@@ -5,13 +5,16 @@ import { UserContextProvider } from "./contexts/UserContext.jsx";
 import "materialize-css/dist/css/materialize.min.css";
 
 import "./App.scss";
+import { UserDataContextProvider, UserDataContext } from "./contexts/UserDataContext.jsx";
 
 function App() {
 	return (
 		<UserContextProvider>
-			<main>
-				<Outlet />
-			</main>
+			<UserDataContextProvider>
+				<div className="mainContainer">
+					<Outlet />
+				</div>
+			</UserDataContextProvider>
 		</UserContextProvider>
 	);
 }
