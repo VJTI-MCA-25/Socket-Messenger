@@ -114,23 +114,23 @@ async function doesUserDataExists(uid) {
  *
  * The code can be one of the following:
  *
- * - "auth/display-name-available"
- * - "auth/display-name-taken"
- * - "auth/display-name-invalid"
+ * - "user/display-name-available"
+ * - "user/display-name-taken"
+ * - "user/display-name-invalid"
  *
  */
 async function validateDisplayName(displayName) {
-	let emptyName = !displayName;
-	let tooLong = displayName.length > 20;
-	let tooShort = displayName.length < 6;
-	let repeatUnderscore = /__+/g.test(displayName);
-	let invalidChars = !/^[a-z0-9_]*$|^null$/gi.test(displayName);
+	let lengthCheck = displayName.length >= 6 && displayName.length <= 20;
+	let repeatUnderscore = !/__+/g.test(displayName);
+	let invalidChars = /^[a-z0-9_]*$|^null$/gi.test(displayName);
 
-	if (emptyName && tooLong && tooShort && repeatUnderscore && invalidChars) return "auth/display-name-invalid";
+	let validate = lengthCheck && repeatUnderscore && invalidChars;
+
+	if (!validate) return "user/display-name-invalid";
 
 	const displayNameSnapshot = await usersRef.where("displayName", "==", displayName).get();
-	if (!displayNameSnapshot.empty) return "auth/display-name-taken";
-	return "auth/display-name-available";
+	if (!displayNameSnapshot.empty) return "user/display-name-taken";
+	return "user/display-name-available";
 }
 
 export { errorHandler, decodeAndVerify, doesUserDataExists, logger, validateDisplayName };

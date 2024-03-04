@@ -2,9 +2,9 @@
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider, Outlet, redirect } from "react-router-dom";
 
-import { Home, Error, Auth, Friends } from "./components/Components";
+import { Home, Error, Auth, Friends, Misc } from "./components/Components";
 
-import { checkLogin } from "./services/authFunctions";
+import { preEntryChecks } from "./services/authFunctions";
 
 import App from "./App.jsx";
 import "./index.css";
@@ -23,10 +23,9 @@ const router = createBrowserRouter([
 				path: "channels",
 				element: <Home />,
 				loader: async () => {
-					let isLoggedIn = await checkLogin();
-					if (!isLoggedIn) {
-						return redirect("/auth/login");
-					} else return null;
+					let report = await preEntryChecks();
+					if (!report.isLoggedIn) return redirect("/auth/login");
+					return report;
 				},
 				children: [
 					{
@@ -67,6 +66,16 @@ const router = createBrowserRouter([
 				path: "auth?/" + path,
 				loader: async () => redirect("/auth/signup"),
 			})),
+			{
+				path: "display-name",
+				loader: async () => {
+					let report = await preEntryChecks();
+					if (!report.isLoggedIn) return redirect("/auth/login");
+					if (report.isDisplayNameSet) return redirect("/channels");
+					return report;
+				},
+				element: <Misc.DisplayName />,
+			},
 			{
 				path: "error",
 				element: <Error />,

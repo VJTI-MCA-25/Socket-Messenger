@@ -1,10 +1,10 @@
-@use "./utilities/variables" as var;
+@use "./utilities/variables" as *;
 
 @at-root {
 	html {
-		font-family: var.$font;
-		color: var.$lightText;
-		background-color: var.$darkBg;
+		font-family: $font;
+		color: $lightText;
+		background-color: $darkBg;
 
 		color-scheme: light dark;
 		font-synthesis: none;

@@ -51,22 +51,6 @@ async function logoutUser() {
 	}
 }
 
-function checkLogin() {
-	try {
-		return new Promise((resolve) => {
-			onAuthStateChanged(auth, (user) => {
-				if (user) {
-					resolve(true);
-				} else {
-					resolve(false);
-				}
-			});
-		});
-	} catch (error) {
-		throw parseError(error);
-	}
-}
-
 async function sendVerificationMail(email, uid, continueUrl) {
 	try {
 		const response = await axios.post("http://localhost:3000/api/users/send-verification-mail", {
@@ -82,4 +66,28 @@ async function sendVerificationMail(email, uid, continueUrl) {
 	}
 }
 
-export { createUser, loginUser, logoutUser, checkLogin, sendVerificationMail };
+// Function to check if the user is logged in and has a display name
+function preEntryChecks() {
+	return new Promise((resolve, reject) => {
+		const unsubscribe = onAuthStateChanged(
+			auth,
+			(user) => {
+				if (user) {
+					const isLoggedIn = true;
+					const isDisplayNameSet = user.displayName ? true : false;
+					resolve({ isLoggedIn, isDisplayNameSet });
+				} else {
+					const isLoggedIn = false;
+					const isDisplayNameSet = false;
+					resolve({ isLoggedIn, isDisplayNameSet });
+				}
+				unsubscribe();
+			},
+			(error) => {
+				reject(parseError(error));
+			}
+		);
+	});
+}
+
+export { createUser, loginUser, logoutUser, preEntryChecks, sendVerificationMail };

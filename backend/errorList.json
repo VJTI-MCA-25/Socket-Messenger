@@ -46,5 +46,15 @@
 		"message": "Invalid email",
 		"code": 400,
 		"statusText": "auth/invalid-email"
+	},
+	"InvalidDisplayNameError": {
+		"message": "Invalid display name",
+		"code": 400,
+		"statusText": "user/invalid-display-name"
+	},
+	"DisplayNameTaken": {
+		"message": "Display name already taken",
+		"code": 409,
+		"statusText": "user/display-name-taken"
 	}
 }

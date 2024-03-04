@@ -3,7 +3,13 @@ config();
 
 import { app, auth, usersRef, PORT } from "./initialize.js";
 import { Timestamp } from "firebase-admin/firestore";
-import { errorHandler, decodeAndVerify, doesUserDataExists, logger } from "./serverHelperFunctions.js";
+import {
+	errorHandler,
+	decodeAndVerify,
+	doesUserDataExists,
+	logger,
+	validateDisplayName,
+} from "./serverHelperFunctions.js";
 import { sendVerificationEmail } from "./emailActionHandler.js";
 
 import el from "./errorList.json" assert { type: "json" };
@@ -18,7 +24,6 @@ app.put("/api/users/create", async (req, res) => {
 		const userRecord = await auth.createUser({
 			email: data.email,
 			password: data.password,
-			displayName: "John Doe",
 		});
 		uid = userRecord.uid;
 
@@ -31,7 +36,6 @@ app.put("/api/users/create", async (req, res) => {
 		// Create user data in Firestore
 		await usersRef.doc(userRecord.uid).set({
 			email: data.email,
-			displayName: "John Doe",
 			createdAt: Timestamp.now(),
 			lastUpdatedAt: Timestamp.now(),
 		});
@@ -105,9 +109,59 @@ app.post("/api/users/send-verification-mail", async (req, res) => {
 		if (!user) return errorHandler(res, el.UserNotFoundError);
 		if (user.emailVerified) return res.send("auth/email-already-verified");
 
-		await sendVerificationEmail(user.email, continueUrl);
+		sendVerificationEmail(user.email, continueUrl);
 		res.status(200).send("auth/verification-email-sent");
 	} catch (error) {
+		return errorHandler(res, error);
+	}
+});
+
+app.get("/api/users/check-display-name/:displayName", async (req, res) => {
+	try {
+		const displayName = req.params.displayName;
+		let validation = await validateDisplayName(displayName);
+
+		if (validation === "user/display-name-invalid") return errorHandler(res, el.InvalidDisplayNameError);
+		else return res.status(200).send(validation);
+	} catch (error) {
+		return errorHandler(res, error);
+	}
+});
+
+app.post("/api/users/set-data", async (req, res) => {
+	try {
+		const accessToken = req.headers.authorization;
+		const uid = req.body.data.uid;
+		const displayName = req.body.data.displayName;
+
+		if (!accessToken || !uid || !displayName) return errorHandler(res, el.MissingParametersError);
+
+		const [verifiedStatus] = await decodeAndVerify(accessToken, uid);
+
+		if (verifiedStatus === -1) return errorHandler(res, el.UserDataNotFoundError);
+		if (verifiedStatus === 0) return errorHandler(res, el.UserNotAuthorizedError);
+
+		if (verifiedStatus === 2 || verifiedStatus === 1) {
+			// Checks for Different Data
+			if (displayName) {
+				let validation = await validateDisplayName(displayName);
+				if (validation === "user/display-name-invalid") return errorHandler(res, el.InvalidDisplayNameError);
+				if (validation === "user/display-name-taken") return errorHandler(res, el.DisplayNameTakenError);
+			}
+
+			console.log(displayName);
+			await getAuth().updateUser(uid, {
+				displayName: displayName,
+			});
+
+			await usersRef.doc(uid).update({
+				displayName,
+				lastUpdatedAt: Timestamp.now(),
+			});
+			return res.status(200).send("user/data-updated");
+		}
+	} catch (error) {
+		await auth.updateUser(uid, { displayName: null });
 		return errorHandler(res, error);
 	}
 });
