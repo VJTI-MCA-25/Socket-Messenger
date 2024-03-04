@@ -77,6 +77,16 @@ const router = createBrowserRouter([
 				element: <Misc.DisplayName />,
 			},
 			{
+				path: "display-name",
+				loader: async () => {
+					let report = await preEntryChecks();
+					if (!report.isLoggedIn) return redirect("/auth/login");
+					if (report.isDisplayNameSet) return redirect("/channels");
+					return report;
+				},
+				element: <Misc.DisplayName />,
+			},
+			{
 				path: "error",
 				element: <Error />,
 			},
