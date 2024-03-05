@@ -64,7 +64,7 @@ const Sidenav = ({ selectedOption = "messages" }) => {
 	useChain([minNavSlideRef, rainIconsRef, maxNavSlideRef, activeOptionsListRef], [0.2, 0.5, 0.8, 0.25], 500);
 
 	return (
-		<div className="sidenav-container">
+		<div className={"sidenav-container " + (isNavOpen ? "open" : "close")}>
 			<MinNav
 				rainIcons={rainIcons}
 				slideNav={slideNav}

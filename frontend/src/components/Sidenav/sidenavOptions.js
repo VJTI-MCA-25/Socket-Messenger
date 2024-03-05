@@ -14,7 +14,7 @@ const maxSidenavOptions = {
 	settings: [
 		{
 			name: "profile",
-			to: "/profile",
+			to: "/channels/profile",
 			icon: faUser,
 			classes: "profile-icon-max",
 			text: "Profile",

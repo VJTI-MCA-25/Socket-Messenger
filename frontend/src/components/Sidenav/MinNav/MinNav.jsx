@@ -19,20 +19,18 @@ const MinNav = ({ rainIcons, slideNav, minNavSlide, sidenavOptions, setActiveOpt
 	}
 
 	return (
-		<animated.div style={{ zIndex: 999, ...minNavSlide }}>
-			<div className="sidenav-min z-depth-2">
-				<animated.li style={rainIcons[0]}>
-					<a className="waves-effect">
-						<FontAwesomeIcon icon={faBars} className="bars-icon icon" onClick={slideNav} />
-					</a>
-				</animated.li>
-				{populateSidenavOptions(sidenavOptions)}
-				<animated.li style={rainIcons[rainIcons.length - 1]} onClick={() => console.log("hello")}>
-					<a className="waves-effect">
-						<FontAwesomeIcon icon={faPlus} className="bars-icon icon" />
-					</a>
-				</animated.li>
-			</div>
+		<animated.div style={minNavSlide} className="sidenav-min z-depth-1-half">
+			<animated.li style={rainIcons[0]}>
+				<a className="waves-effect">
+					<FontAwesomeIcon icon={faBars} className="bars-icon icon" onClick={slideNav} />
+				</a>
+			</animated.li>
+			{populateSidenavOptions(sidenavOptions)}
+			<animated.li style={rainIcons[rainIcons.length - 1]} onClick={() => console.log("hello")}>
+				<a className="waves-effect">
+					<FontAwesomeIcon icon={faPlus} className="bars-icon icon" />
+				</a>
+			</animated.li>
 		</animated.div>
 	);
 };

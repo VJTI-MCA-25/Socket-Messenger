@@ -26,8 +26,8 @@ const MaxNav = ({ maxNavSlide, activeOptionsList, isNavOpen, slideNav }) => {
 	}
 
 	return (
-		<animated.div style={{ zIndex: 998, ...maxNavSlide }}>
-			<ul className="sidenav sidenav-fixed sidenav-max">{populateSidenav()}</ul>
+		<animated.div style={maxNavSlide} className="z-depth-1 sidenav sidenav-fixed sidenav-max">
+			<ul>{populateSidenav()}</ul>
 		</animated.div>
 	);
 };

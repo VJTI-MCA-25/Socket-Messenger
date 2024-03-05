@@ -2,6 +2,7 @@ export { Home } from "./Home/Home";
 export { Error } from "./Error/Error";
 export { Sidenav } from "./Sidenav/Sidenav";
 export { Friends } from "./Friends/Friends";
+export { Profile } from "./Profile/Profile";
 
 export { Misc } from "./Misc/MiscComponents";
 

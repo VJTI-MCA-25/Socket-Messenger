@@ -1,15 +1,16 @@
 .sidenav-container {
 	display: flex;
-	flex-direction: row;
-	position: fixed;
-	height: 100vh;
-	width: max-content;
+	position: relative;
+	// overflow: hidden;
+	height: 100%;
 	left: 0;
 	top: 0;
+	z-index: 10;
 	.sidenav-max {
 		position: relative !important;
 		background-color: #242424;
-		z-index: 998;
+		z-index: 11;
+		height: 100%;
 		.subheader {
 			color: #ffffff55;
 		}
@@ -26,8 +27,8 @@
 
 	.sidenav-min {
 		background-color: #242424;
-		z-index: 999;
 		height: 100%;
+		z-index: 12;
 		li {
 			list-style: none;
 			padding: 0.5rem 1rem;
