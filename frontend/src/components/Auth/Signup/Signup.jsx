@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 
 // Services
-import { createUser } from "../../../services/authFunctions";
+import { createUser } from "services/authFunctions";
 
 // CSS
 import "./Signup.scss";

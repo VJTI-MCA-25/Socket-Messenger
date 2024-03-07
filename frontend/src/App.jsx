@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 
-import { UserContextProvider } from "./contexts/UserContext.jsx";
-import { UserDataContextProvider } from "./contexts/UserDataContext.jsx";
+import { UserContextProvider } from "contexts/UserContext.jsx";
+import { UserDataContextProvider } from "contexts/UserDataContext.jsx";
 
 import "materialize-css/dist/css/materialize.min.css";
 import "./App.scss";

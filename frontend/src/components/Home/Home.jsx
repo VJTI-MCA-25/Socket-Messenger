@@ -1,12 +1,19 @@
-import { useContext } from "react";
-import { Outlet } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 
-import { Sidenav } from "../Components";
+import { Sidenav } from "components/Components";
 
-import { UserContext } from "../../contexts/UserContext";
+import { UserContext } from "contexts/UserContext";
 
 const Home = () => {
 	const user = useContext(UserContext);
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (!user) {
+			navigate("/auth/login");
+		}
+	}, [user]);
 
 	if (user !== null) {
 		return (

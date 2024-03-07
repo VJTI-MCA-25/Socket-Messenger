@@ -2,9 +2,9 @@
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider, Outlet, redirect } from "react-router-dom";
 
-import { Home, Error, Auth, Friends, Misc, Profile } from "./components/Components";
+import { Home, Error, Auth, Friends, Misc, Profile } from "components/Components";
 
-import { preEntryChecks } from "./services/authFunctions";
+import { preEntryChecks } from "services/authFunctions";
 
 import App from "./App.jsx";
 import "./index.css";

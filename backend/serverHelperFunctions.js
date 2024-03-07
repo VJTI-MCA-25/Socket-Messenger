@@ -57,7 +57,7 @@ function errorHandler(res, error, extraInfo = {}, log = false) {
  *
  * statusNumber is a number from -1 to 2. It is the sum of the following:
  * - -1 if the userData does not exist
- * -  0 if the uid in the decodedToken **does not** match the uid provided or the userData does not exist
+ * -  0 if the uid in the decodedToken **does not** match the uid provided or the userData does not exist or it had no basis to check
  * -  1 if the uid in the decodedToken matches the uid provided and the email is **not** verified
  * -  2 if the uid in the decodedToken matches the uid provided and the email is verified
  *
@@ -67,11 +67,12 @@ function errorHandler(res, error, extraInfo = {}, log = false) {
  *
  * @returns {Promise<[Number, Object]>} [isVerified, decodedToken]
  */
-async function decodeAndVerify(accessToken, uid) {
-	if (!accessToken || !uid) throw el.MissingParametersError;
+async function decodeAndVerify(accessToken, uid = null) {
+	if (!accessToken) throw el.MissingParametersError;
 	try {
 		const decodedToken = await auth.verifyIdToken(accessToken);
 		let verifyStatus = 0;
+		if (!uid) return [verifyStatus, decodedToken];
 
 		if (decodedToken.uid === uid) verifyStatus = 1;
 		if (decodedToken.email_verified) verifyStatus = 2;

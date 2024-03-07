@@ -1,9 +1,11 @@
 import axios from "axios";
 import { logoutUser } from "./authFunctions";
+import { baseURL } from "./firebase-config";
 
 async function getUserData(user) {
 	try {
-		const response = await axios.get(`http://localhost:3000/api/users/get-data/${user.uid}`, {
+		const response = await axios.get(`/users/get-data/${user.uid}`, {
+			baseURL,
 			headers: {
 				Authorization: user.accessToken,
 			},
@@ -17,7 +19,7 @@ async function getUserData(user) {
 
 async function checkDisplayName(displayName) {
 	try {
-		const response = await axios.get(`http://localhost:3000/api/users/check-display-name/${displayName}`);
+		const response = await axios.get(`/users/check-display-name/${displayName}`, { baseURL });
 		return response.data;
 	} catch (error) {
 		throw { ...error.response.data };
@@ -28,7 +30,8 @@ async function setData(user, data) {
 	try {
 		const response = await axios({
 			method: "post",
-			url: `http://localhost:3000/api/users/set-data`,
+			url: "/users/set-data",
+			baseURL,
 			headers: {
 				Authorization: user.accessToken,
 			},

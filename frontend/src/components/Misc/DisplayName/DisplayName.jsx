@@ -1,11 +1,12 @@
 import { useEffect, useState, useContext } from "react";
-import { checkDisplayName, setData } from "../../../services/userFunctions";
+
+import { UserContext } from "contexts/UserContext";
+import { checkDisplayName, setData } from "services/userFunctions";
+
 import { useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
-
-import { UserContext } from "../../../contexts/UserContext";
 
 import "./DisplayName.scss";
 
@@ -23,6 +24,7 @@ const DisplayName = () => {
 			if (!input) return setLoading(false);
 			try {
 				let res = await checkDisplayName(input);
+				console.log(res);
 				if (res == "user/display-name-available") setStatus("available");
 				else setStatus("taken");
 			} catch (error) {
@@ -82,6 +84,7 @@ const DisplayName = () => {
 				const res = await setData(user, {
 					displayName: input,
 				});
+				console.log(res);
 				if (res === "user/data-updated") navigate("/channels");
 			} catch (error) {
 				//TODO Handle Different Errors for Failed Display Name Update

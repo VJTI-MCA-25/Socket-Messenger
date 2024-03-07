@@ -133,7 +133,7 @@ app.post("/api/users/set-data", async (req, res) => {
 		const accessToken = req.headers.authorization;
 		const uid = req.body.data.uid;
 		const displayName = req.body.data.displayName;
-
+	try {
 		if (!accessToken || !uid || !displayName) return errorHandler(res, el.MissingParametersError);
 
 		const [verifiedStatus] = await decodeAndVerify(accessToken, uid);
@@ -150,7 +150,7 @@ app.post("/api/users/set-data", async (req, res) => {
 			}
 
 			console.log(displayName);
-			await getAuth().updateUser(uid, {
+			await auth.updateUser(uid, {
 				displayName: displayName,
 			});
 
