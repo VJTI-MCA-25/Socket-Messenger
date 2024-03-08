@@ -3,6 +3,7 @@ export { Error } from "./Error/Error";
 export { Sidenav } from "./Sidenav/Sidenav";
 export { Friends } from "./Friends/Friends";
 export { Profile } from "./Profile/Profile";
+export { Invitations } from "./Invitations/Invitations";
 
 export { Misc } from "./Misc/MiscComponents";
 

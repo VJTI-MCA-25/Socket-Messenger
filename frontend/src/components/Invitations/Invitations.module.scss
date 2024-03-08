@@ -1,0 +1,50 @@
+@use "utilities/variables" as *;
+
+.invite {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	position: relative;
+	padding-left: 2rem;
+	&::before {
+		content: "";
+		display: block;
+		width: 5px;
+		height: 100%;
+		position: absolute;
+		background-color: $highlight;
+		top: 0;
+		left: 0;
+	}
+}
+
+.inviteActions {
+	display: flex;
+	flex-direction: row;
+	gap: 1rem;
+	align-items: center;
+	justify-content: center;
+	margin-right: 3rem;
+	& > button {
+		outline: none;
+		border: none;
+		padding: 0.5rem 1rem;
+		border-radius: 5px;
+		background-color: $highlight;
+	}
+}
+
+.inviteSender {
+	font-size: 16px;
+	& > span {
+		font-style: italic;
+		color: $highlight;
+	}
+}
+
+.invitesContainer {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}

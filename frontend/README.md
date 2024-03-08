@@ -5,3 +5,8 @@
 -   [Delete Unverified Users After 24 Hours](https://stackoverflow.com/questions/67148672/how-to-delete-unverified-e-mail-addresses-in-firebase-authentication-flutter)
 
 > **Note:** This project uses aliases for import for some of its directories. They can be found in `vite.config.js`
+
+TODO:
+
+-   [ ] Seperate Server Routes and init file
+-   [ ] Generalize the auth required routes

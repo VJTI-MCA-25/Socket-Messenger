@@ -7,6 +7,9 @@ import { cert, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 
+import { createServer } from "http";
+import { Server } from "socket.io";
+
 // Global variables
 const app = express();
 
@@ -18,6 +21,8 @@ initializeApp({
 });
 const auth = getAuth();
 const db = getFirestore();
+
+db.settings({ ignoreUndefinedProperties: true });
 
 const usersRef = db.collection("users");
 
@@ -38,4 +43,12 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-export { app, auth, db, usersRef, PORT };
+const server = createServer(app);
+const io = new Server(server);
+
+const inviteIo = io.of("/invites");
+const sockets = {
+	inviteIo,
+};
+
+export { app, auth, db, usersRef, PORT, server, sockets };

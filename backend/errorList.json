@@ -56,5 +56,40 @@
 		"message": "Display name already taken",
 		"code": 409,
 		"statusText": "user/display-name-taken"
+	},
+	"InvalidInviteStatusError": {
+		"message": "Invalid invite status",
+		"code": 400,
+		"statusText": "invite/invalid-status"
+	},
+	"InviteNotFoundError": {
+		"message": "Invite not found",
+		"code": 404,
+		"statusText": "invite/not-found"
+	},
+	"InviteAlreadyProcessedError": {
+		"message": "Invite already processed",
+		"code": 409,
+		"statusText": "invite/already-processed"
+	},
+	"SelfInviteError": {
+		"message": "Self invite",
+		"code": 400,
+		"statusText": "invite/self-invite"
+	},
+	"AlreadyFriendsError": {
+		"message": "Already friends",
+		"code": 409,
+		"statusText": "friend/already-friends"
+	},
+	"InviteAlreadySentError": {
+		"message": "Invite already sent",
+		"code": 409,
+		"statusText": "invite/already-sent"
+	},
+	"InviteAlreadyReceivedError": {
+		"message": "Invite already received",
+		"code": 409,
+		"statusText": "invite/already-received"
 	}
 }

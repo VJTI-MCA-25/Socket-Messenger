@@ -19,6 +19,7 @@ const Home = () => {
 		return (
 			<>
 				<Sidenav />
+				{/* Change the animation to decrease the width of the max nav */}
 				<Outlet />
 			</>
 		);

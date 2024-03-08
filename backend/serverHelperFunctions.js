@@ -6,7 +6,7 @@ import fs from "fs";
 //* --------- Error handler --------- *//
 function logger(error) {
 	// Log the error in a file
-	fs.appendFile("error.log", `${new Date().toISOString()}: ${error}\n`, (err) => {
+	fs.appendFile("error.log", `${new Date().toISOString()}: ${JSON.stringify(error)}\n`, (err) => {
 		if (err) {
 			console.error("Failed to log error:", err);
 		}
