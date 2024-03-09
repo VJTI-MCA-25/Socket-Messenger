@@ -65,7 +65,7 @@ function errorHandler(res, error, extraInfo = {}, log = false) {
  * @throws {FirebaseAuthError} If accessToken is invalid
  * @throws {MissingParametersError} If accessToken or uid is not provided
  *
- * @returns {Promise<[Number, Object]>} [isVerified, decodedToken]
+ * @returns {Promise<[number, object]>} [isVerified, decodedToken]
  */
 async function decodeAndVerify(accessToken, uid = null) {
 	if (!accessToken) throw el.MissingParametersError;
@@ -109,7 +109,7 @@ async function doesUserDataExists(uid) {
  * @async @function validateDisplayName
  * @param {String} displayName The displayName to validate
  * @throws {MissingParametersError} If displayName is not provided
- * @returns {String} The code specifying the the validation result
+ * @returns {Promise<string>} The code specifying the the validation result
  *
  * This function validates the displayName and returns a code specifying the result of the validation.
  *
@@ -129,9 +129,14 @@ async function validateDisplayName(displayName) {
 
 	if (!validate) return "user/display-name-invalid";
 
-	const displayNameSnapshot = await usersRef.where("displayName", "==", displayName).get();
-	if (!displayNameSnapshot.empty) return "user/display-name-taken";
-	return "user/display-name-available";
+	try {
+		const displayNameSnapshot = await usersRef.where("displayName", "==", displayName).get();
+
+		if (!displayNameSnapshot.empty) return "user/display-name-taken";
+		else return "user/display-name-available";
+	} catch (error) {
+		throw error;
+	}
 }
 
 export { errorHandler, decodeAndVerify, doesUserDataExists, logger, validateDisplayName };

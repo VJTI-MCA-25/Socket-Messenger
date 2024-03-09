@@ -5,10 +5,10 @@ import { sendInvite } from "services/userFunctions";
 import { toast } from "materialize-css";
 import "./FriendsList.scss";
 
-const FriendsList = ({ usersList, user }) => {
-	async function handleInvite(friend) {
+const FriendsList = ({ usersList }) => {
+	async function handleInvite(sendTo) {
 		try {
-			let response = await sendInvite(user, friend);
+			let response = await sendInvite(sendTo);
 			if (response === "invite/sent") {
 				toast({ html: "Invite sent!" });
 			}

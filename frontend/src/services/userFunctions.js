@@ -1,15 +1,10 @@
-import axios from "axios";
 import { logoutUser } from "./authFunctions";
-import { baseURL } from "./firebase-config";
+import { instance } from "./firebase-config";
+import axios from "axios";
 
 async function getUserData(user) {
 	try {
-		const response = await axios.get(`/users/get-data/${user.uid}`, {
-			baseURL,
-			headers: {
-				Authorization: user.accessToken,
-			},
-		});
+		const response = await instance.get(`/users/get-data/${user.uid}`);
 		return response.data;
 	} catch (error) {
 		logoutUser();
@@ -19,28 +14,17 @@ async function getUserData(user) {
 
 async function checkDisplayName(displayName) {
 	try {
-		const response = await axios.get(`/users/check-display-name/${displayName}`, { baseURL });
+		const response = await axios.get(`/users/check-display-name/${displayName}`);
 		return response.data;
 	} catch (error) {
 		throw { ...error.response.data };
 	}
 }
 
-async function setData(user, data) {
+async function setData(data) {
 	try {
-		const response = await axios({
-			method: "post",
-			url: "/users/set-data",
-			baseURL,
-			headers: {
-				Authorization: user.accessToken,
-			},
-			data: {
-				data: {
-					uid: user.uid,
-					...data,
-				},
-			},
+		const response = await instance.post("/users/set-data", {
+			data,
 		});
 		return response.data;
 	} catch (error) {
@@ -48,58 +32,30 @@ async function setData(user, data) {
 	}
 }
 
-async function getUsersList(user, displayNameString) {
+async function getUsersList(displayNameString) {
 	try {
-		const response = await axios({
-			method: "get",
-			url: "/users/get-users-list",
-			baseURL,
-			params: {
-				displayNameString: displayNameString,
-			},
-			headers: {
-				Authorization: user.accessToken,
-			},
-		});
+		const response = await instance.get(`/users/get-users-list/${displayNameString}`);
 		return response.data;
 	} catch (error) {
 		throw { ...error.response };
 	}
 }
 
-async function respondInvite(user, invite, response) {
+async function respondInvite(inviteId, status) {
 	try {
-		const res = await axios({
-			method: "post",
-			url: "/invites/invite-response",
-			baseURL,
-			headers: {
-				Authorization: user.accessToken,
-			},
-			data: {
-				inviteId: invite.id,
-				response,
-			},
+		const response = await instance.post("/invites/invite-response", {
+			inviteId,
+			status,
 		});
-		return res.data;
+		return response.data;
 	} catch (error) {
 		throw { ...error.response.data };
 	}
 }
 
-async function sendInvite(user, sendTo) {
+async function sendInvite(sendTo) {
 	try {
-		const res = await axios({
-			method: "post",
-			url: "/invites/send-invite",
-			baseURL,
-			headers: {
-				Authorization: user.accessToken,
-			},
-			data: {
-				sendTo: sendTo.uid,
-			},
-		});
+		const res = await instance.post("/invites/send-invite", { sendTo });
 		return res.data;
 	} catch (error) {
 		throw { ...error.response.data };

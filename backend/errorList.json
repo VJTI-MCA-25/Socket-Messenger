@@ -91,5 +91,10 @@
 		"message": "Invite already received",
 		"code": 409,
 		"statusText": "invite/already-received"
+	},
+	"MissingAccessTokenError": {
+		"message": "Missing access token",
+		"code": 400,
+		"statusText": "auth/missing-access-token"
 	}
 }

@@ -6,7 +6,7 @@ import {
 	signOut,
 	onAuthStateChanged,
 } from "firebase/auth";
-import { auth } from "./firebase-config";
+import { auth, instance } from "./firebase-config";
 import axios from "axios";
 
 import { parseError } from "./helperFunctions";
@@ -14,7 +14,7 @@ import { parseError } from "./helperFunctions";
 // Function to create a user
 async function createUser(email, password) {
 	try {
-		const response = await axios.put("http://localhost:3000/api/users/create", {
+		const response = await axios.put("/users/create", {
 			email,
 			password,
 		});
@@ -30,7 +30,7 @@ async function loginUser(email, password, rememberMe) {
 		await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
 		const userCred = await signInWithEmailAndPassword(auth, email, password);
 		const user = userCred.user;
-		const response = await axios.get(`http://localhost:3000/api/users/verify/${user.uid}`, {
+		const response = await instance.get(`/users/verify/${user.uid}`, {
 			headers: {
 				Authorization: user.accessToken,
 			},
@@ -53,7 +53,7 @@ async function logoutUser() {
 
 async function sendVerificationMail(email, uid, continueUrl) {
 	try {
-		const response = await axios.post("http://localhost:3000/api/users/send-verification-mail", {
+		const response = await axios.post("/users/send-verification-mail", {
 			data: {
 				email,
 				uid,

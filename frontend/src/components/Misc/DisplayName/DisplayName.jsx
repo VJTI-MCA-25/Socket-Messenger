@@ -1,6 +1,5 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 
-import { UserContext } from "contexts/UserContext";
 import { checkDisplayName, setData } from "services/userFunctions";
 
 import { useNavigate } from "react-router-dom";
@@ -16,8 +15,6 @@ const DisplayName = () => {
 	const [input, setInput] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [status, setStatus] = useState(null);
-
-	const user = useContext(UserContext);
 
 	useEffect(() => {
 		const timer = setTimeout(async () => {
@@ -80,9 +77,7 @@ const DisplayName = () => {
 			setLoading(true);
 
 			try {
-				const res = await setData(user, {
-					displayName: input,
-				});
+				const res = await setData({ displayName: input });
 				console.log(res === "user/data-updated", res);
 				if (res === "user/data-updated") navigate("/channels");
 			} catch (error) {

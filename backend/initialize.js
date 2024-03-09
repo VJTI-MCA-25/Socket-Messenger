@@ -7,6 +7,8 @@ import { cert, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 
+import { decodeAndVerify } from "./serverHelperFunctions.js";
+
 import { createServer } from "http";
 import { Server } from "socket.io";
 
@@ -46,7 +48,24 @@ app.use(express.urlencoded({ extended: true }));
 const server = createServer(app);
 const io = new Server(server);
 
+/* Socket Middleware - (Decode Token) */
+
 const inviteIo = io.of("/invites");
+
+inviteIo.use(async (socket, next) => {
+	//TODO Change this logic to use a id token
+	const token = socket.handshake.auth.token;
+	if (!token) next(new Error("auth/missing-token"));
+
+	const [verifiedStatus, user] = await decodeAndVerify(token);
+	if (verifiedStatus === -1) next(new Error("auth/unauthorized"));
+	else {
+		socket.user = user;
+		socket.verifiedStatus = verifiedStatus;
+		next();
+	}
+});
+
 const sockets = {
 	inviteIo,
 };

@@ -13,7 +13,7 @@ const FriendsListItem = ({ friend, handleInvite }) => {
 						<FontAwesomeIcon icon={faEllipsisVertical} className="more-icon" />
 					</>
 				) : (
-					<FontAwesomeIcon icon={faEnvelope} onClick={() => handleInvite(friend)} />
+					<FontAwesomeIcon icon={faEnvelope} onClick={() => handleInvite(friend.uid)} />
 				)}
 			</div>
 		</li>
