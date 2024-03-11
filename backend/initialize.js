@@ -7,10 +7,11 @@ import { cert, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 
-import { decodeAndVerify } from "./serverHelperFunctions.js";
-
 import { createServer } from "http";
 import { Server } from "socket.io";
+
+import el from "./errorList.json" assert { type: "json" };
+import { decodeAndVerify } from "./serverHelperFunctions.js";
 
 // Global variables
 const app = express();
@@ -30,6 +31,7 @@ const usersRef = db.collection("users");
 
 // Express middleware
 
+//TODO Check if CORS is working properly with socket.io
 // CORS
 app.use(
 	cors({
@@ -53,16 +55,14 @@ const io = new Server(server);
 const inviteIo = io.of("/invites");
 
 inviteIo.use(async (socket, next) => {
-	//TODO Change this logic to use a id token
 	const token = socket.handshake.auth.token;
-	if (!token) next(new Error("auth/missing-token"));
-
-	const [verifiedStatus, user] = await decodeAndVerify(token);
-	if (verifiedStatus === -1) next(new Error("auth/unauthorized"));
-	else {
+	try {
+		let user = await decodeAndVerify(token, false); // Disabled database check, might slow down the socket connection, idk
 		socket.user = user;
-		socket.verifiedStatus = verifiedStatus;
 		next();
+	} catch (error) {
+		//TODO - Handle error (Frontend should handle this)
+		console.log(error);
 	}
 });
 
@@ -70,4 +70,4 @@ const sockets = {
 	inviteIo,
 };
 
-export { app, auth, db, usersRef, PORT, server, sockets };
+export { app, auth, db, usersRef, PORT, server, sockets, el };

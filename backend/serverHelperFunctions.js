@@ -1,6 +1,6 @@
-import { auth, usersRef } from "./initialize.js";
+import { auth, usersRef, el } from "./initialize.js";
+const { MissingAccessTokenError, MissingParametersError, UserDataNotFoundError, InvalidDisplayNameError } = el;
 
-import el from "./errorList.json" assert { type: "json" };
 import fs from "fs";
 
 //* --------- Error handler --------- *//
@@ -17,7 +17,7 @@ function logger(error) {
 /**
  * @function errorHandler
  *
- * @param {Object} res The http response object
+ * @param {import("express").Response} res The http response object
  * @param {Error} error The error object
  *
  * This function sends the error response to the client and logs the error.
@@ -49,41 +49,21 @@ function errorHandler(res, error, extraInfo = {}, log = false) {
  * @async @function decodeAndVerify
  *
  * @param {String} accessToken The accessToken provided by the client
- * @param {String} uid The uid of the user
+ * @param {Boolean} checkDataBase if true, checks if the user data exists in the database
  *
- * This function verifies the accessToken and uid. It returns a Promise which resolves to an array of two elements:
- * - statusNumber: Number
- * - decodedToken: Object
+ * @throws {FirebaseAuthError} If accessToken is invalid / expired
+ * @throws {MissingAccessTokenError} If accessToken is not provided
  *
- * statusNumber is a number from -1 to 2. It is the sum of the following:
- * - -1 if the userData does not exist
- * -  0 if the uid in the decodedToken **does not** match the uid provided or the userData does not exist or it had no basis to check
- * -  1 if the uid in the decodedToken matches the uid provided and the email is **not** verified
- * -  2 if the uid in the decodedToken matches the uid provided and the email is verified
- *
- *
- * @throws {FirebaseAuthError} If accessToken is invalid
- * @throws {MissingParametersError} If accessToken or uid is not provided
- *
- * @returns {Promise<[number, object]>} [isVerified, decodedToken]
+ * @returns {Promise<import("firebase-admin/auth").DecodedIdToken>} The decoded token
  */
-async function decodeAndVerify(accessToken, uid = null) {
-	if (!accessToken) throw el.MissingParametersError;
-	try {
-		const decodedToken = await auth.verifyIdToken(accessToken);
-		let verifyStatus = 0;
-		if (!uid) return [verifyStatus, decodedToken];
-
-		if (decodedToken.uid === uid) verifyStatus = 1;
-		if (decodedToken.email_verified) verifyStatus = 2;
-
-		let userDataExists = await doesUserDataExists(uid);
-		if (!userDataExists) verifyStatus = -1;
-
-		return [verifyStatus, decodedToken];
-	} catch (error) {
-		throw error;
+async function decodeAndVerify(accessToken, checkDataBase = true) {
+	if (!accessToken) throw MissingAccessTokenError;
+	const decodedToken = await auth.verifyIdToken(accessToken);
+	if (checkDataBase) {
+		const userDoc = await usersRef.doc(decodedToken.uid).get();
+		if (!userDoc.exists) throw UserDataNotFoundError;
 	}
+	return decodedToken;
 }
 
 /**
@@ -96,13 +76,9 @@ async function decodeAndVerify(accessToken, uid = null) {
  * @returns {Promise<boolean>}
  */
 async function doesUserDataExists(uid) {
-	if (!uid) throw el.MissingParametersError;
-	try {
-		const response = await usersRef.doc(uid).get();
-		return response.exists;
-	} catch (error) {
-		throw error;
-	}
+	if (!uid) throw MissingParametersError;
+	const response = await usersRef.doc(uid).get();
+	return response.exists;
 }
 
 /**
@@ -127,16 +103,12 @@ async function validateDisplayName(displayName) {
 
 	let validate = lengthCheck && repeatUnderscore && invalidChars;
 
-	if (!validate) return "user/display-name-invalid";
+	if (!validate) throw InvalidDisplayNameError;
 
-	try {
-		const displayNameSnapshot = await usersRef.where("displayName", "==", displayName).get();
+	const displayNameSnapshot = await usersRef.where("displayName", "==", displayName).get();
 
-		if (!displayNameSnapshot.empty) return "user/display-name-taken";
-		else return "user/display-name-available";
-	} catch (error) {
-		throw error;
-	}
+	if (!displayNameSnapshot.empty) return "user/display-name-taken";
+	else return "user/display-name-available";
 }
 
 export { errorHandler, decodeAndVerify, doesUserDataExists, logger, validateDisplayName };

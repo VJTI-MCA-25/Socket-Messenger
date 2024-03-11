@@ -10,3 +10,5 @@ TODO:
 
 -   [ ] Seperate Server Routes and init file
 -   [ ] Generalize the auth required routes
+-   [ ] Optimize Error Parser and Handling in both client and server
+-   [ ] Check how to handle multiple socket connections from the same user for same event

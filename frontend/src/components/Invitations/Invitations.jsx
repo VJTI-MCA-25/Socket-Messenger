@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 
 import { UserContext } from "contexts/UserContext";
-import { manager } from "services/firebase-config";
+import { sockets } from "services/config";
 import { respondInvite } from "services/userFunctions";
 
 import styles from "./Invitations.module.scss";
@@ -20,12 +20,12 @@ const Invitations = () => {
 	}, [invites]);
 
 	useEffect(() => {
-		const invites = manager.socket("/invites", { auth: { token: user.accessToken } });
-		invites.on("invites", (data) => {
+		sockets.invitations.connect();
+		sockets.invitations.on("invites", (data) => {
 			setInvites(data);
 		});
 		return () => {
-			invites.disconnect();
+			sockets.invitations.disconnect();
 		};
 	}, []);
 

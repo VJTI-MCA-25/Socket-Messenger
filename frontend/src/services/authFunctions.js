@@ -6,7 +6,7 @@ import {
 	signOut,
 	onAuthStateChanged,
 } from "firebase/auth";
-import { auth, instance } from "./firebase-config";
+import { auth, instance } from "./config";
 import axios from "axios";
 
 import { parseError } from "./helperFunctions";
@@ -90,4 +90,23 @@ function preEntryChecks() {
 	});
 }
 
-export { createUser, loginUser, logoutUser, preEntryChecks, sendVerificationMail };
+function getAuthToken() {
+	return new Promise((resolve, reject) => {
+		const unsubscribe = onAuthStateChanged(
+			auth,
+			(user) => {
+				if (user) {
+					user.getIdToken(true).then((token) => {
+						resolve(token);
+					});
+				}
+				unsubscribe();
+			},
+			(error) => {
+				reject(parseError(error));
+			}
+		);
+	});
+}
+
+export { createUser, loginUser, logoutUser, preEntryChecks, sendVerificationMail, getAuthToken };

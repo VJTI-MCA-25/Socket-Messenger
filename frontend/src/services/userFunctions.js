@@ -1,5 +1,5 @@
 import { logoutUser } from "./authFunctions";
-import { instance } from "./firebase-config";
+import { instance } from "./config";
 import axios from "axios";
 
 async function getUserData(user) {

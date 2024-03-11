@@ -1,23 +1,21 @@
-import { auth, usersRef } from "../initialize.js";
+import { auth, usersRef, el } from "../initialize.js";
 import { Timestamp } from "firebase-admin/firestore";
 import {
 	errorHandler,
-	decodeAndVerify,
 	doesUserDataExists,
 	logger,
 	validateDisplayName,
+	decodeAndVerify,
 } from "../serverHelperFunctions.js";
 import { sendVerificationEmail } from "../emailActionHandler.js";
 
-import el from "../errorList.json" assert { type: "json" };
 const {
 	UserDataAlreadyExistsError,
-	UserDataNotFoundError,
 	UserNotAuthorizedError,
 	MissingParametersError,
-	MissingAccessTokenError,
 	InvalidDisplayNameError,
 	DisplayNameTakenError,
+	UserNotFoundError,
 } = el;
 
 import { Router } from "express";
@@ -69,12 +67,11 @@ users.post("/send-verification-mail", async (req, res) => {
 	let uid = req.body.uid;
 	let continueUrl = req.body.continueUrl;
 
-	if ((!email || !uid) && !continueUrl) return errorHandler(res, el.MissingParametersError);
-
 	try {
+		if ((!email || !uid) && !continueUrl) throw MissingParametersError;
 		let user = !uid ? await auth.getUserByEmail(email) : await auth.getUser(uid);
 
-		if (!user) return errorHandler(res, el.UserNotFoundError);
+		if (!user) throw UserNotFoundError;
 		if (user.emailVerified) return res.send("auth/email-already-verified");
 
 		sendVerificationEmail(user.email, continueUrl);
@@ -88,11 +85,9 @@ users.get("/check-display-name/:displayName", async (req, res) => {
 	try {
 		const displayName = req.params.displayName;
 		let validation = await validateDisplayName(displayName);
-
-		if (validation === "user/display-name-invalid") return errorHandler(res, el.InvalidDisplayNameError);
-		else return res.status(200).send(validation);
+		res.status(200).send(validation);
 	} catch (error) {
-		return errorHandler(res, error);
+		errorHandler(res, error);
 	}
 });
 
@@ -100,11 +95,13 @@ users.get("/check-display-name/:displayName", async (req, res) => {
 /* Middleware Function (Token Decoder) */
 users.use(async (req, res, next) => {
 	const idToken = req.headers.authorization;
-	if (!idToken) return errorHandler(res, el.MissingAccessTokenError);
-
-	let decodedToken = await auth.verifyIdToken(idToken);
-	req.user = decodedToken;
-	next();
+	try {
+		let user = await decodeAndVerify(idToken);
+		req.user = user;
+		next();
+	} catch (error) {
+		errorHandler(res, error);
+	}
 });
 
 users.get("/verify/:uid", async (req, res) => {

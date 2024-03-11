@@ -1,8 +1,7 @@
-import { usersRef, auth } from "../initialize.js";
+import { usersRef, el } from "../initialize.js";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
-import { errorHandler, decodeAndVerify, logger } from "../serverHelperFunctions.js";
+import { errorHandler, logger, decodeAndVerify } from "../serverHelperFunctions.js";
 
-import el from "../errorList.json" assert { type: "json" };
 const {
 	MissingParametersError,
 	UserNotFoundError,
@@ -11,7 +10,6 @@ const {
 	InviteAlreadySentError,
 	InviteAlreadyReceivedError,
 	UnknownError,
-	UserDataNotFoundError,
 	MissingAccessTokenError,
 	InviteAlreadyProcessedError,
 	InvalidInviteStatusError,
@@ -21,12 +19,16 @@ const {
 import { Router } from "express";
 const invites = Router();
 
+/* Invite Routes Middleware - Token Decode */
 invites.use(async (req, res, next) => {
 	const idToken = req.headers.authorization;
-	if (!idToken) return errorHandler(res, MissingAccessTokenError);
-	let decodedToken = await auth.verifyIdToken(idToken);
-	req.user = decodedToken;
-	next();
+	try {
+		const user = await decodeAndVerify(idToken);
+		req.user = user;
+		next();
+	} catch (error) {
+		errorHandler(res, error);
+	}
 });
 
 invites.post("/send-invite", async (req, res) => {

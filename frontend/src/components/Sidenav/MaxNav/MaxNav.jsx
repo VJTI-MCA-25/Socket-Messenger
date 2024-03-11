@@ -1,11 +1,18 @@
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+
 import { animated } from "@react-spring/web";
+
+import { UserDataContext } from "contexts/UserDataContext";
+
+import officeImage from "assets/office.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import PropTypes from "prop-types";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
+const MaxNav = ({ maxNavSlide, activeOptionsList, bind }) => {
+	const userData = useContext(UserDataContext);
 
-const MaxNav = ({ maxNavSlide, activeOptionsList, isNavOpen, slideNav }) => {
 	function handleClick(func) {
 		return () => {
 			func ? func() : null;
@@ -26,8 +33,23 @@ const MaxNav = ({ maxNavSlide, activeOptionsList, isNavOpen, slideNav }) => {
 	}
 
 	return (
-		<animated.div style={maxNavSlide} className="z-depth-1 sidenav sidenav-fixed sidenav-max">
-			<ul>{populateSidenav()}</ul>
+		<animated.div
+			{...bind()}
+			style={{ ...maxNavSlide, touchAction: "none" }}
+			className="z-depth-1 sidenav sidenav-fixed sidenav-max">
+			<ul>
+				<li>
+					<div className="user-view">
+						<div className="background">
+							<img src={officeImage} />
+						</div>
+						<img className="circle" src="https://via.placeholder.com/150" />
+						<span className="white-text name">{userData?.displayName}</span>
+						<span className="white-text email">{userData?.email}</span>
+					</div>
+				</li>
+				{populateSidenav()}
+			</ul>
 		</animated.div>
 	);
 };

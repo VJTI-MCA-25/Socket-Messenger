@@ -6,11 +6,18 @@
 	left: 0;
 	top: 0;
 	z-index: 10;
+	&.close > .sidenav-max {
+		width: 0;
+	}
 	.sidenav-max {
 		position: relative !important;
 		background-color: #242424;
 		z-index: 11;
 		height: 100%;
+		transition: width 0.3s ease-out;
+		transition-delay: 0.1s;
+		overflow-x: hidden;
+		width: 300px;
 		.subheader {
 			color: #ffffff55;
 		}
@@ -46,5 +53,17 @@
 			cursor: pointer;
 			color: white;
 		}
+	}
+}
+
+.user-view {
+	.background::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6));
 	}
 }

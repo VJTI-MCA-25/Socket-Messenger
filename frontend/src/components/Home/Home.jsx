@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 import { Sidenav } from "components/Components";
@@ -9,6 +9,8 @@ const Home = () => {
 	const user = useContext(UserContext);
 	const navigate = useNavigate();
 
+	const [isNavOpen, setIsNavOpen] = useState(true);
+
 	useEffect(() => {
 		if (!user) {
 			navigate("/auth/login");
@@ -18,8 +20,8 @@ const Home = () => {
 	if (user !== null) {
 		return (
 			<>
-				<Sidenav />
-				{/* Change the animation to decrease the width of the max nav */}
+				<Sidenav isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
+				{/* Might change user to be passed in outlet context */}
 				<Outlet />
 			</>
 		);

@@ -1,19 +1,19 @@
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState, createContext } from "react";
 import PropTypes from "prop-types";
 
 import { MaxNav } from "./MaxNav/MaxNav";
 import { MinNav } from "./MinNav/MinNav";
 
 import { useSpring, useTrail, useSpringRef, useChain, useTransition } from "@react-spring/web";
+import { useDrag } from "@use-gesture/react";
 
 import { minSidenavOptions, maxSidenavOptions as maxNavOptions } from "./sidenavOptions";
 
 import "./Sidenav.scss";
 
-const Sidenav = ({ selectedOption = "messages" }) => {
-	const [isNavOpen, setIsNavOpen] = useState(true);
-	const [activeOption, setActiveOption] = useState(selectedOption);
-	const [activeOptionsList, setActiveOptionsList] = useState(maxNavOptions[selectedOption]);
+const Sidenav = ({ isNavOpen, setIsNavOpen }) => {
+	const [activeOption, setActiveOption] = useState("messages");
+	const [activeOptionsList, setActiveOptionsList] = useState(maxNavOptions[activeOption]);
 
 	useLayoutEffect(() => {
 		setActiveOptionsList(maxNavOptions[activeOption]);
@@ -54,11 +54,26 @@ const Sidenav = ({ selectedOption = "messages" }) => {
 		to: { x: "0%" },
 	}));
 
+	const bind = useDrag(({ down, movement: [mx] }) => {
+		mx = (mx / window.innerWidth) * 500;
+		const clampedX = Math.max(Math.min(mx, 0), -150);
+		maxNavSlideApi.start({
+			x: down ? `${clampedX}%` : isNavOpen ? "0%" : "-150%",
+			immediate: down,
+			config: { tension: 500, friction: 50 },
+			clamp: true,
+			touchAction: "none",
+			onResolve: () => {
+				setIsNavOpen(clampedX > -75);
+			},
+		});
+	});
+
 	function slideNav() {
 		maxNavSlideApi.start({
 			to: { x: isNavOpen ? "-150%" : "0%" },
 		});
-		setIsNavOpen((prev) => !prev);
+		setIsNavOpen(!isNavOpen);
 	}
 
 	useChain([minNavSlideRef, rainIconsRef, maxNavSlideRef, activeOptionsListRef], [0.2, 0.5, 0.8, 0.25], 500);
@@ -78,6 +93,7 @@ const Sidenav = ({ selectedOption = "messages" }) => {
 				activeOptionsList={activeOptionsListAnim}
 				isNavOpen={isNavOpen}
 				slideNav={slideNav}
+				bind={bind}
 			/>
 		</div>
 	);

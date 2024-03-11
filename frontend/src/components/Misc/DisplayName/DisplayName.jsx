@@ -79,7 +79,9 @@ const DisplayName = () => {
 			try {
 				const res = await setData({ displayName: input });
 				console.log(res === "user/data-updated", res);
-				if (res === "user/data-updated") navigate("/channels");
+				if (res === "user/data-updated") {
+					navigate("/channels");
+				}
 			} catch (error) {
 				//TODO Handle Different Errors for Failed Display Name Update
 				setStatus("error");

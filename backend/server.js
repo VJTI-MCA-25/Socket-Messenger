@@ -12,7 +12,6 @@ app.use("/api/users", userRoutes);
 app.use("/api/invites", inviteRoutes);
 
 sockets.inviteIo.on("connection", async (socket) => {
-	console.log("New connection to /invites");
 	try {
 		const user = socket.user;
 		usersRef
