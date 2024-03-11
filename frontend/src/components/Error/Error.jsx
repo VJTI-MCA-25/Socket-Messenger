@@ -1,7 +1,7 @@
+import { useEffect } from "react";
 import { useLocation, useRouteError, useNavigate } from "react-router-dom";
 
 import "./Error.scss";
-import { useEffect } from "react";
 
 const Error = () => {
 	// eslint-disable-next-line react-hooks/rules-of-hooks

@@ -6,9 +6,22 @@
 
 > **Note:** This project uses aliases for import for some of its directories. They can be found in `vite.config.js`
 
-TODO:
+### TODO:
 
--   [ ] Seperate Server Routes and init file
--   [ ] Generalize the auth required routes
+-   [x] Authentication
+-   [x] Search Friends
+-   [x] Invites
+-   [ ] Profile Page
+-   [ ] Chat
+-   [ ] Notifications
+
+#### Extra TODO:
+
+-   [x] Seperate Server Routes and init file
+-   [x] Generalize the auth required routes
+-   [ ] Animate Invites, SearchFriends
+-   [ ] Think over the flow of Sign Up
+-   [ ] Seperate socket routes
+-   [ ] Check CORS for socket server
 -   [ ] Optimize Error Parser and Handling in both client and server
 -   [ ] Check how to handle multiple socket connections from the same user for same event

@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage, faEllipsisVertical, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 
-const FriendsListItem = ({ friend, handleInvite }) => {
+const SearchItem = ({ friend, handleInvite }) => {
 	return (
 		<li className="item">
 			<img src="https://via.placeholder.com/150" alt="" className="profile-pic" />
@@ -20,4 +20,4 @@ const FriendsListItem = ({ friend, handleInvite }) => {
 	);
 };
 
-export { FriendsListItem };
+export { SearchItem };

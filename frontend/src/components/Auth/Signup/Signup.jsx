@@ -13,7 +13,7 @@ import { createUser } from "services/authFunctions";
 
 // CSS
 import "./Signup.scss";
-import M from "materialize-css";
+import { updateTextFields } from "materialize-css";
 
 function Signup() {
 	const [errorLine, setErrorLine] = useState("");
@@ -29,7 +29,7 @@ function Signup() {
 
 	useEffect(() => {
 		// Materialize Init
-		M.updateTextFields();
+		updateTextFields();
 	}, []);
 
 	// React Spring, delayed animation for the inputs

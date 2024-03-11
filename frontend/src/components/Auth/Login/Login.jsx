@@ -1,5 +1,5 @@
 // Imports
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { animated, useSpring, useTrail } from "@react-spring/web";
@@ -13,7 +13,7 @@ import { loginUser } from "services/authFunctions";
 
 // CSS
 import "./Login.scss";
-import M from "materialize-css";
+import { updateTextFields } from "materialize-css";
 
 function Login() {
 	const [errorLine, setErrorLine] = useState("");
@@ -30,7 +30,7 @@ function Login() {
 
 	useEffect(() => {
 		// Materialize Init
-		M.updateTextFields();
+		updateTextFields();
 	}, []);
 
 	// React Spring, delayed animation for the inputs

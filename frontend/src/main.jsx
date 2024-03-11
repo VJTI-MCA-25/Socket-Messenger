@@ -2,7 +2,7 @@
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider, Outlet, redirect } from "react-router-dom";
 
-import { Home, Error, Auth, Friends, Misc, Profile } from "components/Components";
+import { Home, Error, Auth, Friends, Misc, Profile } from "barrel";
 
 import { preEntryChecks } from "services/authFunctions";
 

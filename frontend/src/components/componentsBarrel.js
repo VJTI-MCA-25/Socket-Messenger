@@ -1,9 +1,10 @@
 export { Home } from "./Home/Home";
 export { Error } from "./Error/Error";
 export { Sidenav } from "./Sidenav/Sidenav";
-export { Friends } from "./Friends/Friends";
+export { SearchFriend } from "./SearchFriend/SearchFriend";
 export { Profile } from "./Profile/Profile";
 export { Invitations } from "./Invitations/Invitations";
+export { Friends } from "./Friends/Friends";
 
 export { Misc } from "./Misc/MiscComponents";
 

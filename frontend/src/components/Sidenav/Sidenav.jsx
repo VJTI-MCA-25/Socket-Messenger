@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState, createContext } from "react";
+import { useLayoutEffect, useState } from "react";
 import PropTypes from "prop-types";
 
 import { MaxNav } from "./MaxNav/MaxNav";

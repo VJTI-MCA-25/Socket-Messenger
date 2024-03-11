@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
-import { Sidenav } from "components/Components";
+import { Sidenav } from "barrel";
 
 import { UserContext } from "contexts/UserContext";
 
