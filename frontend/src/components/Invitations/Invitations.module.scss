@@ -7,6 +7,8 @@
 	align-items: center;
 	position: relative;
 	padding-left: 2rem;
+	border-bottom: 1px solid $highlight;
+	padding-bottom: 10px;
 	&::before {
 		content: "";
 		display: block;
@@ -32,6 +34,12 @@
 		padding: 0.5rem 1rem;
 		border-radius: 5px;
 		background-color: $highlight;
+	}
+
+	svg {
+		cursor: pointer;
+		color: $danger;
+		font-size: 1.5rem;
 	}
 }
 

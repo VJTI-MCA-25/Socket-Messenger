@@ -35,6 +35,8 @@ const SearchFriend = () => {
 			<div className="row">
 				<div className="input-field col s12 search-field">
 					<input
+						id="search-input"
+						name="search-input"
 						placeholder="Search for a Friend"
 						type="text"
 						className="validate search-input"

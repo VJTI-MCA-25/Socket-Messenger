@@ -81,16 +81,6 @@ users.post("/send-verification-mail", async (req, res) => {
 	}
 });
 
-users.get("/check-display-name/:displayName", async (req, res) => {
-	try {
-		const displayName = req.params.displayName;
-		let validation = await validateDisplayName(displayName);
-		res.status(200).send(validation);
-	} catch (error) {
-		errorHandler(res, error);
-	}
-});
-
 /* Routes Requiring Verification - Place Below*/
 /* Middleware Function (Token Decoder) */
 users.use(async (req, res, next) => {
@@ -99,6 +89,16 @@ users.use(async (req, res, next) => {
 		let user = await decodeAndVerify(idToken);
 		req.user = user;
 		next();
+	} catch (error) {
+		errorHandler(res, error);
+	}
+});
+
+users.get("/check-display-name/:displayName", async (req, res) => {
+	try {
+		const displayName = req.params.displayName;
+		let validation = await validateDisplayName(displayName);
+		res.status(200).send(validation);
 	} catch (error) {
 		errorHandler(res, error);
 	}
@@ -133,6 +133,7 @@ users.get("/get-data/:uid", async (req, res) => {
 });
 
 users.get("/get-users-list/:displayNameString", async (req, res) => {
+	//TODO Implement Fuzzy Search (Algolia or Elastisearch)
 	const displayNameString = req.params.displayNameString;
 	const user = req.user;
 
@@ -153,7 +154,7 @@ users.get("/get-users-list/:displayNameString", async (req, res) => {
 			if (userItem.id === user.uid) return;
 			users.push({
 				...userItem.data(),
-				isFriend: userData.friends ? userData.friends.includes(userItem.id) : false,
+				isFriend: userData.friends.includes(userItem.id),
 			});
 		});
 

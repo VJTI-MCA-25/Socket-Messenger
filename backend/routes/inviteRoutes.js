@@ -10,10 +10,10 @@ const {
 	InviteAlreadySentError,
 	InviteAlreadyReceivedError,
 	UnknownError,
-	MissingAccessTokenError,
 	InviteAlreadyProcessedError,
 	InvalidInviteStatusError,
 	InviteNotFoundError,
+	UserCannotCancelReceivedInviteError,
 } = el;
 
 import { Router } from "express";
@@ -37,6 +37,7 @@ invites.post("/send-invite", async (req, res) => {
 
 	try {
 		if (!sendTo) throw MissingParametersError;
+
 		const sendToUserSnap = await usersRef.doc(sendTo).get();
 		const sendToUser = sendToUserSnap.data();
 
@@ -46,30 +47,42 @@ invites.post("/send-invite", async (req, res) => {
 
 		const inviteRef = usersRef.doc(user.uid).collection("invitations").where("status", "==", "pending");
 
-		var inviteSnap = await inviteRef.where("sentTo", "==", sendTo).where("sentBy", "==", user.uid).get();
-		if (inviteSnap.docs.length > 0) throw InviteAlreadySentError;
+		const [sentInviteSnap, receivedInviteSnap] = await Promise.all([
+			inviteRef.where("sentTo", "==", sendTo).where("sentBy", "==", user.uid).get(),
+			inviteRef.where("sentTo", "==", user.uid).where("sentBy", "==", sendTo).get(),
+		]);
 
-		inviteSnap = await inviteRef.where("sentTo", "==", user.uid).where("sentBy", "==", sendTo).get();
-		if (inviteSnap.docs.length > 0) throw InviteAlreadyReceivedError;
+		if (sentInviteSnap.docs.length > 0) throw InviteAlreadySentError;
+		if (receivedInviteSnap.docs.length > 0) throw InviteAlreadyReceivedError;
 
-		let inviteData = {
+		const inviteData = {
 			sentBy: user.uid,
 			sentTo: sendTo,
 			status: "pending",
 			sentAt: Timestamp.now(),
 		};
 
-		let sentInviteRef = await usersRef.doc(sendTo).collection("invitations").add(inviteData);
-		let inviteId = sentInviteRef.id;
-		await usersRef
-			.doc(user.uid)
+		const sentInviteRef = await usersRef
+			.doc(sendTo)
 			.collection("invitations")
-			.doc(inviteId)
-			.set(inviteData)
-			.catch(() => {
-				usersRef.doc(sendTo).collection("invitations").doc(inviteId).delete().catch(logger);
-				throw UnknownError;
-			});
+			.add({ ...inviteData, sentByCurrentUser: false });
+		const inviteId = sentInviteRef.id;
+
+		await Promise.all([
+			usersRef
+				.doc(user.uid)
+				.collection("invitations")
+				.doc(inviteId)
+				.set({ ...inviteData, sentByCurrentUser: true }),
+			usersRef
+				.doc(sendTo)
+				.collection("invitations")
+				.doc(inviteId)
+				.set({ ...inviteData, sentByCurrentUser: false }),
+		]).catch(() => {
+			usersRef.doc(sendTo).collection("invitations").doc(inviteId).delete().catch(logger);
+			throw UnknownError;
+		});
 
 		return res.status(200).send("invite/sent");
 	} catch (error) {
@@ -82,52 +95,52 @@ invites.post("/invite-response", async (req, res) => {
 	const user = req.user;
 
 	try {
-		if (status !== "accepted" && status !== "declined") throw InvalidInviteStatusError;
-		let inviteSnap = await usersRef.doc(user.uid).collection("invitations").doc(inviteId).get();
-		let invite = inviteSnap.data();
-
-		if (!invite) throw InviteNotFoundError;
-		if (invite.status !== "pending") throw InviteAlreadyProcessedError;
-
-		if (status === "accepted") {
-			await usersRef.doc(user.uid).update({
-				friends: FieldValue.arrayUnion(invite.sentBy),
-			});
-			await usersRef.doc(invite.sentBy).update({
-				friends: FieldValue.arrayUnion(user.uid),
-			});
+		if (!["accepted", "declined", "canceled"].includes(status)) {
+			throw InvalidInviteStatusError;
 		}
 
-		await usersRef
-			.doc(invite.sentBy)
-			.collection("invitations")
-			.doc(inviteId)
-			.set({ status, processedAt: Timestamp.now() }, { merge: true });
-		await usersRef
-			.doc(user.uid)
-			.collection("invitations")
-			.doc(inviteId)
-			.set({ status, processedAt: Timestamp.now() }, { merge: true });
+		const inviteRef = usersRef.doc(user.uid).collection("invitations").doc(inviteId);
+		const inviteSnap = await inviteRef.get();
+		const invite = inviteSnap.data();
+
+		if (!invite) {
+			throw InviteNotFoundError;
+		}
+
+		if (invite.status !== "pending") {
+			throw InviteAlreadyProcessedError;
+		}
+
+		if (status === "canceled") {
+			if (!invite.sentByCurrentUser) {
+				throw UserCannotCancelReceivedInviteError;
+			}
+
+			await inviteRef.update({ status, processedAt: Timestamp.now() });
+			await usersRef.doc(invite.sentTo).collection("invitations").doc(inviteId).delete();
+		}
+
+		if (status === "accepted") {
+			await Promise.all([
+				usersRef.doc(user.uid).update({ friends: FieldValue.arrayUnion(invite.sentBy) }),
+				usersRef.doc(invite.sentBy).update({ friends: FieldValue.arrayUnion(user.uid) }),
+			]);
+		}
+
+		await inviteRef.set({ status, processedAt: Timestamp.now() }, { merge: true });
 
 		return res.status(200).send("invite/response-processed");
 	} catch (error) {
-		let inviteSnap = await usersRef.doc(user.uid).collection("invitations").doc(inviteId).get();
-		let invite = inviteSnap.data();
+		const inviteSnap = await usersRef.doc(user.uid).collection("invitations").doc(inviteId).get();
+		const invite = inviteSnap.data();
 
 		if (status === "accepted") {
-			await usersRef.doc(user.uid).update({
-				friends: FieldValue.arrayRemove(invite.sentBy),
-			});
-			await usersRef.doc(invite.sentBy).update({
-				friends: FieldValue.arrayRemove(user.uid),
-			});
+			await Promise.all([
+				usersRef.doc(user.uid).update({ friends: FieldValue.arrayRemove(invite.sentBy) }),
+				usersRef.doc(invite.sentBy).update({ friends: FieldValue.arrayRemove(user.uid) }),
+			]);
 		}
 
-		await usersRef
-			.doc(invite.sentBy)
-			.collection("invitations")
-			.doc(inviteId)
-			.set({ status: "pending", processedAt: null }, { merge: true });
 		await usersRef
 			.doc(user.uid)
 			.collection("invitations")

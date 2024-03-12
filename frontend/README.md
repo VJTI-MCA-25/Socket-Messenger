@@ -25,3 +25,4 @@
 -   [ ] Check CORS for socket server
 -   [ ] Optimize Error Parser and Handling in both client and server
 -   [ ] Check how to handle multiple socket connections from the same user for same event
+-   [ ] Think over on if all invitations should be stored in one collection rather than in the user's collection

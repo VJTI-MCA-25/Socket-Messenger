@@ -19,23 +19,33 @@ sockets.inviteIo.on("connection", async (socket) => {
 			.collection("invitations")
 			.where("status", "==", "pending")
 			.onSnapshot(async (snap) => {
-				let invitations = snap.docs.map((snap) => ({ id: snap.id, ...snap.data() }));
-				const returnData = [];
-				for (const invitation of invitations) {
-					const sentByUserSnap = await usersRef.doc(invitation.sentBy).get();
-					const sentByUser = sentByUserSnap.data();
-					const invitationWithUser = {
-						...invitation,
-						sentBy: {
-							uid: sentByUser.uid,
-							displayName: sentByUser.displayName,
-							email: sentByUser.email,
-						},
-						sentByCurrentUser: invitation.sentBy === user.uid,
+				let invitations = snap.docs.map((snap) => ({
+					id: snap.id,
+					...snap.data(),
+				}));
+				for await (const invite of invitations) {
+					const sentBySnap = await usersRef.doc(invite.sentBy).get();
+					const sentToSnap = await usersRef.doc(invite.sentTo).get();
+					const sentBy = sentBySnap.data();
+					const sentTo = sentToSnap.data();
+
+					invite.sentBy = {
+						uid: sentBy.uid,
+						displayName: sentBy.displayName,
+						email: sentBy.email,
 					};
-					returnData.push(invitationWithUser);
+
+					invite.sentTo = {
+						uid: sentTo.uid,
+						displayName: sentTo.displayName,
+						email: sentTo.email,
+					};
+
+					if (!invite.sentByCurrentUser) {
+						[invite.sentBy, invite.sentTo] = [invite.sentTo, invite.sentBy];
+					}
 				}
-				socket.emit("invites", returnData);
+				socket.emit("invites", invitations);
 			});
 	} catch (error) {
 		logger(error);

@@ -96,5 +96,10 @@
 		"message": "Missing access token",
 		"code": 400,
 		"statusText": "auth/missing-access-token"
+	},
+	"UserCannotCancelReceivedInviteError": {
+		"message": "User cannot cancel received invite",
+		"code": 400,
+		"statusText": "invite/cannot-cancel-received-invite"
 	}
 }
