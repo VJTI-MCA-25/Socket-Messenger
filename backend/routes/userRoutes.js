@@ -1,5 +1,5 @@
-import { auth, usersRef, el } from "../initialize.js";
-import { Timestamp } from "firebase-admin/firestore";
+import { auth, usersRef, el, index } from "../initialize.js";
+import { FieldPath, Timestamp } from "firebase-admin/firestore";
 import {
 	errorHandler,
 	doesUserDataExists,
@@ -98,6 +98,7 @@ users.get("/check-display-name/:displayName", async (req, res) => {
 	try {
 		const displayName = req.params.displayName;
 		let validation = await validateDisplayName(displayName);
+
 		res.status(200).send(validation);
 	} catch (error) {
 		errorHandler(res, error);
@@ -133,19 +134,19 @@ users.get("/get-data/:uid", async (req, res) => {
 });
 
 users.get("/get-users-list/:displayNameString", async (req, res) => {
-	//TODO Implement Fuzzy Search (Algolia or Elastisearch)
 	const displayNameString = req.params.displayNameString;
 	const user = req.user;
 
 	try {
 		if (!displayNameString) throw MissingParametersError;
 
-		const usersList = await usersRef
-			.where("displayName", ">=", displayNameString)
-			.where("displayName", "<=", displayNameString + "\uf8ff")
-			.limit(10)
-			// .where("emailVerified", "==", true)
-			.get();
+		// Algolia Search (Fuzzy Search)
+		const results = await index.search(displayNameString);
+		const list = results.hits.map((hit) => hit.objectID);
+
+		if (list.length === 0) return res.status(200).send([]);
+
+		const usersList = await usersRef.where(FieldPath.documentId(), "in", list).limit(10).get();
 
 		const userDataSnap = await usersRef.doc(user.uid).get();
 		const userData = userDataSnap.data();

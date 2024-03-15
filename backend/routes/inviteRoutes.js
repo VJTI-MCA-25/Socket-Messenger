@@ -66,23 +66,18 @@ invites.post("/send-invite", async (req, res) => {
 			.doc(sendTo)
 			.collection("invitations")
 			.add({ ...inviteData, sentByCurrentUser: false });
+
 		const inviteId = sentInviteRef.id;
 
-		await Promise.all([
-			usersRef
-				.doc(user.uid)
-				.collection("invitations")
-				.doc(inviteId)
-				.set({ ...inviteData, sentByCurrentUser: true }),
-			usersRef
-				.doc(sendTo)
-				.collection("invitations")
-				.doc(inviteId)
-				.set({ ...inviteData, sentByCurrentUser: false }),
-		]).catch(() => {
-			usersRef.doc(sendTo).collection("invitations").doc(inviteId).delete().catch(logger);
-			throw UnknownError;
-		});
+		await usersRef
+			.doc(user.uid)
+			.collection("invitations")
+			.doc(inviteId)
+			.set({ ...inviteData, sentByCurrentUser: true })
+			.catch(() => {
+				usersRef.doc(sendTo).collection("invitations").doc(inviteId).delete().catch(logger);
+				throw UnknownError;
+			});
 
 		return res.status(200).send("invite/sent");
 	} catch (error) {
@@ -111,42 +106,37 @@ invites.post("/invite-response", async (req, res) => {
 			throw InviteAlreadyProcessedError;
 		}
 
+		var senderInviteRef = inviteRef;
+		var receiverInviteRef = usersRef.doc(invite.sentTo).collection("invitations").doc(inviteId);
+
+		if (!invite.sentByCurrentUser) {
+			[senderInviteRef, receiverInviteRef] = [receiverInviteRef, senderInviteRef];
+		}
+
 		if (status === "canceled") {
 			if (!invite.sentByCurrentUser) {
 				throw UserCannotCancelReceivedInviteError;
 			}
 
-			await inviteRef.update({ status, processedAt: Timestamp.now() });
-			await usersRef.doc(invite.sentTo).collection("invitations").doc(inviteId).delete();
+			await Promise.all([inviteRef.update({ status, processedAt: Timestamp.now() }), receiverInviteRef.delete()]);
+
+			return res.status(200).send("invite/canceled");
 		}
 
 		if (status === "accepted") {
 			await Promise.all([
-				usersRef.doc(user.uid).update({ friends: FieldValue.arrayUnion(invite.sentBy) }),
-				usersRef.doc(invite.sentBy).update({ friends: FieldValue.arrayUnion(user.uid) }),
+				usersRef.doc(invite.sentTo).update({ friends: FieldValue.arrayUnion(invite.sentBy) }),
+				usersRef.doc(invite.sentBy).update({ friends: FieldValue.arrayUnion(invite.sentTo) }),
 			]);
 		}
 
-		await inviteRef.set({ status, processedAt: Timestamp.now() }, { merge: true });
+		await Promise.all([
+			senderInviteRef.set({ status, processedAt: Timestamp.now() }, { merge: true }),
+			receiverInviteRef.set({ status, processedAt: Timestamp.now() }, { merge: true }),
+		]);
 
 		return res.status(200).send("invite/response-processed");
 	} catch (error) {
-		const inviteSnap = await usersRef.doc(user.uid).collection("invitations").doc(inviteId).get();
-		const invite = inviteSnap.data();
-
-		if (status === "accepted") {
-			await Promise.all([
-				usersRef.doc(user.uid).update({ friends: FieldValue.arrayRemove(invite.sentBy) }),
-				usersRef.doc(invite.sentBy).update({ friends: FieldValue.arrayRemove(user.uid) }),
-			]);
-		}
-
-		await usersRef
-			.doc(user.uid)
-			.collection("invitations")
-			.doc(inviteId)
-			.set({ status: "pending", processedAt: null }, { merge: true });
-
 		return errorHandler(res, error);
 	}
 });

@@ -15,4 +15,12 @@ export default defineConfig({
 		},
 	},
 	plugins: [react()],
+	css: {
+		preprocessorOptions: {
+			scss: {
+				quietDeps: true,
+				additionalData: [`@use "./src/utilities/variables.scss" as *;`],
+			},
+		},
+	},
 });

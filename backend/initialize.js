@@ -13,6 +13,8 @@ import { Server } from "socket.io";
 import el from "./errorList.json" assert { type: "json" };
 import { decodeAndVerify } from "./serverHelperFunctions.js";
 
+import algoliasearch from "algoliasearch";
+
 // Global variables
 const app = express();
 
@@ -28,6 +30,13 @@ const db = getFirestore();
 db.settings({ ignoreUndefinedProperties: true });
 
 const usersRef = db.collection("users");
+
+// Algolia
+const APP_ID = process.env.ALGOLIA_APP_ID;
+const SEARCH_KEY = process.env.ALGOLIA_SEARCH_KEY;
+
+const algoliaClient = algoliasearch(APP_ID, SEARCH_KEY);
+const index = algoliaClient.initIndex("fuzzy_search");
 
 // Express middleware
 
@@ -70,4 +79,4 @@ const sockets = {
 	inviteIo,
 };
 
-export { app, auth, db, usersRef, PORT, server, sockets, el };
+export { app, auth, db, usersRef, PORT, server, sockets, el, index };

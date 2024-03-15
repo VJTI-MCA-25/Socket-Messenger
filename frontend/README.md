@@ -26,3 +26,22 @@
 -   [ ] Optimize Error Parser and Handling in both client and server
 -   [ ] Check how to handle multiple socket connections from the same user for same event
 -   [ ] Think over on if all invitations should be stored in one collection rather than in the user's collection
+-   [ ] Add Powered By Icons
+    -   [ ] Firebase
+    -   [ ] Algolia
+    -   [ ] Socket.io
+
+### Accessibilities
+
+-   [ ] Add aria-labels to buttons
+-   [ ] Add alt to images
+-   [ ] HTML Semantics
+-   [ ] Keyboard Navigation
+-   [ ] Focus Management
+-   [ ] Screen Reader
+-   [ ] Color Contrast
+-   [ ] Font Size
+-   [ ] Disable Animations
+-   [ ] Add support for Dyslexia (Comic Sans, OpenDyslexic, etc.)
+-   [ ] Add support for Color Blindness (Color Palette, etc.)
+-   [ ] Add language support
