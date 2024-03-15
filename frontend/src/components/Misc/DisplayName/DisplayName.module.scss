@@ -1,6 +1,6 @@
 @use "utilities/variables" as *;
 
-.preloader-wrapper {
+.preloaderWrapper {
 	position: absolute !important;
 }
 
@@ -21,4 +21,11 @@
 			color: $danger;
 		}
 	}
+}
+
+.container {
+	height: 100vh;
+	display: grid;
+	place-items: center;
+	overflow: hidden;
 }

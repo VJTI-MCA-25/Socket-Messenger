@@ -1,9 +1,7 @@
-import { SearchItem } from "./SearchItem/SearchItem";
-
+import { SearchItem } from "../SearchItem/SearchItem";
 import { sendInvite } from "services/userFunctions";
-
 import { toast } from "materialize-css";
-import "./SearchList.scss";
+import styles from "./SearchList.module.scss";
 
 const SearchList = ({ usersList }) => {
 	async function handleInvite(sendTo) {
@@ -20,10 +18,12 @@ const SearchList = ({ usersList }) => {
 	}
 
 	function populateList() {
-		return usersList.map((user, index) => <SearchItem key={index} friend={user} handleInvite={handleInvite} />);
+		return usersList.map((user, index) => (
+			<SearchItem key={index} friend={user} handleInvite={handleInvite} styles={styles} />
+		));
 	}
 
-	return <ul className="friends-list">{populateList()}</ul>;
+	return <ul className={styles.friendsList}>{populateList()}</ul>;
 };
 
 export { SearchList };

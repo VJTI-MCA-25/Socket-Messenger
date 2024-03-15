@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { checkDisplayName, setData } from "services/userFunctions";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 
-import "./DisplayName.scss";
+import { checkDisplayName, setData } from "services/userFunctions";
+
+import styles from "./DisplayName.module.scss";
 
 const DisplayName = () => {
 	const navigate = useNavigate();
@@ -62,7 +62,7 @@ const DisplayName = () => {
 				break;
 		}
 		return (
-			<div className="status">
+			<div className={styles.status}>
 				{icon && <FontAwesomeIcon icon={icon} />}
 				<span>{text}</span>
 			</div>
@@ -89,42 +89,50 @@ const DisplayName = () => {
 	}
 
 	return (
-		<div className="container">
-			<form onSubmit={handleSubmit}>
-				<div className="row">
-					<div className="col s12">
-						<h3>Set Your Display Name</h3>
-					</div>
-				</div>
-				<div className="row">
-					<div className="col s12">
-						Before you get started, set a display name, so your friends can find you.
-					</div>
-				</div>
-				<div className="row">
-					<div className="col s10">
-						<div className="input-field">
-							<input id="display-name" type="text" value={input} onChange={handleInput} />
-							<label htmlFor="display-name">Display Name</label>
+		<div className={styles.container}>
+			<div className="container">
+				<form onSubmit={handleSubmit}>
+					<div className="row">
+						<div className="col s8">{loading ? <PreLoader /> : updateStatus(status)}</div>
+						<div className="col s4">
+							<button
+								className="waves-effect waves-light btn"
+								type="submit"
+								disabled={loading || status !== "available"}>
+								Set Display Name
+							</button>
 						</div>
 					</div>
-				</div>
-				<div className="row">
-					<div className="col s8">{loading ? <PreLoader /> : updateStatus(status)}</div>
-					<div className="col s4">
-						<button className="waves-effect waves-light btn" type="submit">
-							Set Display Name
-						</button>
+					<div className="row">
+						<div className="col s12">
+							Before you get started, set a display name, so your friends can find you.
+						</div>
 					</div>
-				</div>
-			</form>
+					<div className="row">
+						<div className="col s10">
+							<div className="input-field">
+								<input id="display-name" type="text" value={input} onChange={handleInput} />
+								<label htmlFor="display-name">Display Name</label>
+							</div>
+						</div>
+					</div>
+					<div className="row">
+						<div className="col s8">{loading ? <PreLoader /> : updateStatus(status)}</div>
+						<div className="col s4">
+							<button className="waves-effect waves-light btn" type="submit">
+								Set Display Name
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
 		</div>
 	);
 };
 
 function PreLoader() {
 	return (
-		<div className="preloader-wrapper small active">
+		<div className={styles.preloadWrapper + " small active"}>
 			<div className="spinner-layer spinner-green-only">
 				<div className="circle-clipper left">
 					<div className="circle"></div>

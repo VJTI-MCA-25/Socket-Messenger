@@ -7,7 +7,7 @@ import { Home, Error, Auth, Friends, Misc, Profile } from "barrel";
 import { preEntryChecks } from "services/authFunctions";
 
 import App from "./App.jsx";
-import "./index.css";
+import "./main.scss";
 
 const router = createBrowserRouter([
 	{
@@ -49,11 +49,7 @@ const router = createBrowserRouter([
 
 			{
 				path: "auth",
-				element: (
-					<div className="container">
-						<Outlet />
-					</div>
-				),
+				element: <Outlet />,
 				children: [
 					{
 						// This path is for when the user goes to /auth

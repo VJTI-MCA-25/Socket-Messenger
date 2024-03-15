@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
-
 import { getUsersList } from "services/userFunctions";
-
 import { SearchList } from "./SearchList/SearchList";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-
-import "./SearchFriend.scss";
+import styles from "./SearchFriend.module.scss";
 
 const SearchFriend = () => {
 	const [searchInput, setSearchInput] = useState("");
@@ -31,19 +27,19 @@ const SearchFriend = () => {
 	}, [searchInput]);
 
 	return (
-		<div className="searchFriendContainer">
+		<div className={styles.container}>
 			<div className="row">
-				<div className="input-field col s12 search-field">
+				<div className={styles.searchField + " input-field col s12"}>
 					<input
 						id="search-input"
 						name="search-input"
 						placeholder="Search for a Friend"
 						type="text"
-						className="validate search-input"
+						className={styles.searchInput}
 						value={searchInput}
 						onChange={(e) => setSearchInput(e.target.value)}
 					/>
-					<FontAwesomeIcon icon={faSearch} className="search-icon" />
+					<FontAwesomeIcon icon={faSearch} className={styles.searchIcon} />
 				</div>
 			</div>
 			<div className="row">

@@ -1,15 +1,14 @@
 import { useLayoutEffect, useState } from "react";
 import PropTypes from "prop-types";
+import { useSpring, useTrail, useSpringRef, useChain, useTransition } from "@react-spring/web";
+import { useDrag } from "@use-gesture/react";
 
 import { MaxNav } from "./MaxNav/MaxNav";
 import { MinNav } from "./MinNav/MinNav";
 
-import { useSpring, useTrail, useSpringRef, useChain, useTransition } from "@react-spring/web";
-import { useDrag } from "@use-gesture/react";
-
 import { minSidenavOptions, maxSidenavOptions as maxNavOptions } from "./sidenavOptions";
 
-import "./Sidenav.scss";
+import styles from "./Sidenav.module.scss";
 
 const Sidenav = ({ isNavOpen, setIsNavOpen }) => {
 	const [activeOption, setActiveOption] = useState("messages");
@@ -58,34 +57,41 @@ const Sidenav = ({ isNavOpen, setIsNavOpen }) => {
 		mx = (mx / window.innerWidth) * 500;
 		const clampedX = Math.max(Math.min(mx, 0), -150);
 		maxNavSlideApi.start({
-			x: down ? `${clampedX}%` : isNavOpen ? "0%" : "-150%",
+			x: down ? `${clampedX}%` : clampedX < -75 ? "-150%" : "0%",
 			immediate: down,
 			config: { tension: 500, friction: 50 },
 			clamp: true,
 			touchAction: "none",
-			onResolve: () => {
-				setIsNavOpen(clampedX > -75);
+			onRest: () => {
+				if (!down && clampedX < -75) {
+					setIsNavOpen(false);
+				}
 			},
 		});
 	});
 
 	function slideNav() {
+		if (!isNavOpen) setIsNavOpen(true);
 		maxNavSlideApi.start({
 			to: { x: isNavOpen ? "-150%" : "0%" },
+			onRest: () => {
+				if (isNavOpen) setIsNavOpen(false);
+			},
 		});
-		setIsNavOpen(!isNavOpen);
 	}
 
 	useChain([minNavSlideRef, rainIconsRef, maxNavSlideRef, activeOptionsListRef], [0.2, 0.5, 0.8, 0.25], 500);
 
 	return (
-		<div className={"sidenav-container " + (isNavOpen ? "open" : "close")}>
+		<div className={`${styles.sidenavContainer} ${isNavOpen ? "open" : "close"}`}>
 			<MinNav
 				rainIcons={rainIcons}
 				slideNav={slideNav}
 				minNavSlide={minNavSlide}
 				sidenavOptions={minSidenavOptions}
 				setActiveOption={setActiveOption}
+				styles={styles}
+				isNavOpen={isNavOpen}
 			/>
 			<MaxNav
 				maxNavSlide={maxNavSlide}
@@ -94,6 +100,7 @@ const Sidenav = ({ isNavOpen, setIsNavOpen }) => {
 				isNavOpen={isNavOpen}
 				slideNav={slideNav}
 				bind={bind}
+				styles={styles}
 			/>
 		</div>
 	);

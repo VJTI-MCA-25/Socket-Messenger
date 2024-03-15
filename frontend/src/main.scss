@@ -1,0 +1,26 @@
+@import "materialize-css/sass/materialize.scss";
+
+@at-root {
+	html {
+		font-family: $font;
+		color: $lightText;
+		background-color: $darkBg;
+
+		color-scheme: light dark;
+		font-synthesis: none;
+		text-rendering: optimizeLegibility;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+}
+
+main {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+	transition: margin-left 0.3s ease-out;
+	&.shift {
+		margin-left: 360px;
+	}
+}

@@ -1,15 +1,14 @@
-import { useState, useEffect } from "react";
-
-import { sockets } from "services/config";
-import { respondInvite } from "services/userFunctions";
-
-import styles from "./Invitations.module.scss";
+import { useEffect, useState, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
-const Invitations = () => {
-	const [invites, setInvites] = useState([]);
+import { respondInvite } from "services/userFunctions";
+import { InvitesContext } from "contexts/InvitesContext";
 
+import styles from "./Invitations.module.scss";
+
+const Invitations = () => {
+	const invites = useContext(InvitesContext);
 	const [sentInvites, setSentInvites] = useState([]);
 	const [receivedInvites, setReceivedInvites] = useState([]);
 
@@ -17,16 +16,6 @@ const Invitations = () => {
 		setSentInvites(invites.filter((invite) => invite.sentByCurrentUser));
 		setReceivedInvites(invites.filter((invite) => !invite.sentByCurrentUser));
 	}, [invites]);
-
-	useEffect(() => {
-		sockets.invitations.connect();
-		sockets.invitations.on("invites", (data) => {
-			setInvites(data);
-		});
-		return () => {
-			sockets.invitations.disconnect();
-		};
-	}, []);
 
 	async function handleResponse(inviteId, status) {
 		setInvites(invites.filter((inv) => inv.id !== inviteId));
@@ -42,7 +31,7 @@ const Invitations = () => {
 	return (
 		<div className="row">
 			<div className="row">
-				<div className="col s12 invites-header">You have Invites</div>
+				<div className={styles.invitesContainerHeader + " col s12"}>You have Invites</div>
 			</div>
 			<div className="row">
 				<div className="col s12">
@@ -77,13 +66,13 @@ function Invite({ invite, handleResponse }) {
 			return (
 				<>
 					You sent an invite to
-					<span className="display-name"> {invite.sentTo.displayName}</span>
+					<span className={styles.displayName}> {invite.sentTo.displayName}</span>
 				</>
 			);
 		} else {
 			return (
 				<>
-					<span className="display-name">{invite.sentBy.displayName}</span> sent you an invite
+					<span className={styles.displayName}>{invite.sentBy.displayName}</span> sent you an invite
 				</>
 			);
 		}
@@ -91,19 +80,16 @@ function Invite({ invite, handleResponse }) {
 
 	return (
 		<div className={styles.invite}>
-			<div className={styles.inviteContent}>
+			<div>
 				<div className={styles.inviteSender}>{getTitle(invite)}</div>
 			</div>
 			<div className={styles.inviteActions} onClick={actionHandler}>
 				{!invite.sentByCurrentUser ? (
 					<>
-						<button data-action="accepted" className={styles.acceptBtn + " waves-effect waves-light"}>
+						<button data-action="accepted" className="waves-effect waves-light">
 							Yes
 						</button>
-						<button
-							data-action="declined"
-							data-id={invite.id}
-							className={styles.declineBtn + " waves-effect waves-light red"}>
+						<button data-action="declined" data-id={invite.id} className="waves-effect waves-light red">
 							Decline
 						</button>
 					</>
@@ -120,7 +106,9 @@ function InvitesWrapper({ invites, heading, handleResponse }) {
 	return (
 		<div className="col s12">
 			<div className="row">
-				<div className="col s12">{heading}</div>
+				<div className="col s12">
+					<h6>{heading}</h6>
+				</div>
 			</div>
 			<div className="row">
 				<div className="col s12">

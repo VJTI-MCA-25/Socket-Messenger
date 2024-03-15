@@ -1,0 +1,19 @@
+@use "utilities/variables" as *;
+
+.searchField {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: row-reverse;
+	gap: 1rem;
+}
+
+.searchIcon {
+	transition: color 0.2s linear;
+}
+
+.searchInput {
+	&:focus-within + .searchIcon {
+		color: $highlight;
+	}
+}

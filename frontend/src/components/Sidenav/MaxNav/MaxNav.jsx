@@ -1,16 +1,12 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-
 import { animated } from "@react-spring/web";
-
 import { UserDataContext } from "contexts/UserDataContext";
-
 import officeImage from "assets/office.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import PropTypes from "prop-types";
 
-const MaxNav = ({ maxNavSlide, activeOptionsList, bind }) => {
+const MaxNav = ({ maxNavSlide, activeOptionsList, bind, styles, isNavOpen }) => {
 	const userData = useContext(UserDataContext);
 
 	function handleClick(func) {
@@ -20,11 +16,11 @@ const MaxNav = ({ maxNavSlide, activeOptionsList, bind }) => {
 	}
 
 	function populateSidenav() {
-		return activeOptionsList((style, option) => {
+		return activeOptionsList((anims, option) => {
 			return (
-				<animated.li style={style} key={option.name}>
+				<animated.li style={anims} key={option.name}>
 					<Link to={option.to} className="waves-effect" onClick={handleClick(option.onClick)}>
-						<FontAwesomeIcon icon={option.icon} className={option.classes + " sidenav-icon"} />
+						<FontAwesomeIcon icon={option.icon} className={`${option.classes} ${styles.sidenavIcon}`} />
 						{option.text}
 					</Link>
 				</animated.li>
@@ -36,10 +32,10 @@ const MaxNav = ({ maxNavSlide, activeOptionsList, bind }) => {
 		<animated.div
 			{...bind()}
 			style={{ ...maxNavSlide, touchAction: "none" }}
-			className="z-depth-1 sidenav sidenav-fixed sidenav-max">
+			className={`z-depth-1 sidenav sidenav-fixed ${styles.sidenavMax} ${isNavOpen ? "" : "hide"}`}>
 			<ul>
 				<li>
-					<div className="user-view">
+					<div className={styles.userView + " user-view"}>
 						<div className="background">
 							<img src={officeImage} />
 						</div>

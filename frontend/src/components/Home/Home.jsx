@@ -22,7 +22,9 @@ const Home = () => {
 			<>
 				<Sidenav isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
 				{/* Might change user to be passed in outlet context */}
-				<Outlet />
+				<main className={isNavOpen ? "shift" : ""}>
+					<Outlet />
+				</main>
 			</>
 		);
 	}

@@ -1,15 +1,12 @@
-.sidenav-container {
+.sidenavContainer {
 	display: flex;
-	position: relative;
+	position: fixed;
 	// overflow: hidden;
 	height: 100%;
 	left: 0;
 	top: 0;
 	z-index: 10;
-	&.close > .sidenav-max {
-		width: 0;
-	}
-	.sidenav-max {
+	.sidenavMax {
 		position: relative !important;
 		background-color: #242424;
 		z-index: 11;
@@ -26,13 +23,12 @@
 			color: inherit;
 		}
 
-		.sidenav-icon {
+		.sidenavIcon {
 			margin-right: 1rem;
 			color: inherit;
 		}
 	}
-
-	.sidenav-min {
+	.sidenavMin {
 		background-color: #242424;
 		height: 100%;
 		z-index: 12;
@@ -53,17 +49,16 @@
 			cursor: pointer;
 			color: white;
 		}
-	}
-}
-
-.user-view {
-	.background::after {
-		content: "";
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6));
+		.userView {
+			.background::after {
+				content: "";
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6));
+			}
+		}
 	}
 }
