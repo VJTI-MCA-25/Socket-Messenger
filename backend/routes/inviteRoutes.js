@@ -95,8 +95,7 @@ invites.post("/invite-response", async (req, res) => {
 		}
 
 		const inviteRef = usersRef.doc(user.uid).collection("invitations").doc(inviteId);
-		const inviteSnap = await inviteRef.get();
-		const invite = inviteSnap.data();
+		const invite = (await inviteRef.get()).data();
 
 		if (!invite) {
 			throw InviteNotFoundError;
@@ -106,7 +105,7 @@ invites.post("/invite-response", async (req, res) => {
 			throw InviteAlreadyProcessedError;
 		}
 
-		var senderInviteRef = inviteRef;
+		var senderInviteRef = usersRef.doc(invite.sentBy).collection("invitations").doc(inviteId);
 		var receiverInviteRef = usersRef.doc(invite.sentTo).collection("invitations").doc(inviteId);
 
 		if (!invite.sentByCurrentUser) {

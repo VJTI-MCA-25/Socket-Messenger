@@ -29,20 +29,18 @@ sockets.inviteIo.on("connection", async (socket) => {
 					const sentBy = sentBySnap.data();
 					const sentTo = sentToSnap.data();
 
-					invite.sentBy = {
-						uid: sentBy.uid,
-						displayName: sentBy.displayName,
-						email: sentBy.email,
-					};
-
-					invite.sentTo = {
-						uid: sentTo.uid,
-						displayName: sentTo.displayName,
-						email: sentTo.email,
-					};
-
-					if (!invite.sentByCurrentUser) {
-						[invite.sentBy, invite.sentTo] = [invite.sentTo, invite.sentBy];
+					if (invite.sentByCurrentUser) {
+						invite.sentTo = {
+							uid: sentTo.uid,
+							displayName: sentTo.displayName,
+							email: sentTo.email,
+						};
+					} else {
+						invite.sentBy = {
+							uid: sentBy.uid,
+							displayName: sentBy.displayName,
+							email: sentBy.email,
+						};
 					}
 				}
 				socket.emit("invites", invitations);

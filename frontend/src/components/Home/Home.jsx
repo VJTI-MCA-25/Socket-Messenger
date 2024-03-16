@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import { InvitesContextProvider } from "contexts/InvitesContext";
 
 import { Sidenav } from "barrel";
 
@@ -19,13 +20,13 @@ const Home = () => {
 
 	if (user !== null) {
 		return (
-			<>
+			<InvitesContextProvider>
 				<Sidenav isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
 				{/* Might change user to be passed in outlet context */}
 				<main className={isNavOpen ? "shift" : ""}>
 					<Outlet />
 				</main>
-			</>
+			</InvitesContextProvider>
 		);
 	}
 };

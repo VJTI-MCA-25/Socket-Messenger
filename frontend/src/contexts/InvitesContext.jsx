@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useLayoutEffect } from "react";
+import { useState, useEffect, createContext } from "react";
 import { PropTypes } from "prop-types";
 import { sockets } from "projectConfig";
 
@@ -13,6 +13,7 @@ function InvitesContextProvider({ children }) {
 			setInvites(data);
 		});
 		return () => {
+			setInvites([]);
 			sockets.invitations.off("invites");
 			sockets.invitations.disconnect();
 		};

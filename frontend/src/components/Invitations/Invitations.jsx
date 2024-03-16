@@ -18,7 +18,6 @@ const Invitations = () => {
 	}, [invites]);
 
 	async function handleResponse(inviteId, status) {
-		setInvites(invites.filter((inv) => inv.id !== inviteId));
 		try {
 			const res = await respondInvite(inviteId, status);
 		} catch (error) {
