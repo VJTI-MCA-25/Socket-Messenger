@@ -39,7 +39,10 @@ const MaxNav = ({ maxNavSlide, activeOptionsList, bind, styles, isNavOpen }) => 
 						<div className="background">
 							<img src={officeImage} />
 						</div>
-						<img className="circle" src="https://via.placeholder.com/150" />
+						<img
+							className="circle"
+							src={userData?.photoURL ? userData.photoURL : "https://via.placeholder.com/150"}
+						/>
 						<span className="white-text name">{userData?.displayName}</span>
 						<span className="white-text email">{userData?.email}</span>
 					</div>

@@ -2,7 +2,7 @@
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider, Outlet, redirect } from "react-router-dom";
 
-import { Home, Error, Auth, Friends, Misc, Profile } from "barrel";
+import { Home, Error, Login, Signup, Friends, Profile, DisplayName } from "barrel";
 
 import { preEntryChecks } from "services/authFunctions";
 
@@ -63,11 +63,11 @@ const router = createBrowserRouter([
 							if (report.isLoggedIn) return redirect("/channels");
 							else return null;
 						},
-						element: <Auth.Login />,
+						element: <Login />,
 					},
 					{
 						path: "signup",
-						element: <Auth.Signup />,
+						element: <Signup />,
 					},
 				],
 			},
@@ -87,7 +87,7 @@ const router = createBrowserRouter([
 					else if (report.isDisplayNameSet) return redirect("/channels");
 					else return null;
 				},
-				element: <Misc.DisplayName />,
+				element: <DisplayName />,
 			},
 			{
 				path: "error",

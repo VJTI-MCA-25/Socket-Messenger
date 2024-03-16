@@ -14,7 +14,7 @@ async function getUserData(user) {
 
 async function checkDisplayName(displayName) {
 	try {
-		const response = await axios.get(`/users/check-display-name/${displayName}`);
+		const response = await instance.get(`/users/check-display-name/${displayName}`);
 		return response.data;
 	} catch (error) {
 		throw { ...error.response.data };

@@ -6,7 +6,7 @@ import {
 	signOut,
 	onAuthStateChanged,
 } from "firebase/auth";
-import { auth, instance } from "./config";
+import { auth, instance, baseURL } from "./config";
 import axios from "axios";
 
 import { parseError } from "./helperFunctions";
@@ -14,9 +14,14 @@ import { parseError } from "./helperFunctions";
 // Function to create a user
 async function createUser(email, password) {
 	try {
-		const response = await axios.put("/users/create", {
-			email,
-			password,
+		const response = await axios({
+			method: "put",
+			url: "/users/create",
+			baseURL,
+			data: {
+				email,
+				password,
+			},
 		});
 		return response;
 	} catch (error) {
@@ -68,6 +73,7 @@ async function sendVerificationMail(email, uid, continueUrl) {
 
 // Function to check if the user is logged in and has a display name
 function preEntryChecks() {
+	auth?.currentUser?.reload();
 	return new Promise((resolve, reject) => {
 		const unsubscribe = onAuthStateChanged(
 			auth,

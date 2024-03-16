@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { useTransition, animated } from "@react-spring/web";
+import { InvitesWrapper } from "./InvitesWrapper/InvitesWrapper";
 
 import { respondInvite } from "services/userFunctions";
 import { InvitesContext } from "contexts/InvitesContext";
@@ -25,101 +25,41 @@ const Invitations = () => {
 		}
 	}
 
-	if (invites.length === 0) return null;
+	const inviteContainerAnim = useTransition(invites.length > 0, {
+		from: { x: 100, opacity: 0 },
+		enter: { x: 0, opacity: 1 },
+		leave: { x: 100, opacity: 0 },
+		config: { duration: 200 },
+	});
 
-	return (
-		<div className="row">
-			<div className="row">
-				<div className={styles.invitesContainerHeader + " col s12"}>You have Invites</div>
-			</div>
-			<div className="row">
-				<div className="col s12">
+	return inviteContainerAnim(
+		(anims, item) =>
+			item && (
+				<animated.div style={anims} className={styles.mainContainer + " row"}>
 					<div className="row">
-						<InvitesWrapper
-							invites={receivedInvites}
-							heading="Received Invites"
-							handleResponse={handleResponse}
-						/>
+						<div className={styles.invitesContainerHeader + " col s12"}>All Invites</div>
 					</div>
 					<div className="row">
-						<InvitesWrapper
-							invites={sentInvites}
-							heading="Your Sent Invites"
-							handleResponse={handleResponse}
-						/>
+						<div className="col s12">
+							<div className="row">
+								<InvitesWrapper
+									invites={receivedInvites}
+									heading="Received Invites"
+									handleResponse={handleResponse}
+								/>
+							</div>
+							<div className="row">
+								<InvitesWrapper
+									invites={sentInvites}
+									heading="Your Sent Invites"
+									handleResponse={handleResponse}
+								/>
+							</div>
+						</div>
 					</div>
-				</div>
-			</div>
-		</div>
+				</animated.div>
+			)
 	);
 };
-
-function Invite({ invite, handleResponse }) {
-	function actionHandler(e) {
-		const action = e.target.dataset.action;
-		return ["accepted", "declined", "canceled"].includes(action) ? handleResponse(invite.id, action) : null;
-	}
-
-	function getTitle(invite) {
-		if (invite.sentByCurrentUser) {
-			return (
-				<>
-					You sent an invite to
-					<span className={styles.displayName}> {invite.sentTo.displayName}</span>
-				</>
-			);
-		} else {
-			return (
-				<>
-					<span className={styles.displayName}>{invite.sentBy.displayName}</span> sent you an invite
-				</>
-			);
-		}
-	}
-
-	return (
-		<div className={styles.invite}>
-			<div>
-				<div className={styles.inviteSender}>{getTitle(invite)}</div>
-			</div>
-			<div className={styles.inviteActions} onClick={actionHandler}>
-				{!invite.sentByCurrentUser ? (
-					<>
-						<button data-action="accepted" className="waves-effect waves-light">
-							Yes
-						</button>
-						<button data-action="declined" data-id={invite.id} className="waves-effect waves-light red">
-							Decline
-						</button>
-					</>
-				) : (
-					<FontAwesomeIcon className="cancel-invite-icon" data-action="canceled" icon={faTimes} />
-				)}
-			</div>
-		</div>
-	);
-}
-
-function InvitesWrapper({ invites, heading, handleResponse }) {
-	if (invites.length === 0) return null;
-	return (
-		<div className="col s12">
-			<div className="row">
-				<div className="col s12">
-					<h6>{heading}</h6>
-				</div>
-			</div>
-			<div className="row">
-				<div className="col s12">
-					<div className={styles.invitesContainer}>
-						{invites.map((invite) => (
-							<Invite key={invite.id} invite={invite} handleResponse={handleResponse} />
-						))}
-					</div>
-				</div>
-			</div>
-		</div>
-	);
-}
 
 export { Invitations };

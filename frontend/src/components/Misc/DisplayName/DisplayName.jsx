@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { Preloader } from "barrel";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 
@@ -19,8 +21,9 @@ const DisplayName = () => {
 		const timer = setTimeout(async () => {
 			if (!input) return setLoading(false);
 			try {
-				let res = await checkDisplayName(input);
-				if (res == "user/display-name-available") setStatus("available");
+				let response = await checkDisplayName(input);
+				console.log(response);
+				if (response == "user/display-name-available") setStatus("available");
 				else setStatus("taken");
 			} catch (error) {
 				if (error.statusText === "user/invalid-display-name") setStatus("invalid");
@@ -63,7 +66,9 @@ const DisplayName = () => {
 		}
 		return (
 			<div className={styles.status}>
-				{icon && <FontAwesomeIcon icon={icon} />}
+				{icon && (
+					<FontAwesomeIcon className={icon == faCheck ? styles.checkIcon : styles.errorIcon} icon={icon} />
+				)}
 				<span>{text}</span>
 			</div>
 		);
@@ -77,9 +82,8 @@ const DisplayName = () => {
 
 			try {
 				const res = await setData({ displayName: input });
-				console.log(res === "user/data-updated", res);
-				if (res === "user/data-updated") {
-					navigate("/channels");
+				if (res == "user/data-updated") {
+					navigate("/channels", { replace: true });
 				}
 			} catch (error) {
 				//TODO Handle Different Errors for Failed Display Name Update
@@ -92,17 +96,6 @@ const DisplayName = () => {
 		<div className={styles.container}>
 			<div className="container">
 				<form onSubmit={handleSubmit}>
-					<div className="row">
-						<div className="col s8">{loading ? <PreLoader /> : updateStatus(status)}</div>
-						<div className="col s4">
-							<button
-								className="waves-effect waves-light btn"
-								type="submit"
-								disabled={loading || status !== "available"}>
-								Set Display Name
-							</button>
-						</div>
-					</div>
 					<div className="row">
 						<div className="col s12">
 							Before you get started, set a display name, so your friends can find you.
@@ -117,9 +110,12 @@ const DisplayName = () => {
 						</div>
 					</div>
 					<div className="row">
-						<div className="col s8">{loading ? <PreLoader /> : updateStatus(status)}</div>
+						<div className="col s8">{loading ? <Preloader /> : updateStatus(status)}</div>
 						<div className="col s4">
-							<button className="waves-effect waves-light btn" type="submit">
+							<button
+								className="waves-effect waves-light btn"
+								type="submit"
+								disabled={loading || status !== "available"}>
 								Set Display Name
 							</button>
 						</div>
@@ -129,23 +125,5 @@ const DisplayName = () => {
 		</div>
 	);
 };
-
-function PreLoader() {
-	return (
-		<div className={styles.preloadWrapper + " small active"}>
-			<div className="spinner-layer spinner-green-only">
-				<div className="circle-clipper left">
-					<div className="circle"></div>
-				</div>
-				<div className="gap-patch">
-					<div className="circle"></div>
-				</div>
-				<div className="circle-clipper right">
-					<div className="circle"></div>
-				</div>
-			</div>
-		</div>
-	);
-}
 
 export { DisplayName };

@@ -5,13 +5,10 @@ export { SearchFriend } from "./SearchFriend/SearchFriend";
 export { Profile } from "./Profile/Profile";
 export { Invitations } from "./Invitations/Invitations";
 export { Friends } from "./Friends/Friends";
+export { FriendsList } from "./FriendsList/FriendsList";
 
-export { Misc } from "./Misc/MiscComponents";
+export { Preloader } from "./Misc/Preloader/Preloader";
+export { DisplayName } from "./Misc/DisplayName/DisplayName";
 
-import { Login } from "./Auth/Login/Login";
-import { Signup } from "./Auth/Signup/Signup";
-
-export const Auth = {
-	Login,
-	Signup,
-};
+export { Login } from "./Auth/Login/Login";
+export { Signup } from "./Auth/Signup/Signup";

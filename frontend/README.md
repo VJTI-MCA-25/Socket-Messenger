@@ -19,7 +19,7 @@
 
 -   [x] Seperate Server Routes and init file
 -   [x] Generalize the auth required routes
--   [ ] Animate Invites, SearchFriends
+-   [x] Animate Invites, SearchFriends
 -   [ ] Think over the flow of Sign Up
 -   [ ] Seperate socket routes
 -   [ ] Check CORS for socket server
@@ -30,6 +30,9 @@
     -   [ ] Firebase
     -   [ ] Algolia
     -   [ ] Socket.io
+-   [ ] Make a About Page
+-   [ ] Make a footer
+-   [ ] Should I limit the number of invitations a user can see?
 
 ### Accessibilities
 

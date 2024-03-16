@@ -1,9 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage, faEllipsisVertical, faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import { animated } from "@react-spring/web";
 
-const SearchItem = ({ friend, handleInvite, styles }) => {
+const SearchItem = ({ friend, handleInvite, styles, anim }) => {
 	return (
-		<li className={styles.item}>
+		<animated.li style={anim} className={styles.item}>
 			<img src="https://via.placeholder.com/150" alt="" className={styles.profilePic} />
 			<div className="display-name">{friend.displayName}</div>
 			<div className={styles.actions}>
@@ -16,7 +17,7 @@ const SearchItem = ({ friend, handleInvite, styles }) => {
 					<FontAwesomeIcon icon={faEnvelope} onClick={() => handleInvite(friend.uid)} />
 				)}
 			</div>
-		</li>
+		</animated.li>
 	);
 };
 

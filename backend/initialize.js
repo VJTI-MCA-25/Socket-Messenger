@@ -6,6 +6,7 @@ import cors from "cors";
 import { cert, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
+import { getStorage } from "firebase-admin/storage";
 
 import { createServer } from "http";
 import { Server } from "socket.io";
@@ -23,9 +24,11 @@ const PORT = process.env.PORT || 3000;
 const serviceAccountKey = process.env.SERVICE_ACCOUNT_KEY;
 initializeApp({
 	credential: cert(serviceAccountKey),
+	storageBucket: "gs://discord-clone-d2f37.appspot.com",
 });
 const auth = getAuth();
 const db = getFirestore();
+const bucket = getStorage().bucket();
 
 db.settings({ ignoreUndefinedProperties: true });
 
@@ -60,23 +63,23 @@ const server = createServer(app);
 const io = new Server(server);
 
 /* Socket Middleware - (Decode Token) */
-
-const inviteIo = io.of("/invites");
-
-inviteIo.use(async (socket, next) => {
-	const token = socket.handshake.auth.token;
-	try {
-		let user = await decodeAndVerify(token, false); // Disabled database check, might slow down the socket connection, idk
-		socket.user = user;
-		next();
-	} catch (error) {
-		//TODO - Handle error (Frontend should handle this)
-		console.log(error);
-	}
+io.on("new_namespace", (nsp) => {
+	nsp.use(async (socket, next) => {
+		const token = socket.handshake.auth.token;
+		try {
+			let user = await decodeAndVerify(token, false); // Disabled database check, might slow down the socket connection, idk
+			socket.user = user;
+			next();
+		} catch (error) {
+			//TODO - Handle error (Frontend should handle this)
+			console.log(error);
+		}
+	});
 });
 
 const sockets = {
-	inviteIo,
+	inviteIo: io.of("/invites"),
+	friendsIo: io.of("/friends"),
 };
 
-export { app, auth, db, usersRef, PORT, server, sockets, el, index };
+export { app, auth, db, usersRef, PORT, server, sockets, el, index, bucket };

@@ -1,5 +1,6 @@
-import { auth, usersRef, el, index } from "../initialize.js";
+import { auth, usersRef, el, index, bucket } from "../initialize.js";
 import { FieldPath, Timestamp } from "firebase-admin/firestore";
+import { getDownloadURL } from "firebase-admin/storage";
 import {
 	errorHandler,
 	doesUserDataExists,
@@ -28,9 +29,14 @@ users.put("/create", async (req, res) => {
 		const data = req.body;
 
 		// Create user in Firebase Authentication
+
+		const profilePic = bucket.file("user_profile_pics/default.svg");
+		const profilePicUrl = await getDownloadURL(profilePic);
+
 		const userRecord = await auth.createUser({
 			email: data.email,
 			password: data.password,
+			photoURL: profilePicUrl,
 		});
 		uid = userRecord.uid;
 
@@ -45,6 +51,7 @@ users.put("/create", async (req, res) => {
 			emailVerified: false,
 			createdAt: Timestamp.now(),
 			lastUpdatedAt: Timestamp.now(),
+			photoURL: profilePicUrl,
 		});
 
 		// Send response
@@ -98,7 +105,6 @@ users.get("/check-display-name/:displayName", async (req, res) => {
 	try {
 		const displayName = req.params.displayName;
 		let validation = await validateDisplayName(displayName);
-
 		res.status(200).send(validation);
 	} catch (error) {
 		errorHandler(res, error);
@@ -142,8 +148,11 @@ users.get("/get-users-list/:displayNameString", async (req, res) => {
 
 		// Algolia Search (Fuzzy Search)
 		const results = await index.search(displayNameString);
-		const list = results.hits.map((hit) => hit.objectID);
+		var list = results.hits.map((hit) => hit.objectID);
 
+		const friends = (await usersRef.doc(user.uid).get()).data()?.friends || [];
+
+		list = list.filter((id) => id !== user.uid && !friends.includes(id));
 		if (list.length === 0) return res.status(200).send([]);
 
 		const usersList = await usersRef.where(FieldPath.documentId(), "in", list).limit(10).get();
@@ -152,10 +161,9 @@ users.get("/get-users-list/:displayNameString", async (req, res) => {
 		const userData = userDataSnap.data();
 		let users = [];
 		usersList.forEach((userItem) => {
-			if (userItem.id === user.uid) return;
 			users.push({
 				...userItem.data(),
-				isFriend: userData.friends.includes(userItem.id),
+				isFriend: userData?.friends?.includes(userItem.id) || false,
 			});
 		});
 

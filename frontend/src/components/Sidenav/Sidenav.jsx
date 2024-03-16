@@ -108,7 +108,8 @@ const Sidenav = ({ isNavOpen, setIsNavOpen }) => {
 
 // PropTypes
 Sidenav.propTypes = {
-	selectedOption: PropTypes.string,
+	isNavOpen: PropTypes.bool.isRequired,
+	setIsNavOpen: PropTypes.func.isRequired,
 };
 
 export { Sidenav };
