@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage, faEllipsisVertical, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { animated } from "@react-spring/web";
 
-const SearchItem = ({ friend, handleInvite, styles, anim }) => {
+const UserItem = ({ friend, handleInvite, styles, anim }) => {
 	return (
 		<animated.li style={anim} className={styles.item}>
 			<img src="https://via.placeholder.com/150" alt="" className={styles.profilePic} />
@@ -21,4 +21,4 @@ const SearchItem = ({ friend, handleInvite, styles, anim }) => {
 	);
 };
 
-export { SearchItem };
+export { UserItem };

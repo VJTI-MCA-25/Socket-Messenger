@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getUsersList } from "services/userFunctions";
-import { SearchList } from "./SearchList/SearchList";
+import { ListUsers } from "barrel";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import styles from "./SearchFriend.module.scss";
@@ -44,7 +44,7 @@ const SearchFriend = () => {
 			</div>
 			<div className="row">
 				<div className="col s12">
-					<SearchList usersList={usersList} />
+					<ListUsers usersList={usersList} />
 				</div>
 			</div>
 		</div>

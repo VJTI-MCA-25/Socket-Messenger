@@ -1,10 +1,10 @@
-import { SearchItem } from "../SearchItem/SearchItem";
+import { UserItem } from "./UserItem/UserItem";
 import { sendInvite } from "services/userFunctions";
-import { toast } from "materialize-css";
-import styles from "./SearchList.module.scss";
 import { useTransition } from "@react-spring/web";
+import { toast } from "materialize-css";
+import styles from "./ListUsers.module.scss";
 
-const SearchList = ({ usersList }) => {
+const ListUsers = ({ usersList }) => {
 	async function handleInvite(sendTo) {
 		try {
 			let response = await sendInvite(sendTo);
@@ -30,10 +30,10 @@ const SearchList = ({ usersList }) => {
 	return (
 		<ul className={styles.friendsList}>
 			{friendsListAnim((anim, user) => (
-				<SearchItem key={user.id} friend={user} handleInvite={handleInvite} styles={styles} anim={anim} />
+				<UserItem key={user.id} friend={user} handleInvite={handleInvite} styles={styles} anim={anim} />
 			))}
 		</ul>
 	);
 };
 
-export { SearchList };
+export { ListUsers };

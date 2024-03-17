@@ -1,6 +1,7 @@
 export { Home } from "./Home/Home";
 export { Error } from "./Error/Error";
 export { Sidenav } from "./Sidenav/Sidenav";
+export { ListUsers } from "./ListUsers/ListUsers";
 export { SearchFriend } from "./SearchFriend/SearchFriend";
 export { Profile } from "./Profile/Profile";
 export { Invitations } from "./Invitations/Invitations";

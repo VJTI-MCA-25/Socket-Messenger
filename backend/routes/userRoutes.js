@@ -203,4 +203,28 @@ users.post("/set-data", async (req, res) => {
 	}
 });
 
+users.get("/get-friends", async (req, res) => {
+	const user = req.user;
+	try {
+		const friends = (await usersRef.doc(user.uid).get()).data()?.friends || [];
+		if (friends.length === 0) return res.status(200).send([]);
+
+		const friendsSnap = await usersRef.where(FieldPath.documentId(), "in", friends).get();
+		const friendsList = friendsSnap.docs.map((friend) => {
+			let data = friend.data();
+
+			return {
+				uid: friend.id,
+				displayName: data.displayName,
+				photoURL: data.photoURL,
+				isFriend: true,
+			};
+		});
+
+		return res.status(200).send(friendsList);
+	} catch (error) {
+		return errorHandler(res, error);
+	}
+});
+
 export { users as userRoutes };

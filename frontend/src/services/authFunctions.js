@@ -115,4 +115,13 @@ function getAuthToken() {
 	});
 }
 
-export { createUser, loginUser, logoutUser, preEntryChecks, sendVerificationMail, getAuthToken };
+async function getFriends() {
+	try {
+		const response = await instance.get("/users/get-friends");
+		return response;
+	} catch (error) {
+		throw parseError(error);
+	}
+}
+
+export { createUser, loginUser, logoutUser, preEntryChecks, sendVerificationMail, getAuthToken, getFriends };
