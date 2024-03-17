@@ -26,6 +26,12 @@ sockets.inviteIo.on("connection", async (socket) => {
 				for await (const invite of invitations) {
 					const sentBySnap = await usersRef.doc(invite.sentBy).get();
 					const sentToSnap = await usersRef.doc(invite.sentTo).get();
+
+					if (!sentBySnap.exists || !sentToSnap.exists) {
+						invitations = invitations.filter((invite) => invite.id !== invite.id);
+						continue;
+					}
+
 					const sentBy = sentBySnap.data();
 					const sentTo = sentToSnap.data();
 

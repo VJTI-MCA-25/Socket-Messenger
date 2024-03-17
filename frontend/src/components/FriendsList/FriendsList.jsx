@@ -4,23 +4,20 @@ import { getFriends } from "services/authFunctions";
 
 import styles from "./FriendsList.module.scss";
 
-const FriendsList = () => {
+const FriendsList = ({ updateDep }) => {
 	const [friends, setFriends] = useState([]);
 
 	useEffect(() => {
-		try {
-			(async () => {
+		console.log("Fetching Data");
+		(async () => {
+			try {
 				const response = await getFriends();
 				setFriends(response.data);
-			})();
-		} catch (error) {
-			console.error(error);
-		}
-	}, []);
-
-	useEffect(() => {
-		console.log(friends);
-	}, [friends]);
+			} catch (error) {
+				console.error(error);
+			}
+		})();
+	}, [updateDep]);
 
 	return (
 		<div className="row">
@@ -32,7 +29,11 @@ const FriendsList = () => {
 				</div>
 				<div className="row">
 					<div className="col s12">
-						<ListUsers usersList={friends} />
+						{friends.length > 0 ? (
+							<ListUsers usersList={friends} />
+						) : (
+							<div className={styles.emptyListTitle}>Looks like you haven't invited anyone yet.</div>
+						)}
 					</div>
 				</div>
 			</div>

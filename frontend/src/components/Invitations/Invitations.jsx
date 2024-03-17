@@ -7,7 +7,7 @@ import { InvitesContext } from "contexts/InvitesContext";
 
 import styles from "./Invitations.module.scss";
 
-const Invitations = () => {
+const Invitations = ({ forceUpdate }) => {
 	const invites = useContext(InvitesContext);
 	const [sentInvites, setSentInvites] = useState([]);
 	const [receivedInvites, setReceivedInvites] = useState([]);
@@ -20,6 +20,7 @@ const Invitations = () => {
 	async function handleResponse(inviteId, status) {
 		try {
 			const res = await respondInvite(inviteId, status);
+			forceUpdate(); // force update FriendsList component
 		} catch (error) {
 			console.error(error);
 		}
