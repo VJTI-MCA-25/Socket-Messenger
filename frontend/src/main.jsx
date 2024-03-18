@@ -37,12 +37,6 @@ const router = createBrowserRouter([
 					{
 						path: "profile",
 						element: <Profile />,
-						loader: async () => {
-							let report = await preEntryChecks();
-							if (!report.isLoggedIn) return redirect("/auth/login");
-							else if (!report.isDisplayNameSet) return redirect("/display-name");
-							else return null;
-						},
 					},
 				],
 			},

@@ -99,7 +99,7 @@ async function doesUserDataExists(uid) {
 async function validateDisplayName(displayName) {
 	let lengthCheck = displayName.length >= 6 && displayName.length <= 20;
 	let repeatUnderscore = !/__+/g.test(displayName);
-	let invalidChars = /^[a-z0-9_]*$|^null$/gi.test(displayName);
+	let invalidChars = /^[a-z0-9_-]*$|^null$/gi.test(displayName);
 
 	let validate = lengthCheck && repeatUnderscore && invalidChars;
 

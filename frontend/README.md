@@ -28,6 +28,7 @@
 -   [x] Check CORS for socket server
 -   [x] Think over on if all invitations should be stored in one collection rather than in the user's collection (User's Collection is already implemented)
 -   [x] Think over the flow of Sign Up
+-   [ ] Add username suggestions
 -   [ ] Seperate socket routes
 -   [ ] Optimize Error Parser and Handling in both client and server
 -   [ ] Check how to handle multiple socket connections from the same user for same event
@@ -44,6 +45,7 @@
 
 ### Accessibilities
 
+-   [ ] Consider Translate Options (Firebase has a translate API)
 -   [ ] Add aria-labels to buttons
 -   [ ] Add alt to images
 -   [ ] HTML Semantics
@@ -55,7 +57,6 @@
 -   [ ] Disable Animations
 -   [ ] Add support for Dyslexia (Comic Sans, OpenDyslexic, etc.)
 -   [ ] Add support for Color Blindness (Color Palette, etc.)
--   [ ] Add language support
 
     > All This can be done using [Axe](https://www.deque.com/axe/)
     > Also Better to create a Setttings Page for this
