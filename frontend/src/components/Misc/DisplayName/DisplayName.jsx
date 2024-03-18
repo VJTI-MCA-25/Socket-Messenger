@@ -65,9 +65,13 @@ const DisplayName = () => {
 				break;
 		}
 		return (
-			<div className={styles.status}>
+			<div className={styles.status} role="status">
 				{icon && (
-					<FontAwesomeIcon className={icon == faCheck ? styles.checkIcon : styles.errorIcon} icon={icon} />
+					<FontAwesomeIcon
+						className={icon === faCheck ? styles.checkIcon : styles.errorIcon}
+						icon={icon}
+						aria-label={icon === faCheck ? "Success" : "Error"}
+					/>
 				)}
 				<span>{text}</span>
 			</div>
@@ -95,17 +99,26 @@ const DisplayName = () => {
 	return (
 		<div className={styles.container}>
 			<div className="container">
-				<form onSubmit={handleSubmit}>
+				<form onSubmit={handleSubmit} aria-label="Set Display Name Form">
 					<div className="row">
 						<div className="col s12">
-							Before you get started, set a display name, so your friends can find you.
+							<p>Before you get started, set a display name, so your friends can find you.</p>
 						</div>
 					</div>
 					<div className="row">
 						<div className="col s10">
 							<div className="input-field">
-								<input id="display-name" type="text" value={input} onChange={handleInput} />
-								<label htmlFor="display-name">Display Name</label>
+								<input
+									id="display-name"
+									type="text"
+									value={input}
+									onChange={handleInput}
+									aria-labelledby="display-name-label"
+									required
+								/>
+								<label htmlFor="display-name" id="display-name-label">
+									Display Name
+								</label>
 							</div>
 						</div>
 					</div>
@@ -115,7 +128,8 @@ const DisplayName = () => {
 							<button
 								className="waves-effect waves-light btn"
 								type="submit"
-								disabled={loading || status !== "available"}>
+								disabled={loading || status !== "available"}
+								aria-label="Set Display Name">
 								Set Display Name
 							</button>
 						</div>

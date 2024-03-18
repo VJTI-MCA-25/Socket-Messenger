@@ -24,7 +24,9 @@ const FriendsList = ({ updateDep }) => {
 			<div className="col s12">
 				<div className="row">
 					<div className="col s12">
-						<div className={styles.header}>Friends</div>
+						<div className={styles.header} role="heading" aria-level="2">
+							Friends
+						</div>
 					</div>
 				</div>
 				<div className="row">
@@ -32,7 +34,9 @@ const FriendsList = ({ updateDep }) => {
 						{friends.length > 0 ? (
 							<ListUsers usersList={friends} />
 						) : (
-							<div className={styles.emptyListTitle}>Looks like you haven't invited anyone yet.</div>
+							<div className={styles.emptyListTitle} role="alert" aria-live="polite">
+								Looks like you haven't invited anyone yet.
+							</div>
 						)}
 					</div>
 				</div>

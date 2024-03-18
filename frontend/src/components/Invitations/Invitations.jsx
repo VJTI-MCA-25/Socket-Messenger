@@ -36,9 +36,11 @@ const Invitations = ({ forceUpdate }) => {
 	return inviteContainerAnim(
 		(anims, item) =>
 			item && (
-				<animated.div style={anims} className={styles.mainContainer + " row"}>
+				<animated.div style={anims} className={`${styles.mainContainer} row`} role="main">
 					<div className="row">
-						<div className={styles.invitesContainerHeader + " col s12"}>All Invites</div>
+						<div className={`${styles.invitesContainerHeader} col s12`} role="heading" aria-level="2">
+							All Invites
+						</div>
 					</div>
 					<div className="row">
 						<div className="col s12">

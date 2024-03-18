@@ -15,7 +15,13 @@ const MinNav = ({ rainIcons, slideNav, minNavSlide, sidenavOptions, setActiveOpt
 		return options.map((option, index) => {
 			return (
 				<animated.li style={rainIcons[index + 1]} key={index}>
-					<a className="waves-effect" onClick={() => handleClick(option.name)}>
+					<a
+						className="waves-effect"
+						onClick={() => handleClick(option.name)}
+						onKeyDown={(e) => e.key === "Enter" && handleClick(option.name)}
+						role="menuitem"
+						tabIndex={0} // Make the link focusable
+					>
 						<FontAwesomeIcon icon={option.icon} className={`${option.iconClasses} ${styles.icon} icon`} />
 					</a>
 				</animated.li>
@@ -24,16 +30,26 @@ const MinNav = ({ rainIcons, slideNav, minNavSlide, sidenavOptions, setActiveOpt
 	}
 
 	return (
-		<animated.div style={minNavSlide} className={styles.sidenavMin + " z-depth-1-half"}>
+		<animated.div style={minNavSlide} className={`${styles.sidenavMin} z-depth-1-half`} role="navigation">
 			<animated.li style={rainIcons[0]}>
-				<a className="waves-effect">
-					<FontAwesomeIcon icon={faBars} className={styles.icon + " bars-icon icon"} onClick={slideNav} />
+				<a
+					className="waves-effect"
+					onClick={slideNav}
+					onKeyDown={(e) => e.key === "Enter" && slideNav()}
+					role="menuitem"
+					tabIndex={0} // Make the link focusable
+				>
+					<FontAwesomeIcon icon={faBars} className={`${styles.icon} bars-icon icon`} />
 				</a>
 			</animated.li>
 			{populateSidenavOptions(sidenavOptions)}
-			<animated.li style={rainIcons[rainIcons.length - 1]} onClick={() => handleClick()}>
+			<animated.li
+				style={rainIcons[rainIcons.length - 1]}
+				onClick={() => handleClick()}
+				role="menuitem"
+				tabIndex={0}>
 				<a className="waves-effect">
-					<FontAwesomeIcon icon={faPlus} className={styles.icon + " icon"} />
+					<FontAwesomeIcon icon={faPlus} className={`${styles.icon} icon`} />
 				</a>
 			</animated.li>
 		</animated.div>

@@ -32,19 +32,22 @@ function Invite({ invite, handleResponse, anim }) {
 					<>
 						<button
 							onClick={() => handleResponse(invite.id, "accepted")}
-							className="waves-effect waves-light">
+							className="waves-effect waves-light"
+							aria-label="Accept Invitation">
 							Yes
 						</button>
 						<button
 							onClick={() => handleResponse(invite.id, "declined")}
-							className="waves-effect waves-light red">
+							className="waves-effect waves-light red"
+							aria-label="Decline Invitation">
 							<FontAwesomeIcon icon={faTimes} />
 						</button>
 					</>
 				) : (
 					<button
 						onClick={() => handleResponse(invite.id, "canceled")}
-						className="waves-effect waves-light red">
+						className="waves-effect waves-light"
+						aria-label="Cancel Invitation">
 						<FontAwesomeIcon icon={faTimes} />
 					</button>
 				)}

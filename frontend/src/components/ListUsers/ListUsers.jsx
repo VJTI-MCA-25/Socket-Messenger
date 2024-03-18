@@ -28,7 +28,7 @@ const ListUsers = ({ usersList }) => {
 	});
 
 	return (
-		<ul className={styles.friendsList}>
+		<ul className={styles.friendsList} role="list">
 			{friendsListAnim((anim, user) => (
 				<UserItem key={user.id} friend={user} handleInvite={handleInvite} styles={styles} anim={anim} />
 			))}
