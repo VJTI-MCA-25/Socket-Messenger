@@ -4,8 +4,6 @@ import { SearchFriend, Invitations, FriendsList } from "barrel";
 import styles from "./Friends.module.scss";
 
 const Friends = () => {
-	const [updateDep, forceUpdate] = useReducer((prev) => prev + 1, 0);
-
 	return (
 		<div className={styles.container}>
 			<div className={styles.friendsCol}>
@@ -14,12 +12,12 @@ const Friends = () => {
 						<SearchFriend />
 					</div>
 					<div className="row">
-						<FriendsList updateDep={updateDep} />
+						<FriendsList />
 					</div>
 				</div>
 			</div>
 			<div className={styles.invitesCol}>
-				<Invitations forceUpdate={forceUpdate} />
+				<Invitations />
 			</div>
 		</div>
 	);

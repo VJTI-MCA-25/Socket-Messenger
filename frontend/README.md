@@ -5,6 +5,7 @@
 -   [Delete Unverified Users After 24 Hours](https://stackoverflow.com/questions/67148672/how-to-delete-unverified-e-mail-addresses-in-firebase-authentication-flutter)
 
 =======
+
 > **Note:** This project uses aliases for import for some of its directories. They can be found in `vite.config.js`
 > The aliases are added in the `jsconfig.json` file for the editor to recognize them.
 
@@ -43,17 +44,17 @@
 -   [ ] Link Previews
 -   [ ] Spotify Integration
 -   [ ] Developer API
--   [ ] Add testing (Vitest) 
+-   [ ] Add testing (Vitest)
 
 ### Accessibilities
 
 -   [ ] Consider Translate Options (Firebase has a translate API)
--   [ ] Add aria-labels to buttons
--   [ ] Add alt to images
--   [ ] HTML Semantics
--   [ ] Keyboard Navigation
--   [ ] Focus Management
--   [ ] Screen Reader
+-   [x] Add aria-labels to buttons
+-   [x] Add alt to images
+-   [x] HTML Semantics
+-   [x] Keyboard Navigation
+-   [x] Focus Management
+-   [x] Screen Reader
 -   [ ] Color Contrast
 -   [ ] Font Size
 -   [ ] Disable Animations
@@ -62,4 +63,3 @@
 
     > All This can be done using [Axe](https://www.deque.com/axe/)
     > Also Better to create a Setttings Page for this
-

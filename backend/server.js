@@ -6,6 +6,7 @@ import { logger } from "./serverHelperFunctions.js";
 
 import { userRoutes } from "./routes/userRoutes.js";
 import { inviteRoutes } from "./routes/inviteRoutes.js";
+import { FieldPath } from "firebase-admin/firestore";
 
 // Routes
 app.use("/api/users", userRoutes);
@@ -54,6 +55,38 @@ sockets.inviteIo.on("connection", async (socket) => {
 	} catch (error) {
 		logger(error);
 	}
+});
+
+sockets.friendsIo.on("connection", async (socket) => {
+	const user = socket.user;
+	let dataSubscription;
+	let listSubscription = usersRef.doc(user.uid).onSnapshot((snap) => {
+		const friends = snap.data().friends;
+		console.log(friends);
+
+		if (friends?.length > 0) {
+			dataSubscription = usersRef.where(FieldPath.documentId(), "in", friends).onSnapshot((snap) => {
+				let friendsData = snap.docs.map((snap) => {
+					const data = snap.data();
+					return {
+						uid: snap.id,
+						displayName: data.displayName,
+						email: data.email,
+						photoURL: data.photoURL,
+						isFriend: true,
+					};
+				});
+				socket.emit("friends", friendsData);
+			});
+		} else {
+			socket.emit("friends", []);
+		}
+	});
+
+	socket.on("disconnect", () => {
+		listSubscription();
+		if (typeof dataSubscription === "function") dataSubscription();
+	});
 });
 
 server.listen(PORT, () => console.log(`Server listening on port ${PORT}!`));

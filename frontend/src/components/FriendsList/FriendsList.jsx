@@ -1,23 +1,12 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ListUsers } from "barrel";
-import { getFriends } from "services/authFunctions";
+import { FriendsContext } from "contexts/FriendsContext";
 
 import styles from "./FriendsList.module.scss";
 
-const FriendsList = ({ updateDep }) => {
-	const [friends, setFriends] = useState([]);
-
-	useEffect(() => {
-		console.log("Fetching Data");
-		(async () => {
-			try {
-				const response = await getFriends();
-				setFriends(response.data);
-			} catch (error) {
-				console.error(error);
-			}
-		})();
-	}, [updateDep]);
+const FriendsList = () => {
+	const friends = useContext(FriendsContext);
+	console.log(friends);
 
 	return (
 		<div className="row">
