@@ -43,6 +43,8 @@
 -   [ ] Spotify Integration
 -   [ ] Developer API
 -   [ ] Add testing (Vitest) 
+-   [ ] Add Media Support (Emojis , Gifs , Video , Audio etc) 
+
 
 ### Accessibilities
 
