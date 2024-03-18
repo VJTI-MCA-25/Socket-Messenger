@@ -1,0 +1,58 @@
+.displayName {
+	font-style: italic;
+	color: $highlight;
+}
+
+.invite {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: flex-start;
+	position: relative;
+	padding-left: 2rem;
+	// border-bottom: 1px solid $highlight;
+	padding-bottom: 10px;
+	gap: 0.5rem;
+	&::before {
+		content: "";
+		display: block;
+		width: 5px;
+		border-radius: 5px;
+		height: 100%;
+		position: absolute;
+		background-color: $highlight;
+		top: 0;
+		left: 0;
+	}
+}
+
+.inviteActions {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	gap: 0.5rem;
+	align-items: center;
+	justify-content: flex-start;
+	& > button {
+		outline: none;
+		border: none;
+		padding: 0.25rem 0.5rem;
+		border-radius: 50px;
+		width: 50px;
+		background-color: $highlight;
+	}
+
+	svg {
+		cursor: pointer;
+		// color: $danger;
+		color: $lightText;
+	}
+}
+
+.inviteSender {
+	font-size: 16px;
+	& .display-name {
+		font-style: italic;
+		color: $highlight;
+	}
+}

@@ -1,27 +1,22 @@
 // Imports
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
 import { animated, useSpring, useTrail } from "@react-spring/web";
-
-// Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
-
-// Services
-import { loginUser } from "../../../services/authFunctions";
+import { loginUser } from "services/authFunctions";
+import { updateTextFields } from "materialize-css";
 
 // CSS
-import "./Login.scss";
-import M from "materialize-css";
+import styles from "./Login.module.scss";
 
 function Login() {
 	const [errorLine, setErrorLine] = useState("");
 
 	const { state } = useLocation();
 
-	const [email, setEmail] = useState(state?.email ? state.email : "");
-	const [password, setPassword] = useState(state?.password ? state.password : "");
+	const [email, setEmail] = useState(state?.email ? state.email : "thakur.aashay@gmail.com");
+	const [password, setPassword] = useState(state?.password ? state.password : "test1234");
 
 	const [passwordVisibility, setPasswordVisibility] = useState(false);
 	const [rememberMe, setRememberMe] = useState(false);
@@ -30,7 +25,7 @@ function Login() {
 
 	useEffect(() => {
 		// Materialize Init
-		M.updateTextFields();
+		updateTextFields();
 	}, []);
 
 	// React Spring, delayed animation for the inputs
@@ -83,81 +78,83 @@ function Login() {
 	}
 
 	return (
-		<animated.div style={appearRight}>
-			<div className="row login-container">
-				<div className="col s12 m8 l6 inputs ">
-					<div className="box">
-						<form onSubmit={handleLogin}>
-							<div className="row">
-								<h3>Log In</h3>
-								<span className="error-line center">{errorLine}</span>
-								<animated.div style={fadeInRise[0]}>
-									<div className="input-field">
-										<input
-											id="email"
-											type="email"
-											className="validate"
-											value={email}
-											autoComplete="email"
-											onChange={(e) => setEmail(e.target.value)}
-										/>
-										<label htmlFor="email">Email</label>
-									</div>
-								</animated.div>
-								<animated.div style={fadeInRise[1]}>
-									<div className="input-field">
-										<FontAwesomeIcon
-											icon={faEye}
-											className="eye"
-											// onClick={() => setPasswordVisibility((prev) => !prev)}
-											onMouseDown={() => setPasswordVisibility(true)}
-											onMouseUp={() => setPasswordVisibility(false)}
-											onMouseLeave={() => setPasswordVisibility(false)}
-										/>
-										<input
-											id="password"
-											autoComplete="current-password"
-											value={password}
-											onChange={(e) => setPassword(e.target.value)}
-											type={passwordVisibility ? "text" : "password"}
-											className="validate"
-										/>
-										<label htmlFor="password">Password</label>
-									</div>
-								</animated.div>
-							</div>
-							<div className="row">
-								<div className="col s6">
-									<p>
-										<label>
+		<div className={styles.container}>
+			<div className="container">
+				<div className="row">
+					<animated.div style={appearRight}>
+						<div className={styles.form + " col s12 m8 l6"}>
+							<form onSubmit={handleLogin}>
+								<div className="row">
+									<h3>Log In</h3>
+									<span className={styles.errorLine + " center"}>{errorLine}</span>
+									<animated.div style={fadeInRise[0]}>
+										<div className="input-field">
 											<input
-												type="checkbox"
-												checked={rememberMe}
-												id="remember-me"
-												onChange={(e) => setRememberMe(e.target.checked)}
+												id="email"
+												type="email"
+												className="validate"
+												value={email}
+												autoComplete="email"
+												onChange={(e) => setEmail(e.target.value)}
 											/>
-											<span>Remember Me</span>
-										</label>
-									</p>
+											<label htmlFor="email">Email</label>
+										</div>
+									</animated.div>
+									<animated.div style={fadeInRise[1]}>
+										<div className="input-field">
+											<FontAwesomeIcon
+												icon={faEye}
+												className={styles.eye}
+												// onClick={() => setPasswordVisibility((prev) => !prev)}
+												onMouseDown={() => setPasswordVisibility(true)}
+												onMouseUp={() => setPasswordVisibility(false)}
+												onMouseLeave={() => setPasswordVisibility(false)}
+											/>
+											<input
+												id="password"
+												autoComplete="current-password"
+												value={password}
+												onChange={(e) => setPassword(e.target.value)}
+												type={passwordVisibility ? "text" : "password"}
+												className="validate"
+											/>
+											<label htmlFor="password">Password</label>
+										</div>
+									</animated.div>
 								</div>
-								<animated.div style={fadeInRise[2]}>
-									<div className="col s6 submit-button">
-										<button type="submit" className="right waves-effect waves-light btn">
-											Log In
-										</button>
+								<div className="row">
+									<div className="col s6">
+										<p>
+											<label>
+												<input
+													type="checkbox"
+													checked={rememberMe}
+													id="remember-me"
+													onChange={(e) => setRememberMe(e.target.checked)}
+												/>
+												<span>Remember Me</span>
+											</label>
+										</p>
 									</div>
-								</animated.div>
-							</div>
-							<div className="row">
-								<Link className="left" to="/auth/signup" state={{ email, password }}>
-									New Here?
-								</Link>
-							</div>
-						</form>
-					</div>
+									<animated.div style={fadeInRise[2]}>
+										<div className={styles.submitButton + " col s6"}>
+											<button type="submit" className="right waves-effect waves-light btn">
+												Log In
+											</button>
+										</div>
+									</animated.div>
+								</div>
+								<div className="row">
+									<Link className="left" to="/auth/signup" state={{ email, password }}>
+										New Here?
+									</Link>
+								</div>
+							</form>
+						</div>
+					</animated.div>
 				</div>
 			</div>
-		</animated.div>
+		</div>
 	);
 }
 

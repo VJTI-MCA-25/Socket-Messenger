@@ -1,0 +1,40 @@
+.friendsList {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	gap: 1rem;
+}
+.item {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	position: relative;
+	align-items: center;
+	background-color: $darkLightBg;
+	width: 100%;
+	padding: 10px;
+	border-radius: 5px;
+	gap: 2rem;
+}
+
+.profilePic {
+	height: 40px;
+	aspect-ratio: 1;
+	border-radius: 50%;
+}
+
+.actions {
+	margin-left: auto;
+	margin-right: 2rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 2rem;
+	svg {
+		cursor: pointer;
+		transition: all 0.3s ease;
+		font-size: 20px;
+		width: 20px;
+	}
+}

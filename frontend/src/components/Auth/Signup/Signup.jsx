@@ -1,19 +1,14 @@
 // Imports
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-
 import { animated, useSpring, useTrail } from "@react-spring/web";
-
-// Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
-
-// Services
-import { createUser } from "../../../services/authFunctions";
+import { createUser } from "services/authFunctions";
+import { updateTextFields } from "materialize-css";
 
 // CSS
-import "./Signup.scss";
-import M from "materialize-css";
+import styles from "./Signup.module.scss";
 
 function Signup() {
 	const [errorLine, setErrorLine] = useState("");
@@ -29,7 +24,7 @@ function Signup() {
 
 	useEffect(() => {
 		// Materialize Init
-		M.updateTextFields();
+		updateTextFields();
 	}, []);
 
 	// React Spring, delayed animation for the inputs
@@ -84,66 +79,70 @@ function Signup() {
 	}
 
 	return (
-		<animated.div style={appearRight}>
-			<div className="row signup-container">
-				<div className="col s12 m8 l6 inputs">
-					<form onSubmit={handleSubmit}>
-						<div className="row">
-							<h3>Sign Up</h3>
-							<span className="error-line center">{errorLine}</span>
-							<animated.div style={fadeInRise[0]}>
-								<div className="input-field">
-									<input
-										id="email"
-										type="email"
-										className="validate"
-										value={email}
-										autoComplete="email"
-										onChange={(e) => setEmail(e.target.value)}
-									/>
-									<label htmlFor="email">Email</label>
+		<div className={styles.container}>
+			<div className="container">
+				<div className="row">
+					<animated.div style={appearRight}>
+						<div className={styles.form + " col s12 m8 l6"}>
+							<form onSubmit={handleSubmit}>
+								<div className="row">
+									<h3>Sign Up</h3>
+									<span className={styles.errorLine + " center"}>{errorLine}</span>
+									<animated.div style={fadeInRise[0]}>
+										<div className="input-field">
+											<input
+												id="email"
+												type="email"
+												className="validate"
+												value={email}
+												autoComplete="email"
+												onChange={(e) => setEmail(e.target.value)}
+											/>
+											<label htmlFor="email">Email</label>
+										</div>
+									</animated.div>
+									<animated.div style={fadeInRise[1]}>
+										<div className="input-field">
+											<FontAwesomeIcon
+												icon={faEye}
+												className={styles.eye}
+												// onClick={() => setPasswordVisibility((prev) => !prev)}
+												onMouseDown={() => setPasswordVisibility(true)}
+												onMouseUp={() => setPasswordVisibility(false)}
+												onMouseLeave={() => setPasswordVisibility(false)}
+											/>
+											<input
+												id="password"
+												autoComplete="new-password"
+												value={password}
+												onChange={(e) => setPassword(e.target.value)}
+												type={passwordVisibility ? "text" : "password"}
+												className="validate"
+											/>
+											<label htmlFor="password">Password</label>
+										</div>
+									</animated.div>
 								</div>
-							</animated.div>
-							<animated.div style={fadeInRise[1]}>
-								<div className="input-field">
-									<FontAwesomeIcon
-										icon={faEye}
-										className="eye"
-										// onClick={() => setPasswordVisibility((prev) => !prev)}
-										onMouseDown={() => setPasswordVisibility(true)}
-										onMouseUp={() => setPasswordVisibility(false)}
-										onMouseLeave={() => setPasswordVisibility(false)}
-									/>
-									<input
-										id="password"
-										autoComplete="new-password"
-										value={password}
-										onChange={(e) => setPassword(e.target.value)}
-										type={passwordVisibility ? "text" : "password"}
-										className="validate"
-									/>
-									<label htmlFor="password">Password</label>
+								<div className="row">
+									<animated.div style={fadeInRise[2]}>
+										<div className={styles.submitButton + " col s12"}>
+											<button type="submit" className="right waves-effect waves-light btn">
+												Sign Up
+											</button>
+										</div>
+									</animated.div>
 								</div>
-							</animated.div>
-						</div>
-						<div className="row">
-							<animated.div style={fadeInRise[2]}>
-								<div className="col submit-button s12">
-									<button type="submit" className="right waves-effect waves-light btn">
-										Sign Up
-									</button>
+								<div className="row">
+									<Link className="left" to="/auth/login" state={{ email, password }}>
+										Already a member?
+									</Link>
 								</div>
-							</animated.div>
+							</form>
 						</div>
-						<div className="row">
-							<Link className="left" to="/auth/login" state={{ email, password }}>
-								Already a member?
-							</Link>
-						</div>
-					</form>
+					</animated.div>
 				</div>
 			</div>
-		</animated.div>
+		</div>
 	);
 }
 

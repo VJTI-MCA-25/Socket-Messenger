@@ -1,26 +1,8 @@
-@use "./utilities/variables" as *;
-
-@at-root {
-	html {
-		font-family: $font;
-		color: $lightText;
-		background-color: $darkBg;
-
-		color-scheme: light dark;
-		font-synthesis: none;
-		text-rendering: optimizeLegibility;
-		-webkit-font-smoothing: antialiased;
-		-moz-osx-font-smoothing: grayscale;
-	}
-}
-
-.mainContainer {
-	height: 100vh;
-	width: 100vw;
+main {
 	display: flex;
-	justify-content: flex-start;
-	gap: 2rem;
+	flex-direction: column;
 	align-items: center;
-	position: relative;
-	z-index: 0;
+	justify-content: center;
+	height: 100vh;
+	font-family: Arial, sans-serif;
 }

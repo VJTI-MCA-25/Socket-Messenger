@@ -2,12 +2,12 @@
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider, Outlet, redirect } from "react-router-dom";
 
-import { Home, Error, Auth, Friends, Misc, Profile } from "./components/Components";
+import { Home, Error, Login, Signup, Friends, Profile, DisplayName } from "barrel";
 
-import { preEntryChecks } from "./services/authFunctions";
+import { preEntryChecks } from "services/authFunctions";
 
 import App from "./App.jsx";
-import "./index.css";
+import "./main.scss";
 
 const router = createBrowserRouter([
 	{
@@ -49,11 +49,7 @@ const router = createBrowserRouter([
 
 			{
 				path: "auth",
-				element: (
-					<div className="container">
-						<Outlet />
-					</div>
-				),
+				element: <Outlet />,
 				children: [
 					{
 						// This path is for when the user goes to /auth
@@ -67,11 +63,11 @@ const router = createBrowserRouter([
 							if (report.isLoggedIn) return redirect("/channels");
 							else return null;
 						},
-						element: <Auth.Login />,
+						element: <Login />,
 					},
 					{
 						path: "signup",
-						element: <Auth.Signup />,
+						element: <Signup />,
 					},
 				],
 			},
@@ -91,7 +87,7 @@ const router = createBrowserRouter([
 					else if (report.isDisplayNameSet) return redirect("/channels");
 					else return null;
 				},
-				element: <Misc.DisplayName />,
+				element: <DisplayName />,
 			},
 			{
 				path: "error",

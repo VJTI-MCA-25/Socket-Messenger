@@ -1,13 +1,10 @@
-import axios from "axios";
 import { logoutUser } from "./authFunctions";
+import { instance } from "./config";
+import axios from "axios";
 
 async function getUserData(user) {
 	try {
-		const response = await axios.get(`http://localhost:3000/api/users/get-data/${user.uid}`, {
-			headers: {
-				Authorization: user.accessToken,
-			},
-		});
+		const response = await instance.get(`/users/get-data/${user.uid}`);
 		return response.data;
 	} catch (error) {
 		logoutUser();
@@ -17,27 +14,17 @@ async function getUserData(user) {
 
 async function checkDisplayName(displayName) {
 	try {
-		const response = await axios.get(`http://localhost:3000/api/users/check-display-name/${displayName}`);
+		const response = await instance.get(`/users/check-display-name/${displayName}`);
 		return response.data;
 	} catch (error) {
 		throw { ...error.response.data };
 	}
 }
 
-async function setData(user, data) {
+async function setData(data) {
 	try {
-		const response = await axios({
-			method: "post",
-			url: `http://localhost:3000/api/users/set-data`,
-			headers: {
-				Authorization: user.accessToken,
-			},
-			data: {
-				data: {
-					uid: user.uid,
-					...data,
-				},
-			},
+		const response = await instance.post("/users/set-data", {
+			data,
 		});
 		return response.data;
 	} catch (error) {
@@ -45,4 +32,34 @@ async function setData(user, data) {
 	}
 }
 
-export { getUserData, checkDisplayName, setData };
+async function getUsersList(displayNameString) {
+	try {
+		const response = await instance.get(`/users/get-users-list/${displayNameString}`);
+		return response.data;
+	} catch (error) {
+		throw { ...error.response };
+	}
+}
+
+async function respondInvite(inviteId, status) {
+	try {
+		const response = await instance.post("/invites/invite-response", {
+			inviteId,
+			status,
+		});
+		return response.data;
+	} catch (error) {
+		throw { ...error.response.data };
+	}
+}
+
+async function sendInvite(sendTo) {
+	try {
+		const res = await instance.post("/invites/send-invite", { sendTo });
+		return res.data;
+	} catch (error) {
+		throw { ...error.response.data };
+	}
+}
+
+export { getUserData, checkDisplayName, setData, getUsersList, respondInvite, sendInvite };

@@ -1,0 +1,20 @@
+.container {
+	display: flex;
+	align-items: flex-start;
+	flex-direction: row;
+	height: 100%;
+	width: 100%;
+	padding: 2rem 3rem;
+	overflow: hidden;
+	gap: 2rem;
+}
+
+.invitesCol {
+	max-width: 30vw;
+}
+
+.friendsCol {
+	flex: 1;
+	margin-left: 2rem;
+	transition: width 0.2s ease-in-out;
+}

@@ -1,0 +1,13 @@
+.header {
+	margin-bottom: 20px;
+	font-size: 28px;
+	border-bottom: 1px solid $highlight;
+}
+
+.emptyListTitle {
+	color: $borderColor;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-style: italic;
+}

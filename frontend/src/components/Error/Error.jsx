@@ -1,7 +1,7 @@
+import { useEffect } from "react";
 import { useLocation, useRouteError, useNavigate } from "react-router-dom";
 
-import "./Error.scss";
-import { useEffect } from "react";
+import styles from "./Error.module.scss";
 
 const Error = () => {
 	// eslint-disable-next-line react-hooks/rules-of-hooks
@@ -17,11 +17,11 @@ const Error = () => {
 
 	if (error) {
 		return (
-			<div className="container error-page">
-				<div className="error-code" style={{ fontSize: typeof code === "number" ? "10rem" : "2rem" }}>
+			<div className={styles.errorPage + " container"}>
+				<div className={styles.errorCode} style={{ fontSize: typeof code === "number" ? "10rem" : "2rem" }}>
 					{code}
 				</div>
-				<div className="error-content">
+				<div>
 					<h3>Something went wrong</h3>
 					<h5>{message}</h5>
 				</div>

@@ -1,10 +1,8 @@
 import { useState, useEffect, createContext } from "react";
 import { PropTypes } from "prop-types";
 
-import { auth } from "../services/firebase-config";
+import { auth } from "services/config";
 import { onAuthStateChanged } from "firebase/auth";
-
-// import { getUserData } from "../services/userFunctions";
 
 const UserContext = createContext();
 
