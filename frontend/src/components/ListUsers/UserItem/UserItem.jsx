@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage, faEllipsisVertical, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { animated } from "@react-spring/web";
 
-const UserItem = ({ friend, handleInvite, styles, anim }) => {
+const UserItem = ({ friend, handleInvite, styles, anim, toggleMenu, children }) => {
 	return (
 		<animated.li style={anim} className={styles.item} role="listitem">
 			<img src="https://via.placeholder.com/150" alt="Profile Picture" className={styles.profilePic} />
@@ -13,8 +13,12 @@ const UserItem = ({ friend, handleInvite, styles, anim }) => {
 						<button className={styles.button} aria-label="Send Message">
 							<FontAwesomeIcon icon={faMessage} className="message-icon" />
 						</button>
-						<button className={styles.button} aria-label="More Options">
+						<button
+							onClick={() => toggleMenu(friend.uid)}
+							className={styles.button}
+							aria-label="More Options">
 							<FontAwesomeIcon icon={faEllipsisVertical} className="more-icon" />
+							{children}
 						</button>
 					</>
 				) : (

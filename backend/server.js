@@ -6,11 +6,13 @@ import { logger } from "./serverHelperFunctions.js";
 
 import { userRoutes } from "./routes/userRoutes.js";
 import { inviteRoutes } from "./routes/inviteRoutes.js";
+import { friendsRoutes } from "./routes/friendsRoutes.js";
 import { FieldPath } from "firebase-admin/firestore";
 
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/invites", inviteRoutes);
+app.use("/api/friends", friendsRoutes);
 
 sockets.inviteIo.on("connection", async (socket) => {
 	try {
@@ -62,7 +64,6 @@ sockets.friendsIo.on("connection", async (socket) => {
 	let dataSubscription;
 	let listSubscription = usersRef.doc(user.uid).onSnapshot((snap) => {
 		const friends = snap.data().friends;
-		console.log(friends);
 
 		if (friends?.length > 0) {
 			dataSubscription = usersRef.where(FieldPath.documentId(), "in", friends).onSnapshot((snap) => {

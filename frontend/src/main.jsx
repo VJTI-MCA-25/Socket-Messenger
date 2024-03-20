@@ -17,7 +17,7 @@ const router = createBrowserRouter([
 		children: [
 			{
 				index: true,
-				loader: async () => redirect("/channels"),
+				loader: async () => redirect("/channels/friends"),
 			},
 			{
 				path: "channels",
@@ -30,8 +30,11 @@ const router = createBrowserRouter([
 				},
 				children: [
 					{
-						path: "friends",
 						index: true,
+						loader: async () => redirect("/channels/friends"),
+					},
+					{
+						path: "friends",
 						element: <Friends />,
 					},
 					{

@@ -6,7 +6,6 @@ import styles from "./FriendsList.module.scss";
 
 const FriendsList = () => {
 	const friends = useContext(FriendsContext);
-	console.log(friends);
 
 	return (
 		<div className="row">

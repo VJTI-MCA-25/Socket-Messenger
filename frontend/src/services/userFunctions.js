@@ -62,4 +62,13 @@ async function sendInvite(sendTo) {
 	}
 }
 
-export { getUserData, checkDisplayName, setData, getUsersList, respondInvite, sendInvite };
+async function removeFriend(friendId) {
+	try {
+		const res = instance.delete(`/friends/${friendId}`);
+		return res.data;
+	} catch (error) {
+		throw { ...error.response.data };
+	}
+}
+
+export { getUserData, checkDisplayName, setData, getUsersList, respondInvite, sendInvite, removeFriend };

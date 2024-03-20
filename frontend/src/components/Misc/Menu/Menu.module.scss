@@ -1,0 +1,36 @@
+.container {
+	position: absolute;
+	background-color: $darkLightBg;
+	min-width: 200px;
+	z-index: 9999;
+	border-radius: 5px;
+	box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+	transform-origin: top left;
+}
+.menu {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+}
+
+.menuItem {
+	padding: 15px 20px;
+	display: flex;
+	flex-direction: row-reverse;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 1rem;
+	width: 100%;
+	&:hover {
+		background-color: $darkBg;
+	}
+}
+
+// .text {
+
+// }
+
+// .icon {
+
+// }

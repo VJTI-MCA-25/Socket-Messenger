@@ -101,5 +101,15 @@
 		"message": "User cannot cancel received invite",
 		"code": 400,
 		"statusText": "invite/cannot-cancel-received-invite"
+	},
+	"ProvidedUidNotAFriendError": {
+		"message": "Provided id is not a friend",
+		"code": 401,
+		"statusText": "friend/not-a-friend"
+	},
+	"CannotRemoveSelfError": {
+		"message": "Cannot remove self",
+		"code": 400,
+		"statusText": "friend/cannot-remove-self"
 	}
 }
