@@ -43,9 +43,9 @@ const MaxNav = ({ maxNavSlide, activeOptionsList, bind, styles, isNavOpen }) => 
 			role="navigation">
 			<ul role="menu">
 				<li role="none">
-					<div className={styles.userView + " user-view"}>
-						<div className="background">
-							<img src={officeImage} alt="Office Background" />
+					<div className="user-view">
+						<div className={`${styles.background} background`}>
+							{/* <img src={officeImage} alt="Office Background" /> */}
 						</div>
 						<img
 							className="circle"

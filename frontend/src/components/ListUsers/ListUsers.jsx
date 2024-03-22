@@ -7,7 +7,7 @@ import { faUserSlash, faBan, faFlag } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "materialize-css";
 import styles from "./ListUsers.module.scss";
 
-const ListUsers = ({ usersList }) => {
+const ListUsers = ({ usersList, handleCreateGroup }) => {
 	const menuRef = useRef(null);
 	const [activeMenu, setActiveMenu] = useState(false);
 
@@ -83,6 +83,7 @@ const ListUsers = ({ usersList }) => {
 					handleInvite={handleInvite}
 					styles={styles}
 					anim={anim}
+					handleCreateGroup={handleCreateGroup}
 					toggleMenu={toggleMenu}>
 					<Menu ref={menuRef} options={options} showMenu={activeMenu === friend.uid} friend={friend} />
 				</UserItem>

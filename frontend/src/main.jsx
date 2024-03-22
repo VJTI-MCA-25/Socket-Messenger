@@ -2,7 +2,7 @@
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider, Outlet, redirect } from "react-router-dom";
 
-import { Home, Error, Login, Signup, Friends, Profile, DisplayName } from "barrel";
+import { Home, Error, Login, Signup, Friends, Profile, DisplayName, MessageBox } from "barrel";
 
 import { preEntryChecks } from "services/authFunctions";
 
@@ -32,6 +32,10 @@ const router = createBrowserRouter([
 					{
 						index: true,
 						loader: async () => redirect("/channels/friends"),
+					},
+					{
+						path: ":channelId",
+						element: <MessageBox />,
 					},
 					{
 						path: "friends",

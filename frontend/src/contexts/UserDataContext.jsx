@@ -1,7 +1,7 @@
 import { useEffect, createContext, useState, useContext } from "react";
 import { PropTypes } from "prop-types";
 import { UserContext } from "./UserContext";
-import { getUserData } from "../services/userFunctions";
+import { getUserData } from "services/userFunctions";
 
 const UserDataContext = createContext();
 

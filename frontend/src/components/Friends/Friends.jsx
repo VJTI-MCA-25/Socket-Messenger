@@ -1,4 +1,3 @@
-import { useReducer } from "react";
 import { SearchFriend, Invitations, FriendsList } from "barrel";
 
 import styles from "./Friends.module.scss";

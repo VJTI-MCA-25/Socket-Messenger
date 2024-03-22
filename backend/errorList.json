@@ -111,5 +111,10 @@
 		"message": "Cannot remove self",
 		"code": 400,
 		"statusText": "friend/cannot-remove-self"
+	},
+	"GroupAlreadyExists": {
+		"message": "Group already exists",
+		"code": 409,
+		"statusText": "group/already-exists"
 	}
 }
