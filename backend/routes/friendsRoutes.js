@@ -42,22 +42,29 @@ friends.delete("/:uid", async (req, res) => {
 	const user = req.user;
 
 	try {
-		let data = (await usersRef.doc(user.uid).get()).data();
-		let friends = data.friends;
+		let userData = (await usersRef.doc(user.uid).get()).data();
+		let userFriendsList = userData.friends.map((friend) => friend.uid);
+
 		let friendRef = usersRef.doc(uid);
+		let friendData = (await friendRef.get()).data();
 
 		if (user.uid === uid) throw CannotRemoveSelfError;
 		if (!(await friendRef.get()).exists) throw UserNotFoundError;
-		if (!friends.includes(uid)) throw ProvidedUidNotAFriendError;
+		if (!friendsList.includes(uid)) throw ProvidedUidNotAFriendError;
+
+		userFriendsList = userData.friends.filter((friend) => friend.uid !== uid);
+		let friendFriendsList = friendData.friends.filter((friend) => friend.uid !== user.uid);
 
 		await Promise.all([
 			usersRef.doc(user.uid).update({
-				friends: FieldValue.arrayRemove(uid),
+				friends: userFriendsList,
 			}),
 			usersRef.doc(uid).update({
-				friends: FieldValue.arrayRemove(user.uid),
+				friends: friendFriendsList,
 			}),
 		]);
+
+		res.status(200).send("auth/friend-removed");
 	} catch (error) {
 		errorHandler(res, error);
 	}
@@ -79,12 +86,12 @@ friends.post("/create-group", async (req, res) => {
 		if (!list.every((uid) => friendsList.includes(uid))) throw ProvidedUidNotAFriendError;
 		if (!(await groupsRef.where("sortedUserIds", "==", sortedUserIds).get()).empty) throw GroupAlreadyExists; // Probably should remove this limitation
 
-		let group = await groupsRef.add({
+		let data = {
 			members: [...list, user.uid],
 			createdAt: Timestamp.now(),
 			createdBy: user.uid,
 			sortedUserIds,
-		});
+		};
 
 		let groupId = group.id;
 
@@ -105,7 +112,12 @@ friends.post("/create-group", async (req, res) => {
 				usersRef.doc(user.uid).update({ friends }),
 				usersRef.doc(friendId).update({ friends: friendsData }),
 			]);
+
+			data.photoURL = friend.photoURL;
+			data.displayName = friend.displayName;
 		}
+
+		let group = await groupsRef.add(data);
 
 		res.status(201).send({ groupId });
 	} catch (error) {

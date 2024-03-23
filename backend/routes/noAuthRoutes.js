@@ -1,20 +1,8 @@
 import { usersRef, el } from "../initialize.js";
-import { FieldValue, Timestamp } from "firebase-admin/firestore";
-import { errorHandler, logger, decodeAndVerify } from "../serverHelperFunctions.js";
+import { Timestamp } from "firebase-admin/firestore";
+import { errorHandler, logger } from "../serverHelperFunctions.js";
 
-const {
-	MissingParametersError,
-	UserNotFoundError,
-	SelfInviteError,
-	AlreadyFriendsError,
-	InviteAlreadySentError,
-	InviteAlreadyReceivedError,
-	UnknownError,
-	InviteAlreadyProcessedError,
-	InvalidInviteStatusError,
-	InviteNotFoundError,
-	UserCannotCancelReceivedInviteError,
-} = el;
+const { MissingParametersError, UserNotFoundError } = el;
 
 import { Router } from "express";
 const noAuth = Router();

@@ -1,6 +1,5 @@
 import { logoutUser } from "./authFunctions";
 import { instance } from "./config";
-import axios from "axios";
 import { parseError } from "./helperFunctions";
 
 async function getUserData(user) {
@@ -81,4 +80,23 @@ async function createGroup(friendsId) {
 	}
 }
 
-export { getUserData, checkDisplayName, setData, getUsersList, respondInvite, sendInvite, removeFriend, createGroup };
+async function getMessages() {
+	try {
+		const response = await instance.get("/messages/get-messages");
+		return response.data;
+	} catch (error) {
+		throw { ...error.response.data };
+	}
+}
+
+export {
+	getUserData,
+	checkDisplayName,
+	setData,
+	getUsersList,
+	respondInvite,
+	sendInvite,
+	removeFriend,
+	createGroup,
+	getMessages,
+};

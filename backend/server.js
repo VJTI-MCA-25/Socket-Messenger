@@ -1,11 +1,13 @@
-import { app, PORT, server, sockets, usersRef } from "./initialize.js";
+import { app, groupsRef, PORT, server, sockets, usersRef } from "./initialize.js";
 import { logger, errorHandler, decodeAndVerify } from "./serverHelperFunctions.js";
 
 import { noAuthRoutes } from "./routes/noAuthRoutes.js";
 import { userRoutes } from "./routes/userRoutes.js";
 import { inviteRoutes } from "./routes/inviteRoutes.js";
 import { friendsRoutes } from "./routes/friendsRoutes.js";
-import { FieldPath } from "firebase-admin/firestore";
+import { messageRoutes } from "./routes/messageRoutes.js";
+
+import { FieldPath, Timestamp } from "firebase-admin/firestore";
 
 app.use("/api", noAuthRoutes);
 
@@ -27,6 +29,7 @@ app.use(async (req, res, next) => {
 app.use("/api/users", userRoutes);
 app.use("/api/invites", inviteRoutes);
 app.use("/api/friends", friendsRoutes);
+app.use("/api/messages", messageRoutes);
 
 // Socket IO has authentication too, it is defined in intialize.js file
 sockets.inviteIo.on("connection", async (socket) => {
@@ -111,17 +114,37 @@ sockets.friendsIo.on("connection", async (socket) => {
 sockets.messageIo.on("connection", async (socket) => {
 	const user = socket.user;
 
-	const groupListSnap = await usersRef.doc(user.uid).collection("groups").get();
-	const groupList = groupListSnap.docs.map((snap) => snap.id);
+	const groupListSnap = await usersRef.doc(user.uid).get();
+	const groupList = groupListSnap.data().groups;
 
 	groupList.forEach((groupId) => {
 		socket.join(groupId);
 	});
 
-	socket.on("message", (message) => {
+	socket.on("message send", async (message) => {
 		const { groupId, messageText } = message;
 
-		socket.to(groupId).emit("message", message);
+		try {
+			let groupRef = groupsRef.doc(groupId);
+
+			Promise.all([
+				groupRef.update({
+					lastMessage: messageText,
+					lastMessageSentAt: Timestamp.now(),
+				}),
+				groupsRef.doc(groupId).collection("messages").add({
+					sentBy: user.uid,
+					message: messageText,
+					sentAt: Timestamp.now(),
+				}),
+			]);
+
+			//TODO Write events for received and read messages
+
+			socket.to(groupId).emit("message receive");
+		} catch (error) {
+			logger(error);
+		}
 	});
 
 	socket.on("join", (groupId) => {
@@ -133,4 +156,7 @@ sockets.messageIo.on("connection", async (socket) => {
 	});
 });
 
-server.listen(PORT, () => console.log(`Server listening on port ${PORT}!`));
+server.listen(PORT, () => {
+	process.stdout.write("\u001b[2J\u001b[0;0H");
+	console.log("\u001b[32m[Nodemon]\u001b[0m Server listening on port \u001b[34m" + PORT + "\u001b[0m!");
+});
