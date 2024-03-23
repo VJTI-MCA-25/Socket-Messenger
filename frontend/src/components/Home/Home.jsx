@@ -5,6 +5,7 @@ import { InvitesContextProvider } from "contexts/InvitesContext";
 import { Sidenav } from "barrel";
 
 import { UserContext } from "contexts/UserContext";
+import { FriendsContextProvider } from "contexts/FriendsContext";
 
 const Home = () => {
 	const user = useContext(UserContext);
@@ -20,13 +21,15 @@ const Home = () => {
 
 	if (user !== null) {
 		return (
-			<InvitesContextProvider>
-				<Sidenav isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
-				{/* Might change user to be passed in outlet context */}
-				<main className={isNavOpen ? "shift" : ""}>
-					<Outlet />
-				</main>
-			</InvitesContextProvider>
+			<FriendsContextProvider>
+				<InvitesContextProvider>
+					<Sidenav isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
+					{/* Might change user to be passed in outlet context */}
+					<main className={isNavOpen ? "shift" : ""}>
+						<Outlet />
+					</main>
+				</InvitesContextProvider>
+			</FriendsContextProvider>
 		);
 	}
 };

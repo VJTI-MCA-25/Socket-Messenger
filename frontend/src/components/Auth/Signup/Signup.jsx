@@ -84,10 +84,12 @@ function Signup() {
 				<div className="row">
 					<animated.div style={appearRight}>
 						<div className={styles.form + " col s12 m8 l6"}>
-							<form onSubmit={handleSubmit}>
+							<form onSubmit={handleSubmit} aria-label="Sign Up Form">
 								<div className="row">
 									<h3>Sign Up</h3>
-									<span className={styles.errorLine + " center"}>{errorLine}</span>
+									<span className={styles.errorLine + " center"} role="alert" aria-live="assertive">
+										{errorLine}
+									</span>
 									<animated.div style={fadeInRise[0]}>
 										<div className="input-field">
 											<input
@@ -97,8 +99,12 @@ function Signup() {
 												value={email}
 												autoComplete="email"
 												onChange={(e) => setEmail(e.target.value)}
+												aria-labelledby="email-label"
+												required
 											/>
-											<label htmlFor="email">Email</label>
+											<label htmlFor="email" id="email-label">
+												Email
+											</label>
 										</div>
 									</animated.div>
 									<animated.div style={fadeInRise[1]}>
@@ -106,10 +112,10 @@ function Signup() {
 											<FontAwesomeIcon
 												icon={faEye}
 												className={styles.eye}
-												// onClick={() => setPasswordVisibility((prev) => !prev)}
 												onMouseDown={() => setPasswordVisibility(true)}
 												onMouseUp={() => setPasswordVisibility(false)}
 												onMouseLeave={() => setPasswordVisibility(false)}
+												aria-label="Toggle Password Visibility"
 											/>
 											<input
 												id="password"
@@ -118,8 +124,12 @@ function Signup() {
 												onChange={(e) => setPassword(e.target.value)}
 												type={passwordVisibility ? "text" : "password"}
 												className="validate"
+												aria-labelledby="password-label"
+												required
 											/>
-											<label htmlFor="password">Password</label>
+											<label htmlFor="password" id="password-label">
+												Password
+											</label>
 										</div>
 									</animated.div>
 								</div>

@@ -38,3 +38,18 @@
 		width: 20px;
 	}
 }
+
+.button,
+.button:hover,
+.button:focus,
+.button:active,
+.button:visited {
+	outline: none;
+	border: none;
+	background-color: transparent;
+	cursor: pointer;
+}
+
+.menuWrapper {
+	position: absolute;
+}

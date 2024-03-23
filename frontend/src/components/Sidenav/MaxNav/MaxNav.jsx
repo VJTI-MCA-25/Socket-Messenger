@@ -11,7 +11,7 @@ const MaxNav = ({ maxNavSlide, activeOptionsList, bind, styles, isNavOpen }) => 
 
 	function handleClick(func) {
 		return () => {
-			func ? func() : null;
+			func && func();
 		};
 	}
 
@@ -19,7 +19,14 @@ const MaxNav = ({ maxNavSlide, activeOptionsList, bind, styles, isNavOpen }) => 
 		return activeOptionsList((anims, option) => {
 			return (
 				<animated.li style={anims} key={option.name}>
-					<Link to={option.to} className="waves-effect" onClick={handleClick(option.onClick)}>
+					<Link
+						to={option.to}
+						className="waves-effect"
+						onClick={handleClick(option.onClick)}
+						onKeyDown={(e) => e.key === "Enter" && handleClick(option.onClick)}
+						role="menuitem"
+						tabIndex={0} // Make the link focusable
+					>
 						<FontAwesomeIcon icon={option.icon} className={`${option.classes} ${styles.sidenavIcon}`} />
 						{option.text}
 					</Link>
@@ -29,19 +36,21 @@ const MaxNav = ({ maxNavSlide, activeOptionsList, bind, styles, isNavOpen }) => 
 	}
 
 	return (
-		<animated.div
+		<animated.nav
 			{...bind()}
 			style={{ ...maxNavSlide, touchAction: "none" }}
-			className={`z-depth-1 sidenav sidenav-fixed ${styles.sidenavMax} ${isNavOpen ? "" : "hide"}`}>
-			<ul>
-				<li>
-					<div className={styles.userView + " user-view"}>
-						<div className="background">
-							<img src={officeImage} />
+			className={`z-depth-1 sidenav sidenav-fixed ${styles.sidenavMax} ${isNavOpen ? "" : "hide"}`}
+			role="navigation">
+			<ul role="menu">
+				<li role="none">
+					<div className="user-view">
+						<div className={`${styles.background} background`}>
+							{/* <img src={officeImage} alt="Office Background" /> */}
 						</div>
 						<img
 							className="circle"
 							src={userData?.photoURL ? userData.photoURL : "https://via.placeholder.com/150"}
+							alt="User Profile"
 						/>
 						<span className="white-text name">{userData?.displayName}</span>
 						<span className="white-text email">{userData?.email}</span>
@@ -49,7 +58,7 @@ const MaxNav = ({ maxNavSlide, activeOptionsList, bind, styles, isNavOpen }) => 
 				</li>
 				{populateSidenav()}
 			</ul>
-		</animated.div>
+		</animated.nav>
 	);
 };
 

@@ -7,9 +7,11 @@ export { Profile } from "./Profile/Profile";
 export { Invitations } from "./Invitations/Invitations";
 export { Friends } from "./Friends/Friends";
 export { FriendsList } from "./FriendsList/FriendsList";
+export { MessageBox } from "./MessageBox/MessageBox";
 
 export { Preloader } from "./Misc/Preloader/Preloader";
 export { DisplayName } from "./Misc/DisplayName/DisplayName";
+export { Menu } from "./Misc/Menu/Menu";
 
 export { Login } from "./Auth/Login/Login";
 export { Signup } from "./Auth/Signup/Signup";

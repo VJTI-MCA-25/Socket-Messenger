@@ -16,7 +16,7 @@ async function createUser(email, password) {
 	try {
 		const response = await axios({
 			method: "put",
-			url: "/users/create",
+			url: "/create",
 			baseURL,
 			data: {
 				email,
@@ -58,7 +58,7 @@ async function logoutUser() {
 
 async function sendVerificationMail(email, uid, continueUrl) {
 	try {
-		const response = await axios.post("/users/send-verification-mail", {
+		const response = await axios.post("/send-verification-mail", {
 			data: {
 				email,
 				uid,

@@ -1,38 +1,46 @@
-import { useEffect, useState } from "react";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { ListUsers } from "barrel";
-import { getFriends } from "services/authFunctions";
+import { FriendsContext } from "contexts/FriendsContext";
+import { createGroup } from "services/userFunctions";
 
 import styles from "./FriendsList.module.scss";
 
-const FriendsList = ({ updateDep }) => {
-	const [friends, setFriends] = useState([]);
+const FriendsList = () => {
+	const friends = useContext(FriendsContext);
+	const navigate = useNavigate();
 
-	useEffect(() => {
-		console.log("Fetching Data");
-		(async () => {
-			try {
-				const response = await getFriends();
-				setFriends(response.data);
-			} catch (error) {
-				console.error(error);
+	async function handleCreateGroup(friend) {
+		let friendUid = friend.uid;
+		if (friend.dm) return navigate(`/channels/${friend.dm}`);
+		try {
+			const response = await createGroup(friendUid);
+			console.log(response);
+			if (response.status === 200) {
 			}
-		})();
-	}, [updateDep]);
+		} catch (error) {
+			console.log("Error creating group", error);
+		}
+	}
 
 	return (
 		<div className="row">
 			<div className="col s12">
 				<div className="row">
 					<div className="col s12">
-						<div className={styles.header}>Friends</div>
+						<div className={styles.header} role="heading" aria-level="2">
+							Friends
+						</div>
 					</div>
 				</div>
 				<div className="row">
 					<div className="col s12">
 						{friends.length > 0 ? (
-							<ListUsers usersList={friends} />
+							<ListUsers usersList={friends} handleCreateGroup={handleCreateGroup} />
 						) : (
-							<div className={styles.emptyListTitle}>Looks like you haven't invited anyone yet.</div>
+							<div className={styles.emptyListTitle} role="alert" aria-live="polite">
+								Looks like you haven't invited anyone yet.
+							</div>
 						)}
 					</div>
 				</div>

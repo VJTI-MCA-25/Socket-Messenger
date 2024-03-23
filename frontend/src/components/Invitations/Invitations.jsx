@@ -7,7 +7,7 @@ import { InvitesContext } from "contexts/InvitesContext";
 
 import styles from "./Invitations.module.scss";
 
-const Invitations = ({ forceUpdate }) => {
+const Invitations = () => {
 	const invites = useContext(InvitesContext);
 	const [sentInvites, setSentInvites] = useState([]);
 	const [receivedInvites, setReceivedInvites] = useState([]);
@@ -20,7 +20,6 @@ const Invitations = ({ forceUpdate }) => {
 	async function handleResponse(inviteId, status) {
 		try {
 			const res = await respondInvite(inviteId, status);
-			forceUpdate(); // force update FriendsList component
 		} catch (error) {
 			console.error(error);
 		}
@@ -36,9 +35,11 @@ const Invitations = ({ forceUpdate }) => {
 	return inviteContainerAnim(
 		(anims, item) =>
 			item && (
-				<animated.div style={anims} className={styles.mainContainer + " row"}>
+				<animated.div style={anims} className={`${styles.mainContainer} row`} role="main">
 					<div className="row">
-						<div className={styles.invitesContainerHeader + " col s12"}>All Invites</div>
+						<div className={`${styles.invitesContainerHeader} col s12`} role="heading" aria-level="2">
+							All Invites
+						</div>
 					</div>
 					<div className="row">
 						<div className="col s12">

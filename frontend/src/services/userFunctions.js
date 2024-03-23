@@ -1,6 +1,7 @@
 import { logoutUser } from "./authFunctions";
 import { instance } from "./config";
 import axios from "axios";
+import { parseError } from "./helperFunctions";
 
 async function getUserData(user) {
 	try {
@@ -62,4 +63,22 @@ async function sendInvite(sendTo) {
 	}
 }
 
-export { getUserData, checkDisplayName, setData, getUsersList, respondInvite, sendInvite };
+async function removeFriend(friendId) {
+	try {
+		const res = instance.delete(`/friends/${friendId}`);
+		return res.data;
+	} catch (error) {
+		throw { ...error.response.data };
+	}
+}
+
+async function createGroup(friendsId) {
+	try {
+		const response = await instance.post("/friends/create-group", { list: friendsId });
+		return response.data;
+	} catch (error) {
+		parseError({ ...error });
+	}
+}
+
+export { getUserData, checkDisplayName, setData, getUsersList, respondInvite, sendInvite, removeFriend, createGroup };

@@ -31,7 +31,7 @@ function InvitesWrapper({ invites, heading, handleResponse }) {
 	return inviteContainerAnim(
 		(anim, item) =>
 			item && (
-				<animated.div style={anim} className="col s12">
+				<animated.div style={anim} className="col s12" role="list">
 					<div className="row">
 						<div className="col s12">
 							<h6>{heading}</h6>
@@ -39,7 +39,7 @@ function InvitesWrapper({ invites, heading, handleResponse }) {
 					</div>
 					<div className="row">
 						<div className="col s12">
-							<div className={styles.invitesContainer}>
+							<div className={styles.invitesContainer} role="list">
 								{inviteAnim((anim, invite) => (
 									<Invite
 										key={invite.id}

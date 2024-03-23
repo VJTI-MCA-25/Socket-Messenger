@@ -1,16 +1,34 @@
-import { config } from "dotenv";
-config();
-
 import { app, PORT, server, sockets, usersRef } from "./initialize.js";
-import { logger } from "./serverHelperFunctions.js";
+import { logger, errorHandler, decodeAndVerify } from "./serverHelperFunctions.js";
 
+import { noAuthRoutes } from "./routes/noAuthRoutes.js";
 import { userRoutes } from "./routes/userRoutes.js";
 import { inviteRoutes } from "./routes/inviteRoutes.js";
+import { friendsRoutes } from "./routes/friendsRoutes.js";
+import { FieldPath } from "firebase-admin/firestore";
+
+app.use("/api", noAuthRoutes);
+
+// This is the middleware authentication, decodes the user token sent with the request
+// It adds the decoded user object from firebase to the app object.
+// Any routes placed under this function will need an Id/Access token to be included in the header to work.
+app.use(async (req, res, next) => {
+	const idToken = req.headers.authorization;
+	try {
+		let user = await decodeAndVerify(idToken);
+		req.user = user;
+		next();
+	} catch (error) {
+		errorHandler(res, error);
+	}
+});
 
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/invites", inviteRoutes);
+app.use("/api/friends", friendsRoutes);
 
+// Socket IO has authentication too, it is defined in intialize.js file
 sockets.inviteIo.on("connection", async (socket) => {
 	try {
 		const user = socket.user;
@@ -54,6 +72,65 @@ sockets.inviteIo.on("connection", async (socket) => {
 	} catch (error) {
 		logger(error);
 	}
+});
+
+sockets.friendsIo.on("connection", async (socket) => {
+	const user = socket.user;
+	let dataSubscription;
+	let listSubscription = usersRef.doc(user.uid).onSnapshot((snap) => {
+		const friends = snap.data().friends;
+		const list = friends.map((friend) => friend.uid);
+
+		if (list.length > 0) {
+			dataSubscription = usersRef.where(FieldPath.documentId(), "in", list).onSnapshot((snap) => {
+				let friendsData = snap.docs.map((snap) => {
+					const data = snap.data();
+					return {
+						uid: snap.id,
+						displayName: data.displayName,
+						email: data.email,
+						photoURL: data.photoURL,
+						befriendedAt: friends.find((friend) => friend.uid === snap.id).befriendedAt,
+						isFriend: true,
+						dm: friends.find((friend) => friend.uid === snap.id)?.dm,
+					};
+				});
+				socket.emit("friends", friendsData);
+			});
+		} else {
+			socket.emit("friends", []);
+		}
+	});
+
+	socket.on("disconnect", () => {
+		listSubscription();
+		if (typeof dataSubscription === "function") dataSubscription();
+	});
+});
+
+sockets.messageIo.on("connection", async (socket) => {
+	const user = socket.user;
+
+	const groupListSnap = await usersRef.doc(user.uid).collection("groups").get();
+	const groupList = groupListSnap.docs.map((snap) => snap.id);
+
+	groupList.forEach((groupId) => {
+		socket.join(groupId);
+	});
+
+	socket.on("message", (message) => {
+		const { groupId, messageText } = message;
+
+		socket.to(groupId).emit("message", message);
+	});
+
+	socket.on("join", (groupId) => {
+		socket.join(groupId);
+	});
+
+	socket.on("leave", (groupId) => {
+		socket.leave(groupId);
+	});
 });
 
 server.listen(PORT, () => console.log(`Server listening on port ${PORT}!`));

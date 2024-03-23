@@ -33,6 +33,7 @@ const bucket = getStorage().bucket();
 db.settings({ ignoreUndefinedProperties: true });
 
 const usersRef = db.collection("users");
+const groupsRef = db.collection("groups");
 
 // Algolia
 const APP_ID = process.env.ALGOLIA_APP_ID;
@@ -47,7 +48,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
 	cors({
 		origin: "http://localhost:5173",
-		methods: ["GET", "POST", "PUT"],
+		methods: ["GET", "POST", "PUT", "DELETE"],
 		exposedHeaders: ["Authorization", "Content-Type"],
 		allowedHeaders: ["Authorization", "Content-Type"],
 		credentials: true,
@@ -83,6 +84,7 @@ io.on("new_namespace", (nsp) => {
 const sockets = {
 	inviteIo: io.of("/invites"),
 	friendsIo: io.of("/friends"),
+	messageIo: io.of("/messages"),
 };
 
-export { app, auth, db, usersRef, PORT, server, sockets, el, index, bucket };
+export { app, auth, db, usersRef, PORT, server, sockets, el, index, bucket, groupsRef };

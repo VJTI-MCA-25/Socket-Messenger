@@ -31,8 +31,17 @@ const invitations = manager.socket("/invites", {
 	},
 });
 
+const friends = manager.socket("/friends", {
+	autoConnect: false,
+	auth: async (cb) => {
+		const token = await getAuthToken();
+		cb({ token });
+	},
+});
+
 const sockets = {
 	invitations,
+	friends,
 };
 
 // Axios Config

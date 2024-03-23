@@ -1,6 +1,6 @@
 import { usersRef, el } from "../initialize.js";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
-import { errorHandler, logger, decodeAndVerify } from "../serverHelperFunctions.js";
+import { errorHandler, logger } from "../serverHelperFunctions.js";
 
 const {
 	MissingParametersError,
@@ -18,18 +18,6 @@ const {
 
 import { Router } from "express";
 const invites = Router();
-
-/* Invite Routes Middleware - Token Decode */
-invites.use(async (req, res, next) => {
-	const idToken = req.headers.authorization;
-	try {
-		const user = await decodeAndVerify(idToken);
-		req.user = user;
-		next();
-	} catch (error) {
-		errorHandler(res, error);
-	}
-});
 
 invites.post("/send-invite", async (req, res) => {
 	const { sendTo } = req.body;
@@ -124,8 +112,12 @@ invites.post("/invite-response", async (req, res) => {
 
 		if (status === "accepted") {
 			await Promise.all([
-				usersRef.doc(invite.sentTo).update({ friends: FieldValue.arrayUnion(invite.sentBy) }),
-				usersRef.doc(invite.sentBy).update({ friends: FieldValue.arrayUnion(invite.sentTo) }),
+				usersRef
+					.doc(invite.sentTo)
+					.update({ friends: FieldValue.arrayUnion({ uid: invite.sentBy, befriendedAt: Timestamp.now() }) }),
+				usersRef
+					.doc(invite.sentBy)
+					.update({ friends: FieldValue.arrayUnion({ uid: invite.sentTo, befriendedAt: Timestamp.now() }) }),
 			]);
 		}
 
