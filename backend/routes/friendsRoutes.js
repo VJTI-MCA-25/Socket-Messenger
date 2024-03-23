@@ -50,7 +50,7 @@ friends.delete("/:uid", async (req, res) => {
 
 		if (user.uid === uid) throw CannotRemoveSelfError;
 		if (!(await friendRef.get()).exists) throw UserNotFoundError;
-		if (!friendsList.includes(uid)) throw ProvidedUidNotAFriendError;
+		if (!userFriendsList.includes(uid)) throw ProvidedUidNotAFriendError;
 
 		userFriendsList = userData.friends.filter((friend) => friend.uid !== uid);
 		let friendFriendsList = friendData.friends.filter((friend) => friend.uid !== user.uid);
