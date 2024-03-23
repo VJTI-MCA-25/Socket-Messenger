@@ -1,0 +1,79 @@
+.main-card{
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    border-radius: 10px;
+    height: 75vh;
+    margin: auto;
+    background-color: #2f2d34 ;
+    padding: 10px;
+}
+
+.banner{
+    width: 100%;
+    height: 40%;
+    border-radius: 10px;
+    background-color: rgb(201, 64, 54);
+}
+
+.sub-card{
+    margin-top: 10%;
+    border-radius: 10px;
+    height: 50%;
+    background-color:  #3a3941;
+    display: flex;
+    flex-direction: column;
+}
+
+.sub{
+    border: 1px solid black;
+    margin: 5px 5px;
+    border-radius: 5px;
+    height: 20%;
+    display: flex;
+    // justify-content: center;
+    padding: 0 10px;
+    font-size: 20px;
+    align-items: center;
+}
+
+.btn-wrapper {
+    height: 40%;
+    width: 20%;
+    // border: 2px solid;
+    position: relative;
+    // size of wrapper
+    top: 70%;
+    left: 5%;
+}
+
+// circle part
+.btn-wrapper .custom-size {
+    // position: relative;
+    // gets wrapper complete size
+    height: 100%;
+    // width: 100%;
+    aspect-ratio: 1;
+    z-index: 100;
+    background-color: gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+.btn-wrapper .custom-size:hover{
+     background-color: rgba($color: #1e1b1b, $alpha: 0.2);
+  }
+
+  .btn-wrapper.custom-size .hover-text {
+    visibility: hidden;
+    color: rgb(222, 201, 201);
+    font-size:large;
+    font-style: normal;
+    transition: visibility 0.3s ease; /* Add transition for smooth visibility */
+  }
+  
+  .btn-wrapper .btn-floating.custom-size:hover .hover-text {
+    visibility: visible; /* Show the text on hover */
+  }
+  
