@@ -15,22 +15,33 @@ messages.get("/get-messages", async (req, res) => {
 
 		const groupDocs = await groupsRef.where(FieldPath.documentId(), "in", groupsList).get();
 
-		let messages = [];
+		let groups = {};
 		for await (let doc of groupDocs.docs) {
 			let groupData = doc.data();
 			let messagesDoc = await doc.ref.collection("messages").get();
 			let messagesData = messagesDoc.docs.map((message) => message.data());
-			messages.push({
+			let data = {
 				createdAt: groupData.createdAt,
 				createdBy: groupData.createdBy,
 				members: groupData.members,
 				groupId: doc.id,
 				messages: messagesData,
-			});
-		}
+			};
 
-		console.log(messages);
-		return res.status(200).send(messages);
+			if (groupData.isDm) {
+				let friend = groupData.members.find((member) => member !== user.uid);
+				let friendData = (await usersRef.doc(friend).get()).data();
+				data.friend = {
+					uid: friend,
+					displayName: friendData.displayName,
+					email: friendData.email,
+					photoURL: friendData.photoURL,
+				};
+			}
+
+			groups[doc.id] = data;
+		}
+		return res.status(200).send(groups);
 	} catch (error) {
 		return errorHandler(res, error);
 	}

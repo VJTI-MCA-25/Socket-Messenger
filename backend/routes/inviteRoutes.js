@@ -28,10 +28,11 @@ invites.post("/send-invite", async (req, res) => {
 
 		const sendToUserSnap = await usersRef.doc(sendTo).get();
 		const sendToUser = sendToUserSnap.data();
+		let sendToUsersFriendsList = sendToUser?.friends?.map((friend) => friend.uid) || [];
 
 		if (!sendToUser) throw UserNotFoundError;
 		if (sendToUser.uid === user.uid) throw SelfInviteError;
-		if (sendToUser?.friends?.includes(user.uid)) throw AlreadyFriendsError;
+		if (sendToUsersFriendsList.includes(user.uid)) throw AlreadyFriendsError;
 
 		const inviteRef = usersRef.doc(user.uid).collection("invitations").where("status", "==", "pending");
 

@@ -93,11 +93,8 @@ friends.post("/create-group", async (req, res) => {
 			sortedUserIds,
 		};
 
+		let group = await groupsRef.add(data);
 		let groupId = group.id;
-
-		await Promise.all(
-			[...list, user.uid].map((member) => usersRef.doc(member).update({ groups: FieldValue.arrayUnion(groupId) }))
-		);
 
 		if (list.length === 1) {
 			let friendId = list[0];
@@ -111,13 +108,13 @@ friends.post("/create-group", async (req, res) => {
 			await Promise.all([
 				usersRef.doc(user.uid).update({ friends }),
 				usersRef.doc(friendId).update({ friends: friendsData }),
+				groupsRef.doc(groupId).update({ isDm: true }),
 			]);
-
-			data.photoURL = friend.photoURL;
-			data.displayName = friend.displayName;
 		}
 
-		let group = await groupsRef.add(data);
+		await Promise.all(
+			[...list, user.uid].map((member) => usersRef.doc(member).update({ groups: FieldValue.arrayUnion(groupId) }))
+		);
 
 		res.status(201).send({ groupId });
 	} catch (error) {

@@ -12,12 +12,10 @@ const FriendsList = () => {
 
 	async function handleCreateGroup(friend) {
 		let friendUid = friend.uid;
-		if (friend.dm) return navigate(`/channels/${friend.dm}`);
+		if (friend?.dm) return navigate(`/channels/${friend.dm}`);
 		try {
 			const response = await createGroup(friendUid);
-			console.log(response);
-			if (response.status === 200) {
-			}
+			navigate(`/channels/${response.groupId}`);
 		} catch (error) {
 			console.log("Error creating group", error);
 		}

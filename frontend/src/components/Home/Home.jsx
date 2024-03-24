@@ -17,19 +17,27 @@ const Home = () => {
 	const [messages, setMessages] = useState({});
 
 	useEffect(() => {
-		try {
-			(async () => {
+		(async () => {
+			try {
 				const messages = await getMessages();
 				setMessages(messages);
-				console.log(messages);
-			})();
+			} catch (error) {
+				console.error(error);
+			}
+		})();
 
-			sockets.messages.on("message receive", (message) => {
-				setMessages((prev) => prev[message.groupId].messages.push(message));
+		sockets.messages.on("message receive", (messageData) => {
+			setMessages((prev) => {
+				let { groupId } = messageData;
+				return {
+					...prev,
+					[groupId]: {
+						...prev[groupId],
+						messages: [...prev[groupId].messages, messageData],
+					},
+				};
 			});
-		} catch (error) {
-			console.error(error);
-		}
+		});
 
 		return () => {
 			sockets.messages.off("message receive");
@@ -44,7 +52,16 @@ const Home = () => {
 
 	function sendMessage(message) {
 		sockets.messages.emit("message send", message);
-		setMessages((prev) => prev[message.groupId].messages.push(message));
+		setMessages((prev) => {
+			console.log("sent");
+			return {
+				...prev,
+				[message.groupId]: {
+					...prev[message.groupId],
+					messages: [...prev[message.groupId].messages, message],
+				},
+			};
+		});
 	}
 
 	if (user !== null) {
@@ -54,7 +71,7 @@ const Home = () => {
 					<Sidenav isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
 					{/* Might change user to be passed in outlet context */}
 					<main className={isNavOpen ? "shift" : ""}>
-						<Outlet />
+						<Outlet context={[messages, sendMessage]} />
 					</main>
 				</InvitesContextProvider>
 			</FriendsContextProvider>
