@@ -18,6 +18,11 @@ const ListUsers = ({ usersList, handleCreateGroup }) => {
 			clickFn: async (friend) => {
 				if (confirm(`Are you sure you want to remove ${friend.displayName} from your friend's list?`)) {
 					let res = await removeFriend(friend.uid);
+					if (res === "friend/removed") {
+						toast({ html: "Friend removed!" });
+					} else {
+						toast({ html: "Something went wrong!" });
+					}
 				}
 			},
 		},

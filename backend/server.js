@@ -81,9 +81,8 @@ sockets.friendsIo.on("connection", async (socket) => {
 	const user = socket.user;
 	let dataSubscription;
 	let listSubscription = usersRef.doc(user.uid).onSnapshot((snap) => {
-		const friends = snap.data().friends;
-		const list = friends.map((friend) => friend.uid);
-
+		const friends = snap.data()?.friends;
+		const list = friends?.map((friend) => friend.uid) || [];
 		if (list.length > 0) {
 			dataSubscription = usersRef.where(FieldPath.documentId(), "in", list).onSnapshot((snap) => {
 				let friendsData = snap.docs.map((snap) => {
@@ -122,26 +121,25 @@ sockets.messageIo.on("connection", async (socket) => {
 	});
 
 	socket.on("message send", async (message) => {
-		const { groupId, messageText } = message;
+		const { groupId, content } = message;
+
+		let messageData = {
+			groupId: groupId,
+			content: content,
+			sentBy: user.uid,
+			sentAt: Timestamp.now(),
+		};
 
 		try {
 			let groupRef = groupsRef.doc(groupId);
+			let groupDoc = await groupRef.get();
+			if (!groupDoc.exists) return;
+			await groupRef.collection("messages").add(messageData);
 
-			Promise.all([
-				groupRef.update({
-					lastMessage: messageText,
-					lastMessageSentAt: Timestamp.now(),
-				}),
-				groupsRef.doc(groupId).collection("messages").add({
-					sentBy: user.uid,
-					message: messageText,
-					sentAt: Timestamp.now(),
-				}),
-			]);
+			console.log("here");
 
+			socket.to(groupId).emit("message receive", messageData);
 			//TODO Write events for received and read messages
-
-			socket.to(groupId).emit("message receive");
 		} catch (error) {
 			logger(error);
 		}
