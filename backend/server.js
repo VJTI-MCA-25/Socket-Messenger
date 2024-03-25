@@ -120,7 +120,7 @@ sockets.messageIo.on("connection", async (socket) => {
 		socket.join(groupId);
 	});
 
-	socket.on("message send", async (message) => {
+	socket.on("message send", async (message, callback) => {
 		const { groupId, content } = message;
 
 		let messageData = {
@@ -137,9 +137,11 @@ sockets.messageIo.on("connection", async (socket) => {
 
 			//TODO Use a transaction to get the latest message count and add the new message
 			let doc = await groupRef.collection("messages").add(messageData);
-			let messageDoc = (await doc.get()).data();
+			let messageDoc = await doc.get();
+			let savedMessage = messageDoc.data();
 
-			socket.to(groupId).emit("message receive", messageDoc);
+			socket.to(groupId).emit("message receive", { ...savedMessage, id: messageDoc.id });
+			callback({ id: messageDoc.id, time: savedMessage.sentAt });
 			//TODO Write events for received and read messages
 		} catch (error) {
 			logger(error);

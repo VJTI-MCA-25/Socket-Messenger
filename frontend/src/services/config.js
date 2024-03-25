@@ -16,10 +16,12 @@ const db = getFirestore();
 // const analytics = getAnalytics(app);
 
 // Api base url
-const baseURL = "http://localhost:3000/api";
+
+const url = "http://localhost:3000";
+const baseURL = url + "/api";
 
 // Socket.io Config
-const manager = new Manager("http://localhost:3000", {
+const manager = new Manager(url, {
 	transports: ["websocket"],
 });
 

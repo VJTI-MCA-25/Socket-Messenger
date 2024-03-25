@@ -62,23 +62,54 @@ const Home = () => {
 	}, [user]);
 
 	function sendMessage(message) {
-		sockets.messages.emit("message send", message);
-		setGroups((prev) => {
-			let timestamp = Timestamp.now();
-			let dateString = dateToString(timestamp);
-			return {
-				...prev,
-				[message.groupId]: {
-					...prev[message.groupId],
-					messages: {
-						...prev[message.groupId].messages,
-						[dateString]: [
-							...(prev[message.groupId].messages[dateString] || []),
-							{ ...message, isUserSent: true, time: timestamp.toDate().getTime() },
-						],
-					},
+		// Generate a temporary id for the message
+		// Optimistically add the message to the state
+		let tempId = Math.random().toString(36).substring(7);
+		let timestamp = Timestamp.now();
+		let dateString = dateToString(timestamp);
+
+		setGroups((prev) => ({
+			...prev,
+			[message.groupId]: {
+				...prev[message.groupId],
+				messages: {
+					...prev[message.groupId].messages,
+					[dateString]: [
+						...(prev[message.groupId].messages[dateString] || []),
+						{
+							...message,
+							isUserSent: true,
+							time: timestamp.toDate().getTime(),
+							id: tempId,
+						},
+					],
 				},
-			};
+			},
+		}));
+
+		sockets.messages.emit("message send", message, (response) => {
+			// Update the message with the id from the server
+			setGroups((prev) => {
+				let messages = [...prev[message.groupId].messages[dateString]];
+				let index = messages.findIndex((msg) => msg.id === tempId);
+
+				if (response.error) {
+					messages[index] = { ...messages[index], error: true };
+				} else {
+					messages[index] = { ...messages[index], id: response.id, time: response.time };
+				}
+
+				return {
+					...prev,
+					[message.groupId]: {
+						...prev[message.groupId],
+						messages: {
+							...prev[message.groupId].messages,
+							[dateString]: messages,
+						},
+					},
+				};
+			});
 		});
 	}
 

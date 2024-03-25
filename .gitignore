@@ -5,3 +5,4 @@ serviceAccountKey.json
 *.log
 package-lock.json
 .eslintrc.*js
+**/*.exe

@@ -24,23 +24,19 @@ messages.get("/get-messages", async (req, res) => {
 				return {
 					...data,
 					isUserSent: data.sentBy === user.uid,
+					id: message.id,
+					time: data.sentAt.toDate().getTime(),
 				};
 			});
 
 			let memberInfo = {};
 			for await (let member of groupData.members) {
-				let memberObj;
-				if (member === user.uid) {
-					memberObj = user;
-				} else {
-					let memberDoc = await usersRef.doc(member).get();
-					memberObj = memberDoc.data();
-				}
+				let userInfo = (await usersRef.doc(member).get()).data();
 				memberInfo[member] = {
-					uid: memberObj.uid,
-					displayName: memberObj.displayName,
-					email: memberObj.email,
-					photoURL: memberObj.photoURL,
+					uid: userInfo.uid,
+					displayName: userInfo.displayName,
+					email: userInfo.email,
+					photoURL: userInfo.photoURL,
 				};
 			}
 

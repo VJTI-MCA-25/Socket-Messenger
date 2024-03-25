@@ -5,7 +5,11 @@ import { animated } from "@react-spring/web";
 const UserItem = ({ friend, handleInvite, styles, anim, toggleMenu, children, handleCreateGroup }) => {
 	return (
 		<animated.li style={anim} className={styles.item} role="listitem">
-			<img src="https://via.placeholder.com/150" alt="Profile Picture" className={styles.profilePic} />
+			<img
+				src={friend.photoURL || "https://via.placeholder.com/150"}
+				alt="Profile Picture"
+				className={styles.profilePic}
+			/>
 			<div className="display-name">{friend.displayName}</div>
 			<div className={styles.actions}>
 				{friend.isFriend ? (

@@ -86,7 +86,6 @@ friends.post("/create-group", async (req, res) => {
 		if (!list.every((uid) => friendsList.includes(uid))) throw ProvidedUidNotAFriendError;
 		if (!(await groupsRef.where("sortedUserIds", "==", sortedUserIds).get()).empty) throw GroupAlreadyExists; // Probably should remove this limitation
 
-		//! Needs fixing, timestamps not allowed in array
 		let data = {
 			members: [...list, user.uid],
 			createdAt: FieldValue.serverTimestamp(),
