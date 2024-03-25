@@ -81,8 +81,8 @@ sockets.friendsIo.on("connection", async (socket) => {
 	const user = socket.user;
 	let dataSubscription;
 	let listSubscription = usersRef.doc(user.uid).onSnapshot((snap) => {
-		const friends = snap.data()?.friends;
-		const list = friends?.map((friend) => friend.uid) || [];
+		const friends = snap.data()?.friends || {};
+		const list = Object.keys(friends);
 		if (list.length > 0) {
 			dataSubscription = usersRef.where(FieldPath.documentId(), "in", list).onSnapshot((snap) => {
 				let friendsData = snap.docs.map((snap) => {
@@ -92,9 +92,9 @@ sockets.friendsIo.on("connection", async (socket) => {
 						displayName: data.displayName,
 						email: data.email,
 						photoURL: data.photoURL,
-						befriendedAt: friends.find((friend) => friend.uid === snap.id).befriendedAt,
+						befriendedAt: friends[snap.id].befriendedAt,
 						isFriend: true,
-						dm: friends.find((friend) => friend.uid === snap.id)?.dm,
+						dm: friends[snap.id]?.dm || null,
 					};
 				});
 				socket.emit("friends", friendsData);
@@ -113,11 +113,19 @@ sockets.friendsIo.on("connection", async (socket) => {
 sockets.messageIo.on("connection", async (socket) => {
 	const user = socket.user;
 
-	const groupListSnap = await usersRef.doc(user.uid).get();
-	const groupList = groupListSnap.data().groups;
+	async function joinGroups() {
+		const groupListSnap = await usersRef.doc(user.uid).get();
+		const groupList = groupListSnap.data().groups || [];
 
-	groupList.forEach((groupId) => {
-		socket.join(groupId);
+		groupList.forEach((groupId) => {
+			socket.join(groupId);
+		});
+	}
+
+	await joinGroups();
+
+	socket.on("rejoin", async () => {
+		await joinGroups();
 	});
 
 	socket.on("message send", async (message, callback) => {
@@ -146,10 +154,6 @@ sockets.messageIo.on("connection", async (socket) => {
 		} catch (error) {
 			logger(error);
 		}
-	});
-
-	socket.on("join", (groupId) => {
-		socket.join(groupId);
 	});
 
 	socket.on("leave", (groupId) => {

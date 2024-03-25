@@ -33,16 +33,19 @@ const Home = () => {
 			setGroups((prev) => {
 				let { groupId } = messageData;
 				let timestamp = convertToFirebaseTimestamp(messageData.sentAt);
+				let time = timestamp.toDate().getTime();
 				let dateString = dateToString(timestamp);
+				let prevGroup = prev[groupId];
+
 				return {
 					...prev,
 					[groupId]: {
-						...prev[groupId],
+						...prevGroup,
 						messages: {
-							...prev[groupId].messages,
+							...prevGroup.messages,
 							[dateString]: [
-								...(prev[groupId].messages[dateString] || []),
-								{ ...messageData, isUserSent: false, time: timestamp.toDate().getTime() },
+								...(prevGroup.messages[dateString] || []),
+								{ ...messageData, time, isUserSent: false },
 							],
 						},
 					},

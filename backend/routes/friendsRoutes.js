@@ -13,30 +13,6 @@ const {
 import { Router } from "express";
 const friends = Router();
 
-friends.get("/get-friends", async (req, res) => {
-	const user = req.user;
-	try {
-		const friends = (await usersRef.doc(user.uid).get()).data()?.friends || [];
-		if (friends.length === 0) return res.status(200).send([]);
-
-		const friendsSnap = await usersRef.where(FieldPath.documentId(), "in", friends).get();
-		const friendsList = friendsSnap.docs.map((friend) => {
-			let data = friend.data();
-
-			return {
-				uid: friend.id,
-				displayName: data.displayName,
-				photoURL: data.photoURL,
-				isFriend: true,
-			};
-		});
-
-		return res.status(200).send(friendsList);
-	} catch (error) {
-		return errorHandler(res, error);
-	}
-});
-
 friends.delete("/:uid", async (req, res) => {
 	const { uid } = req.params;
 	const user = req.user;
@@ -79,8 +55,8 @@ friends.post("/create-group", async (req, res) => {
 	if (!Array.isArray(list)) throw MissingParametersError;
 
 	try {
-		const friends = (await usersRef.doc(user.uid).get()).data().friends;
-		const friendsList = friends.map((friend) => friend.uid);
+		const friends = (await usersRef.doc(user.uid).get()).data().friends || {};
+		const friendsList = Object.keys(friends);
 		const sortedUserIds = [...list, user.uid].sort().join(",");
 
 		if (!list.every((uid) => friendsList.includes(uid))) throw ProvidedUidNotAFriendError;
@@ -91,6 +67,7 @@ friends.post("/create-group", async (req, res) => {
 			createdAt: FieldValue.serverTimestamp(),
 			createdBy: user.uid,
 			sortedUserIds,
+			isDm: list.length === 1,
 		};
 
 		let group = await groupsRef.add(data);
@@ -98,17 +75,21 @@ friends.post("/create-group", async (req, res) => {
 
 		if (list.length === 1) {
 			let friendId = list[0];
-			let friend = friends.find((friend) => friend.uid === friendId);
-			friend.dm = groupId;
-
-			let friendsData = (await usersRef.doc(friendId).get()).data().friends;
-			let userInFriendsList = friendsData.find((friend) => friend.uid === user.uid);
-			userInFriendsList.dm = groupId;
-
 			await Promise.all([
-				usersRef.doc(user.uid).update({ friends }),
-				usersRef.doc(friendId).update({ friends: friendsData }),
-				groupsRef.doc(groupId).update({ isDm: true }),
+				usersRef.doc(user.uid).update({
+					friends: {
+						[friendId]: {
+							dm: groupId,
+						},
+					},
+				}),
+				usersRef.doc(friendId).update({
+					friends: {
+						[user.uid]: {
+							dm: groupId,
+						},
+					},
+				}),
 			]);
 		}
 

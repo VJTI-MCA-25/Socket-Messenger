@@ -1,4 +1,5 @@
-import { usersRef, el } from "../initialize.js";
+import { usersRef, el, bucket, auth } from "../initialize.js";
+import { getDownloadURL } from "firebase-admin/storage";
 import { FieldValue } from "firebase-admin/firestore";
 import { errorHandler, logger } from "../serverHelperFunctions.js";
 
@@ -13,9 +14,11 @@ noAuth.put("/create", async (req, res) => {
 	var uid;
 	try {
 		const data = req.body;
+		// Check if user data already exists
+		const udExists = await doesUserDataExists(uid);
+		if (udExists) throw UserDataAlreadyExistsError;
 
 		// Create user in Firebase Authentication
-
 		const profilePic = bucket.file("user_profile_pics/default.svg");
 		const profilePicUrl = await getDownloadURL(profilePic);
 
@@ -25,10 +28,6 @@ noAuth.put("/create", async (req, res) => {
 			photoURL: profilePicUrl,
 		});
 		uid = userRecord.uid;
-
-		// Check if user data already exists
-		const udExists = await doesUserDataExists(uid);
-		if (udExists) throw UserDataAlreadyExistsError;
 
 		// Create user data in Firestore
 		await usersRef.doc(uid).set({

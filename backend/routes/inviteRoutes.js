@@ -28,7 +28,7 @@ invites.post("/send-invite", async (req, res) => {
 
 		const sendToUserSnap = await usersRef.doc(sendTo).get();
 		const sendToUser = sendToUserSnap.data();
-		let sendToUsersFriendsList = sendToUser?.friends?.map((friend) => friend.uid) || [];
+		let sendToUsersFriendsList = Object.keys(sendToUser?.friends || {});
 
 		if (!sendToUser) throw UserNotFoundError;
 		if (sendToUser.uid === user.uid) throw SelfInviteError;
@@ -117,16 +117,18 @@ invites.post("/invite-response", async (req, res) => {
 		if (status === "accepted") {
 			await Promise.all([
 				usersRef.doc(invite.sentTo).update({
-					friends: FieldValue.arrayUnion({
-						uid: invite.sentBy,
-						befriendedAt: FieldValue.serverTimestamp(),
-					}),
+					friends: {
+						[invite.sentBy]: {
+							befriendedAt: FieldValue.serverTimestamp(),
+						},
+					},
 				}),
 				usersRef.doc(invite.sentBy).update({
-					friends: FieldValue.arrayUnion({
-						uid: invite.sentTo,
-						befriendedAt: FieldValue.serverTimestamp(),
-					}),
+					friends: {
+						[invite.sentTo]: {
+							befriendedAt: FieldValue.serverTimestamp(),
+						},
+					},
 				}),
 			]);
 		}

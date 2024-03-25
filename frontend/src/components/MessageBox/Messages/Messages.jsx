@@ -3,7 +3,6 @@ import { MessageItem } from "../MessageItem/MessageItem";
 import styles from "./Messages.module.scss";
 
 const Messages = React.memo(({ group }) => {
-	console.log(group);
 	const messagesElements = useMemo(() => {
 		return Object.entries(group.messages)
 			.sort()

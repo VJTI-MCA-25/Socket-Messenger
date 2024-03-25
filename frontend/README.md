@@ -16,10 +16,13 @@
 -   [x] Invites
 -   [x] Algolia Search
 -   [x] Friends List
+-   [x] Chat
+-   [ ] Create Groups
+    -   [x] Direct messages
+    -   [ ] Group messages
 -   [ ] Add User Info Form
 -   [ ] Settings Page
 -   [ ] Profile Page
--   [ ] Chat
 -   [ ] Notifications
 
 #### Extra TODO:
@@ -44,8 +47,8 @@
 -   [ ] Link Previews
 -   [ ] Spotify Integration
 -   [ ] Developer API
--   [ ] Add testing (Vitest) 
--   [ ] Add Media Support (Emojis , Gifs , Video , Audio etc) 
+-   [ ] Add testing (Vitest)
+-   [ ] Add Media Support (Emojis , Gifs , Video , Audio etc)
 
 ### Accessibilities
 
