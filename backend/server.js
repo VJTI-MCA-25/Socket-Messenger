@@ -7,7 +7,7 @@ import { inviteRoutes } from "./routes/inviteRoutes.js";
 import { friendsRoutes } from "./routes/friendsRoutes.js";
 import { messageRoutes } from "./routes/messageRoutes.js";
 
-import { FieldPath, Timestamp } from "firebase-admin/firestore";
+import { FieldPath, FieldValue } from "firebase-admin/firestore";
 
 app.use("/api", noAuthRoutes);
 
@@ -127,18 +127,19 @@ sockets.messageIo.on("connection", async (socket) => {
 			groupId: groupId,
 			content: content,
 			sentBy: user.uid,
-			sentAt: Timestamp.now(),
+			sentAt: FieldValue.serverTimestamp(),
 		};
 
 		try {
 			let groupRef = groupsRef.doc(groupId);
 			let groupDoc = await groupRef.get();
 			if (!groupDoc.exists) return;
-			await groupRef.collection("messages").add(messageData);
 
-			console.log("here");
+			//TODO Use a transaction to get the latest message count and add the new message
+			let doc = await groupRef.collection("messages").add(messageData);
+			let messageDoc = (await doc.get()).data();
 
-			socket.to(groupId).emit("message receive", messageData);
+			socket.to(groupId).emit("message receive", messageDoc);
 			//TODO Write events for received and read messages
 		} catch (error) {
 			logger(error);
@@ -156,5 +157,5 @@ sockets.messageIo.on("connection", async (socket) => {
 
 server.listen(PORT, () => {
 	process.stdout.write("\u001b[2J\u001b[0;0H");
-	console.log("\u001b[32m[Nodemon]\u001b[0m Server listening on port \u001b[34m" + PORT + "\u001b[0m!");
+	console.log("\u001b[32m[Node Server]\u001b[0m Server listening on port \u001b[34m" + PORT + "\u001b[0m!");
 });

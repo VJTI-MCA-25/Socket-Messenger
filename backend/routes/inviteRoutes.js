@@ -1,5 +1,5 @@
 import { usersRef, el } from "../initialize.js";
-import { FieldValue, Timestamp } from "firebase-admin/firestore";
+import { FieldValue } from "firebase-admin/firestore";
 import { errorHandler, logger } from "../serverHelperFunctions.js";
 
 const {
@@ -48,7 +48,7 @@ invites.post("/send-invite", async (req, res) => {
 			sentBy: user.uid,
 			sentTo: sendTo,
 			status: "pending",
-			sentAt: Timestamp.now(),
+			sentAt: FieldValue.serverTimestamp(),
 		};
 
 		const sentInviteRef = await usersRef
@@ -106,25 +106,34 @@ invites.post("/invite-response", async (req, res) => {
 				throw UserCannotCancelReceivedInviteError;
 			}
 
-			await Promise.all([inviteRef.update({ status, processedAt: Timestamp.now() }), receiverInviteRef.delete()]);
+			await Promise.all([
+				inviteRef.update({ status, processedAt: FieldValue.serverTimestamp() }),
+				receiverInviteRef.delete(),
+			]);
 
 			return res.status(200).send("invite/canceled");
 		}
 
 		if (status === "accepted") {
 			await Promise.all([
-				usersRef
-					.doc(invite.sentTo)
-					.update({ friends: FieldValue.arrayUnion({ uid: invite.sentBy, befriendedAt: Timestamp.now() }) }),
-				usersRef
-					.doc(invite.sentBy)
-					.update({ friends: FieldValue.arrayUnion({ uid: invite.sentTo, befriendedAt: Timestamp.now() }) }),
+				usersRef.doc(invite.sentTo).update({
+					friends: FieldValue.arrayUnion({
+						uid: invite.sentBy,
+						befriendedAt: FieldValue.serverTimestamp(),
+					}),
+				}),
+				usersRef.doc(invite.sentBy).update({
+					friends: FieldValue.arrayUnion({
+						uid: invite.sentTo,
+						befriendedAt: FieldValue.serverTimestamp(),
+					}),
+				}),
 			]);
 		}
 
 		await Promise.all([
-			senderInviteRef.set({ status, processedAt: Timestamp.now() }, { merge: true }),
-			receiverInviteRef.set({ status, processedAt: Timestamp.now() }, { merge: true }),
+			senderInviteRef.set({ status, processedAt: FieldValue.serverTimestamp() }, { merge: true }),
+			receiverInviteRef.set({ status, processedAt: FieldValue.serverTimestamp() }, { merge: true }),
 		]);
 
 		return res.status(200).send("invite/response-processed");

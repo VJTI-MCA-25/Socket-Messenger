@@ -1,12 +1,6 @@
 import { auth, usersRef, el, index } from "../initialize.js";
-import { FieldPath, Timestamp } from "firebase-admin/firestore";
-import {
-	errorHandler,
-	doesUserDataExists,
-	logger,
-	validateDisplayName,
-	decodeAndVerify,
-} from "../serverHelperFunctions.js";
+import { FieldPath, FieldValue } from "firebase-admin/firestore";
+import { errorHandler, validateDisplayName } from "../serverHelperFunctions.js";
 
 const { UserNotAuthorizedError, MissingParametersError, InvalidDisplayNameError, DisplayNameTakenError } = el;
 
@@ -106,7 +100,7 @@ users.post("/set-data", async (req, res) => {
 
 		await usersRef.doc(uid).update({
 			displayName,
-			lastUpdatedAt: Timestamp.now(),
+			lastUpdatedAt: FieldValue.serverTimestamp(),
 		});
 		return res.status(200).send("user/data-updated");
 	} catch (error) {

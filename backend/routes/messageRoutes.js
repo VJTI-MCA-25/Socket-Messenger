@@ -19,25 +19,38 @@ messages.get("/get-messages", async (req, res) => {
 		for await (let doc of groupDocs.docs) {
 			let groupData = doc.data();
 			let messagesDoc = await doc.ref.collection("messages").get();
-			let messagesData = messagesDoc.docs.map((message) => message.data());
+			let messagesData = messagesDoc.docs.map((message) => {
+				let data = message.data();
+				return {
+					...data,
+					isUserSent: data.sentBy === user.uid,
+				};
+			});
+
+			let memberInfo = {};
+			for await (let member of groupData.members) {
+				let memberObj;
+				if (member === user.uid) {
+					memberObj = user;
+				} else {
+					let memberDoc = await usersRef.doc(member).get();
+					memberObj = memberDoc.data();
+				}
+				memberInfo[member] = {
+					uid: memberObj.uid,
+					displayName: memberObj.displayName,
+					email: memberObj.email,
+					photoURL: memberObj.photoURL,
+				};
+			}
+
 			let data = {
 				createdAt: groupData.createdAt,
 				createdBy: groupData.createdBy,
-				members: groupData.members,
+				members: memberInfo,
 				groupId: doc.id,
 				messages: messagesData,
 			};
-
-			if (groupData.isDm) {
-				let friend = groupData.members.find((member) => member !== user.uid);
-				let friendData = (await usersRef.doc(friend).get()).data();
-				data.friend = {
-					uid: friend,
-					displayName: friendData.displayName,
-					email: friendData.email,
-					photoURL: friendData.photoURL,
-				};
-			}
 
 			groups[doc.id] = data;
 		}

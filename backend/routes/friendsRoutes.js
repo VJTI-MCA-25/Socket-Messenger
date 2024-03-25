@@ -1,4 +1,4 @@
-import { FieldValue, Timestamp } from "firebase-admin/firestore";
+import { FieldValue } from "firebase-admin/firestore";
 import { usersRef, el, groupsRef } from "../initialize.js";
 import { errorHandler } from "../serverHelperFunctions.js";
 
@@ -86,9 +86,10 @@ friends.post("/create-group", async (req, res) => {
 		if (!list.every((uid) => friendsList.includes(uid))) throw ProvidedUidNotAFriendError;
 		if (!(await groupsRef.where("sortedUserIds", "==", sortedUserIds).get()).empty) throw GroupAlreadyExists; // Probably should remove this limitation
 
+		//! Needs fixing, timestamps not allowed in array
 		let data = {
 			members: [...list, user.uid],
-			createdAt: Timestamp.now(),
+			createdAt: FieldValue.serverTimestamp(),
 			createdBy: user.uid,
 			sortedUserIds,
 		};

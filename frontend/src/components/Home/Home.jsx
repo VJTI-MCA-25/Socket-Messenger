@@ -8,32 +8,43 @@ import { InvitesContextProvider } from "contexts/InvitesContext";
 import { FriendsContextProvider } from "contexts/FriendsContext";
 import { sockets } from "services/config";
 import { getMessages } from "services/userFunctions";
+import { Timestamp } from "firebase/firestore";
+import { convertToFirebaseTimestamp, dateToString, processGroups } from "services/helperFunctions";
 
 const Home = () => {
 	const user = useContext(UserContext);
 	const navigate = useNavigate();
 
 	const [isNavOpen, setIsNavOpen] = useState(true);
-	const [messages, setMessages] = useState({});
+	const [groups, setGroups] = useState({});
 
 	useEffect(() => {
 		(async () => {
 			try {
-				const messages = await getMessages();
-				setMessages(messages);
+				var groups = await getMessages();
+				groups = processGroups(groups);
+				setGroups(groups);
 			} catch (error) {
 				console.error(error);
 			}
 		})();
 
 		sockets.messages.on("message receive", (messageData) => {
-			setMessages((prev) => {
+			setGroups((prev) => {
 				let { groupId } = messageData;
+				let timestamp = convertToFirebaseTimestamp(messageData.sentAt);
+				let dateString = dateToString(timestamp);
 				return {
 					...prev,
 					[groupId]: {
 						...prev[groupId],
-						messages: [...prev[groupId].messages, messageData],
+						messages: {
+							...prev[groupId].messages,
+							[dateString]: [
+								...(prev[groupId].messages[dateString] || []),
+								{ ...messageData, isUserSent: false, time: timestamp.toDate().getTime() },
+							],
+						},
 					},
 				};
 			});
@@ -52,13 +63,20 @@ const Home = () => {
 
 	function sendMessage(message) {
 		sockets.messages.emit("message send", message);
-		setMessages((prev) => {
-			console.log("sent");
+		setGroups((prev) => {
+			let timestamp = Timestamp.now();
+			let dateString = dateToString(timestamp);
 			return {
 				...prev,
 				[message.groupId]: {
 					...prev[message.groupId],
-					messages: [...prev[message.groupId].messages, message],
+					messages: {
+						...prev[message.groupId].messages,
+						[dateString]: [
+							...(prev[message.groupId].messages[dateString] || []),
+							{ ...message, isUserSent: true, time: timestamp.toDate().getTime() },
+						],
+					},
 				},
 			};
 		});
@@ -71,7 +89,7 @@ const Home = () => {
 					<Sidenav isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
 					{/* Might change user to be passed in outlet context */}
 					<main className={isNavOpen ? "shift" : ""}>
-						<Outlet context={[messages, sendMessage]} />
+						<Outlet context={[groups, sendMessage]} />
 					</main>
 				</InvitesContextProvider>
 			</FriendsContextProvider>

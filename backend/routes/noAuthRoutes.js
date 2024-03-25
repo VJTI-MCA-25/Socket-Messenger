@@ -1,5 +1,5 @@
 import { usersRef, el } from "../initialize.js";
-import { Timestamp } from "firebase-admin/firestore";
+import { FieldValue } from "firebase-admin/firestore";
 import { errorHandler, logger } from "../serverHelperFunctions.js";
 
 const { MissingParametersError, UserNotFoundError } = el;
@@ -35,8 +35,8 @@ noAuth.put("/create", async (req, res) => {
 			email: data.email,
 			uid: uid,
 			emailVerified: false,
-			createdAt: Timestamp.now(),
-			lastUpdatedAt: Timestamp.now(),
+			createdAt: FieldValue.serverTimestamp(),
+			lastUpdatedAt: FieldValue.serverTimestamp(),
 			photoURL: profilePicUrl,
 		});
 
