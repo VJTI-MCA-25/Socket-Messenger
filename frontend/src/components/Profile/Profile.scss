@@ -1,3 +1,8 @@
+*{
+  font-family: 'Helvetica';
+
+}
+
 .main-card{
     display: flex;
     flex-direction: column;
@@ -5,7 +10,7 @@
     border-radius: 10px;
     height: 75vh;
     margin: auto;
-    background-color: #2f2d34 ;
+    background-color: $darkLightBg;
     padding: 10px;
 }
 
@@ -13,67 +18,137 @@
     width: 100%;
     height: 40%;
     border-radius: 10px;
-    background-color: rgb(201, 64, 54);
+    background-color: rgb(229, 70, 59);
+    box-shadow: inset 0 0 5px rgb(30, 13, 12);
 }
 
-.sub-card{
-    margin-top: 10%;
-    border-radius: 10px;
-    height: 50%;
-    background-color:  #3a3941;
-    display: flex;
-    flex-direction: column;
-}
-
-.sub{
-    border: 1px solid black;
-    margin: 5px 5px;
-    border-radius: 5px;
-    height: 20%;
-    display: flex;
-    // justify-content: center;
-    padding: 0 10px;
-    font-size: 20px;
-    align-items: center;
-}
-
+// comprises both buttons
 .btn-wrapper {
-    height: 40%;
-    width: 20%;
-    // border: 2px solid;
-    position: relative;
-    // size of wrapper
+  // border: 1px solid;
+  position: relative;
+    height: 60%;
+    margin: 0 20px;
     top: 70%;
-    left: 5%;
+    // bottom: 10%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
 }
 
 // circle part
-.btn-wrapper .custom-size {
+.custom-size {
     // position: relative;
-    // gets wrapper complete size
     height: 100%;
     // width: 100%;
     aspect-ratio: 1;
-    z-index: 100;
-    background-color: gray;
+    background-color: rgb(72, 62, 62);
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: inset 0 0 2px rgb(30, 13, 12);
   }
 
-.btn-wrapper .custom-size:hover{
-     background-color: rgba($color: #1e1b1b, $alpha: 0.2);
+.custom-size:hover{
+     background-color: rgba($color: #430b0b, $alpha: 0.2);
   }
 
-  .btn-wrapper.custom-size .hover-text {
-    visibility: hidden;
-    color: rgb(222, 201, 201);
-    font-size:large;
-    font-style: normal;
-    transition: visibility 0.3s ease; /* Add transition for smooth visibility */
+  a.btn{
+    position: relative;
+    background-color: #424769;
+    color: white;
+    letter-spacing: 2px;
+    padding: 0 25px;
+    font-family: 'Helvetica';
+    border-radius: 5px;
   }
-  
-  .btn-wrapper .btn-floating.custom-size:hover .hover-text {
-    visibility: visible; /* Show the text on hover */
+
+  a.btn:hover{
+    background-color: #343852;
+    box-shadow: 2px 3px 8px 2px rgb(17, 17, 17);
   }
+
+  .sub-card{
+    margin-top: 10%;
+    border-radius: 8px;
+    height: 60%;
+    background-color: #282828;
+    display: flex;
+    flex-direction: column;
+    box-shadow:  0px 1px 3px rgb(24, 14, 14);
+}
+
+.sub{
+    border: 2px solid rgb(65, 60, 60);
+    margin: 5px 5px;
+    border-radius: 5px;
+    height: 18%;
+    display: flex;
+    padding: 0 10px;
+    font-size: 15px;
+    align-items: center;
+}
+
+input.subInp{
+  /* Your styles for the input element */
+  color: white;
+  font-size: 16px;
+  font-weight: 400;
+  user-select: text;
+  text-align: start;
+  margin:0;
+  padding: 0;
+}
+
+input.subInp:disabled{
+  /* Your styles for the disabled state of the input element */
+  font-weight: 100;
+  border-radius: 5px;
+  background-color: rgb(48, 48, 48);
+  margin: 10px;
+}
+
+// last div - friends
+.friendsList{
+  padding: 40px 10px ;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #353535;
+  // border: 2px solid rgb(33, 29, 32);
+}
+
+.profilesIcons{
+  position: relative;
+  display: flex;
+  align-items: center;
+  // border: 1px solid white;
+  // width: 35%;
+  // padding: 0 10px;
+  justify-content: space-between;
+}
+
+.profile-left-sec{
+  display: flex;
+  flex-direction: row;
+  margin-right: 20px;
+}
+
+// circular profile icons : overlapping 
+.profile{
+  margin-right: -12px;
+  border: 2px solid;
+}
+
+.more{
+  position: relative;
+  border: 1px solid;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
   
