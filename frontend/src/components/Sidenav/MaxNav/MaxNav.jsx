@@ -1,12 +1,11 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { animated } from "@react-spring/web";
+import { animated, useTrail } from "@react-spring/web";
 import { UserDataContext } from "contexts/UserDataContext";
-import officeImage from "assets/office.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PropTypes from "prop-types";
 
-const MaxNav = ({ maxNavSlide, activeOptionsList, bind, styles, isNavOpen }) => {
+const MaxNav = ({ maxNavSlide, activeOptionsList, bind, styles, isNavOpen, groups, activeOption }) => {
 	const userData = useContext(UserDataContext);
 
 	function handleClick(func) {
@@ -15,13 +14,37 @@ const MaxNav = ({ maxNavSlide, activeOptionsList, bind, styles, isNavOpen }) => 
 		};
 	}
 
+	function groupElements(groups) {
+		//TODO Add Animation
+		return groups.map((group) => {
+			return (
+				<li key={group.groupId}>
+					<Link to={`${group.groupId}`} className="waves-effect waves-light">
+						<div className={styles.groupContainer}>
+							<div className={styles.groupImageContainer}>
+								<img
+									className={styles.groupImage}
+									src={group.photoURL || "https://via.placeholder.com/150"}
+								/>
+							</div>
+							<div className={styles.groupDetails}>
+								<span className={styles.groupName}>{group.displayName}</span>
+								<span className={styles.lastMessage}>{group.lastMessage.content}</span>
+							</div>
+						</div>
+					</Link>
+				</li>
+			);
+		});
+	}
+
 	function populateSidenav() {
 		return activeOptionsList((anims, option) => {
 			return (
 				<animated.li style={anims} key={option.name}>
 					<Link
 						to={option.to}
-						className="waves-effect"
+						className="waves-effect waves-light"
 						onClick={handleClick(option.onClick)}
 						onKeyDown={(e) => e.key === "Enter" && handleClick(option.onClick)}
 						role="menuitem"
@@ -44,9 +67,7 @@ const MaxNav = ({ maxNavSlide, activeOptionsList, bind, styles, isNavOpen }) => 
 			<ul role="menu">
 				<li role="none">
 					<div className="user-view">
-						<div className={`${styles.background} background`}>
-							{/* <img src={officeImage} alt="Office Background" /> */}
-						</div>
+						<div className={`${styles.background} background`}></div>
 						<img
 							className="circle"
 							src={userData?.photoURL ? userData.photoURL : "https://via.placeholder.com/150"}
@@ -57,6 +78,17 @@ const MaxNav = ({ maxNavSlide, activeOptionsList, bind, styles, isNavOpen }) => 
 					</div>
 				</li>
 				{populateSidenav()}
+				{groups.length > 0 && activeOption === "messages" && (
+					<>
+						<li>
+							<div className={`${styles.divider} divider`}></div>
+						</li>
+						<li>
+							<a className={`${styles.subheader} subheader`}>Your DMs</a>
+						</li>
+						{groupElements(groups)}
+					</>
+				)}
 			</ul>
 		</animated.nav>
 	);

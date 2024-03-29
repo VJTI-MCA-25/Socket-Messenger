@@ -1,25 +1,32 @@
 import React, { useMemo } from "react";
-import { MessageItem } from "../MessageItem/MessageItem";
 import styles from "./Messages.module.scss";
+import GroupedMessages from "../GroupedMessages/GroupedMessages";
 
 const Messages = React.memo(({ group }) => {
 	const messagesElements = useMemo(() => {
 		return Object.entries(group.messages)
 			.sort()
 			.map(([date, messages]) => {
+				const groupedMessages = messages.reduce((acc, message) => {
+					if (acc.length === 0) {
+						acc.push([message]);
+					} else {
+						const lastGroup = acc[acc.length - 1];
+						const lastMessage = lastGroup[lastGroup.length - 1];
+						if (lastMessage.sentBy === message.sentBy) {
+							lastGroup.push(message);
+						} else {
+							acc.push([message]);
+						}
+					}
+					return acc;
+				}, []);
 				return (
 					<div key={date}>
 						<div className={styles.separator}>{date}</div>
-						{messages.map((message, index) => {
-							return (
-								<MessageItem
-									key={index}
-									message={message}
-									isContinuation={index !== 0 ? messages[index - 1].sentBy === message.sentBy : false}
-									sender={group.members[message.sentBy]}
-								/>
-							);
-						})}
+						{groupedMessages.map((messages, index) => (
+							<GroupedMessages key={index} messages={messages} group={group} />
+						))}
 					</div>
 				);
 			});
@@ -27,9 +34,6 @@ const Messages = React.memo(({ group }) => {
 
 	return (
 		<div className={styles.container}>
-			<div className={styles.header}>
-				<div className={styles.title}>Messages</div>
-			</div>
 			<div className={styles.messages}>{messagesElements}</div>
 		</div>
 	);

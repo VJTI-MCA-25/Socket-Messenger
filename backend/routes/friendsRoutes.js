@@ -8,6 +8,7 @@ const {
 	CannotRemoveSelfError,
 	MissingParametersError,
 	GroupAlreadyExists,
+	CannotCreateGroupWithSelfError,
 } = el;
 
 import { Router } from "express";
@@ -53,9 +54,10 @@ friends.post("/create-group", async (req, res) => {
 	if (!list) throw MissingParametersError;
 	if (typeof list === "string") list = [list];
 	if (!Array.isArray(list)) throw MissingParametersError;
+	if (list.includes(user.uid)) throw CannotCreateGroupWithSelfError;
 
 	try {
-		const friends = (await usersRef.doc(user.uid).get()).data().friends || {};
+		const friends = (await usersRef.doc(user.uid).get()).data()?.friends || {};
 		const friendsList = Object.keys(friends);
 		const sortedUserIds = [...list, user.uid].sort().join(",");
 
@@ -75,17 +77,23 @@ friends.post("/create-group", async (req, res) => {
 
 		if (list.length === 1) {
 			let friendId = list[0];
+			let userFriends = (await usersRef.doc(user.uid).get()).data()?.friends || {};
+
 			await Promise.all([
 				usersRef.doc(user.uid).update({
 					friends: {
+						...userFriends,
 						[friendId]: {
+							...userFriends[friendId],
 							dm: groupId,
 						},
 					},
 				}),
 				usersRef.doc(friendId).update({
 					friends: {
+						...friends,
 						[user.uid]: {
+							...friends[user.uid],
 							dm: groupId,
 						},
 					},

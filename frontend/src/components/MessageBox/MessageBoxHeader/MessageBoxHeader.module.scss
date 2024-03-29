@@ -1,0 +1,25 @@
+.container {
+	display: flex;
+	justify-content: flex-start;
+	gap: 2rem;
+	align-items: center;
+	padding: 2.5rem 1rem;
+	height: 2rem;
+	color: $lightText;
+	position: absolute;
+	width: 100%;
+	left: 0;
+	top: 0;
+	background-image: linear-gradient(to bottom, $darkHighlightBg, transparent);
+	z-index: 9999;
+}
+
+.pic {
+	display: grid;
+	place-items: center;
+	& > img {
+		border-radius: 50%;
+		height: 50px;
+		aspect-ratio: 1;
+	}
+}

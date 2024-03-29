@@ -15,12 +15,16 @@
 }
 
 main {
+	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	height: 100vh;
 	transition: margin-left 0.3s ease-out;
 	&.shift {
-		margin-left: 360px;
+		margin-left: 350px;
+	}
+	&:not(.shift) {
+		margin-left: 50px;
 	}
 }

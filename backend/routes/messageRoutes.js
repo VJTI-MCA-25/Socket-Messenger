@@ -18,7 +18,7 @@ messages.get("/get-messages", async (req, res) => {
 		let groups = {};
 		for await (let doc of groupDocs.docs) {
 			let groupData = doc.data();
-			let messagesDoc = await doc.ref.collection("messages").get();
+			let messagesDoc = await doc.ref.collection("messages").orderBy("sentAt", "asc").limitToLast(200).get();
 			let messagesData = messagesDoc.docs.map((message) => {
 				let data = message.data();
 				return {
@@ -46,7 +46,17 @@ messages.get("/get-messages", async (req, res) => {
 				members: memberInfo,
 				groupId: doc.id,
 				messages: messagesData,
+				isDm: groupData.isDm,
+				photoURL: groupData.photoURL,
+				displayName: groupData.displayName,
 			};
+
+			if (groupData.isDm) {
+				let otherUser = groupData.members.find((member) => member !== user.uid);
+				let otherUserInfo = (await usersRef.doc(otherUser).get()).data();
+				data.photoURL = otherUserInfo.photoURL;
+				data.displayName = otherUserInfo.displayName;
+			}
 
 			groups[doc.id] = data;
 		}

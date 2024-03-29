@@ -56,7 +56,8 @@ users.get("/get-users-list/:displayNameString", async (req, res) => {
 		const results = await index.search(displayNameString);
 		var list = results.hits.map((hit) => hit.objectID);
 
-		const friends = (await usersRef.doc(user.uid).get()).data()?.friends?.map((friend) => friend.uid) || [];
+		const friendsObj = (await usersRef.doc(user.uid).get()).data()?.friends;
+		const friends = Object.keys(friendsObj || {});
 
 		list = list.filter((id) => id !== user.uid && !friends.includes(id));
 		if (list.length === 0) return res.status(200).send([]);
@@ -69,7 +70,7 @@ users.get("/get-users-list/:displayNameString", async (req, res) => {
 		usersList.forEach((userItem) => {
 			users.push({
 				...userItem.data(),
-				isFriend: userData?.friends?.includes(userItem.id) || false,
+				isFriend: friends.includes(userItem.id) || false,
 			});
 		});
 

@@ -1,0 +1,25 @@
+.groupedMessages {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	width: 100%;
+	margin-top: 1.5rem;
+}
+
+.container {
+	display: flex;
+	flex-direction: row;
+	gap: 1.5rem;
+	&.userSent {
+		flex-direction: row-reverse;
+	}
+}
+
+.user {
+	width: 50px;
+	& > img {
+		height: 50px;
+		aspect-ratio: 1;
+		border-radius: 50%;
+	}
+}
