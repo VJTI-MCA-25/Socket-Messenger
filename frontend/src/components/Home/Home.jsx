@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useMemo } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 import { Sidenav } from "barrel";
@@ -17,6 +17,13 @@ const Home = () => {
 
 	const [isNavOpen, setIsNavOpen] = useState(true);
 	const [groups, setGroups] = useState({});
+	const [groupDetails, setGroupDetails] = useState([]);
+
+	useEffect(() => {
+		if (!user) {
+			navigate("/auth/login");
+		}
+	}, [user]);
 
 	useEffect(() => {
 		(async () => {
@@ -58,12 +65,6 @@ const Home = () => {
 		};
 	}, []);
 
-	useEffect(() => {
-		if (!user) {
-			navigate("/auth/login");
-		}
-	}, [user]);
-
 	function sendMessage(message) {
 		// Generate a temporary id for the message
 		// Optimistically add the message to the state
@@ -82,7 +83,7 @@ const Home = () => {
 						{
 							...message,
 							isUserSent: true,
-							time: timestamp.toDate().getTime(),
+							time: timestamp,
 							id: tempId,
 						},
 					],
@@ -116,11 +117,26 @@ const Home = () => {
 		});
 	}
 
+	const groupDetailsMemo = useMemo(() => {
+		return Object.keys(groups).map((groupId) => {
+			let { messages, ...groupDetails } = groups[groupId];
+			let keys = Object.keys(messages);
+			let lastMessage =
+				keys && keys.message ? messages[keys[keys.length - 1]][messages[keys[keys.length - 1]].length - 1] : {};
+			return { ...groupDetails, groupId, lastMessage };
+		});
+	}, [groups]);
+
+	useEffect(() => {
+		setGroupDetails(groupDetailsMemo);
+	}, [groupDetailsMemo]);
+
 	if (user !== null) {
+		// TODO Change to Props instead of context
 		return (
 			<FriendsContextProvider>
 				<InvitesContextProvider>
-					<Sidenav isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
+					<Sidenav isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} groupDetails={groupDetails} />
 					{/* Might change user to be passed in outlet context */}
 					<main className={isNavOpen ? "shift" : ""}>
 						<Outlet context={[groups, sendMessage]} />

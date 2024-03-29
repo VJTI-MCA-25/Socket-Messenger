@@ -116,5 +116,10 @@
 		"message": "Group already exists",
 		"code": 409,
 		"statusText": "group/already-exists"
+	},
+	"CannotCreateGroupWithSelfError": {
+		"message": "Cannot create group with self",
+		"code": 400,
+		"statusText": "group/cannot-create-with-self"
 	}
 }

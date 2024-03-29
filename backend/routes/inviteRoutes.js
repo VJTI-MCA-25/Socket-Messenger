@@ -115,9 +115,13 @@ invites.post("/invite-response", async (req, res) => {
 		}
 
 		if (status === "accepted") {
+			let sentToDoc = (await usersRef.doc(invite.sentTo).get()).data()?.friends || {};
+			let sentByDoc = (await usersRef.doc(invite.sentBy).get()).data()?.friends || {};
+
 			await Promise.all([
 				usersRef.doc(invite.sentTo).update({
 					friends: {
+						...sentToDoc,
 						[invite.sentBy]: {
 							befriendedAt: FieldValue.serverTimestamp(),
 						},
@@ -125,6 +129,7 @@ invites.post("/invite-response", async (req, res) => {
 				}),
 				usersRef.doc(invite.sentBy).update({
 					friends: {
+						...sentByDoc,
 						[invite.sentTo]: {
 							befriendedAt: FieldValue.serverTimestamp(),
 						},

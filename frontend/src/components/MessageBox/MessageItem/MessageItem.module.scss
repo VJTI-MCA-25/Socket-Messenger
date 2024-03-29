@@ -1,0 +1,80 @@
+.left {
+	justify-content: flex-start;
+	.isFirst {
+		border-top-left-radius: 0;
+		position: relative;
+		&::before {
+			content: "";
+			position: absolute;
+			top: 0;
+			left: -10px;
+			border-width: 10px;
+			border-style: solid;
+			border-color: $darkLightBg transparent transparent transparent;
+		}
+	}
+	.time {
+		text-align: right;
+		margin-right: 10px;
+	}
+}
+
+.right {
+	justify-content: flex-end;
+	.message {
+		background-color: $darkHighlightBg;
+	}
+	.time {
+		text-align: left;
+		margin-left: 10px;
+		color: $darkLightBg;
+	}
+	.isFirst {
+		border-top-right-radius: 0;
+		position: relative;
+		&::before {
+			content: "";
+			position: absolute;
+			top: 0;
+			right: -10px;
+			border-width: 10px;
+			border-style: solid;
+			border-color: $darkHighlightBg transparent transparent transparent;
+		}
+	}
+}
+
+.row {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.message {
+	position: relative;
+	background-color: $darkLightBg;
+	border-radius: 5px;
+	padding: 1px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	max-width: 70%;
+	min-width: 10%;
+}
+
+.content {
+	word-wrap: break-word;
+	color: $lightText;
+	padding: 3px 10px;
+	font-size: $messageFontSize;
+	text-align: left;
+	width: 100%;
+}
+
+.time {
+	position: static;
+	color: $borderColor;
+	font-size: 0.7rem;
+	width: 100%;
+}

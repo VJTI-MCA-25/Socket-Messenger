@@ -6,12 +6,12 @@ import { useDrag } from "@use-gesture/react";
 import { MaxNav } from "./MaxNav/MaxNav";
 import { MinNav } from "./MinNav/MinNav";
 
-import { minSidenavOptions, maxSidenavOptions as maxNavOptions } from "./sidenavOptions";
+import { minSidenavOptions as minNavOptions, maxSidenavOptions as maxNavOptions } from "./sidenavOptions";
 
 import styles from "./Sidenav.module.scss";
 
-const Sidenav = ({ isNavOpen, setIsNavOpen }) => {
-	const [activeOption, setActiveOption] = useState("messages");
+const Sidenav = ({ isNavOpen, setIsNavOpen, groupDetails }) => {
+	const [activeOption, setActiveOption] = useState("friends");
 	const [activeOptionsList, setActiveOptionsList] = useState(maxNavOptions[activeOption]);
 
 	useLayoutEffect(() => {
@@ -31,7 +31,7 @@ const Sidenav = ({ isNavOpen, setIsNavOpen }) => {
 
 	// Animation - Fade in icons (on render)
 	const rainIconsRef = useSpringRef();
-	const rainIcons = useTrail(minSidenavOptions.length + 2, {
+	const rainIcons = useTrail(minNavOptions.length + 2, {
 		ref: rainIconsRef,
 		from: { opacity: 0, y: -20 },
 		to: { opacity: 1, y: 0 },
@@ -53,6 +53,7 @@ const Sidenav = ({ isNavOpen, setIsNavOpen }) => {
 		to: { x: "0%" },
 	}));
 
+	// Animation - Drag nav
 	const bind = useDrag(({ down, movement: [mx] }) => {
 		mx = (mx / window.innerWidth) * 500;
 		const clampedX = Math.max(Math.min(mx, 0), -150);
@@ -88,7 +89,7 @@ const Sidenav = ({ isNavOpen, setIsNavOpen }) => {
 				rainIcons={rainIcons}
 				slideNav={slideNav}
 				minNavSlide={minNavSlide}
-				sidenavOptions={minSidenavOptions}
+				sidenavOptions={minNavOptions}
 				setActiveOption={setActiveOption}
 				styles={styles}
 				isNavOpen={isNavOpen}
@@ -101,6 +102,7 @@ const Sidenav = ({ isNavOpen, setIsNavOpen }) => {
 				slideNav={slideNav}
 				bind={bind}
 				styles={styles}
+				groups={groupDetails}
 			/>
 		</div>
 	);
