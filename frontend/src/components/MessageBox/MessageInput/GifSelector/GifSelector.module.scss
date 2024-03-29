@@ -1,0 +1,50 @@
+.button {
+	background-color: transparent;
+	border: none;
+	padding: 0 10px;
+	cursor: pointer;
+	font-size: 1.5rem;
+	transition: all 0.3s ease-out;
+	&.active {
+		color: $highlight;
+	}
+}
+
+.container {
+	position: absolute;
+	height: max-content;
+	width: max-content;
+	z-index: 999;
+	left: 5%;
+	bottom: 100%;
+	input {
+		box-sizing: border-box !important;
+		margin: 0 !important;
+		box-shadow: none !important;
+	}
+	div {
+		@include custom-scroll;
+	}
+
+	:global {
+		.GifPickerReact {
+			--gpr-highlight-color: #{$highlight};
+			--gpr-hover-bg-color: #{$darkText};
+			--gpr-focus-bg-color: #e0f0ff;
+			--gpr-search-input-bg-color: transparent;
+			--gpr-picker-border-color: transparent;
+			--gpr-bg-color: #{$darkLightBg};
+			--gpr-horizontal-padding: 10px;
+			--gpr-picker-border-radius: 8px;
+
+			/* Body */
+			--gpr-category-font-color: #{$lightText};
+
+			/* Search */
+			--gpr-search-border-color-active: transparent;
+
+			/* Placeholder */
+			--gpr-placeholder-color: #{$darkText};
+		}
+	}
+}

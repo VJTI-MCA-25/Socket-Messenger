@@ -1,0 +1,27 @@
+.form {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	width: 100%;
+}
+
+.input {
+	&::placeholder {
+		color: $borderColor;
+		padding: 5px;
+	}
+}
+
+button.send {
+	border-radius: 2rem;
+}
+
+.container {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 1rem;
+	width: 100%;
+}

@@ -69,4 +69,6 @@ instance.interceptors.request.use(async (config) => {
 	}
 });
 
-export { app, auth, db, baseURL, manager, instance, sockets };
+const TENOR_API_KEY = "AIzaSyBLFpR-2M13iTS1RmDYIPho0X-UO9tWDLY";
+
+export { app, auth, db, baseURL, manager, instance, sockets, TENOR_API_KEY };

@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDoubleDown } from "@fortawesome/free-solid-svg-icons";
 
 import styles from "./MessageBox.module.scss";
+import MessageInput from "./MessageInput/MessageInput";
 
 const MessageBox = () => {
 	const messageBoxRef = useRef(null);
@@ -62,18 +63,7 @@ const MessageBox = () => {
 						)
 				)}
 			</div>
-			<form onSubmit={send} className={styles.inputContainer}>
-				<input
-					placeholder="Type your message here..."
-					className={styles.input}
-					type="text"
-					onChange={(e) => setInput(e.target.value)}
-					value={input}
-				/>
-				<button type="submit" className={`${styles.sendButton} waves-effect waves-light btn`}>
-					Send
-				</button>
-			</form>
+			<MessageInput inputState={[input, setInput]} send={send} />
 		</div>
 	);
 };

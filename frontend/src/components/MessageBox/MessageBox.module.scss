@@ -7,24 +7,6 @@
 	padding: 10px;
 }
 
-.inputContainer {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 1rem;
-}
-
-.input {
-	&::placeholder {
-		color: $borderColor;
-		padding: 5px;
-	}
-}
-
-button.sendButton {
-	border-radius: 2rem;
-}
-
 .messageBox {
 	display: flex;
 	flex-direction: column;
@@ -33,25 +15,14 @@ button.sendButton {
 	overflow-x: hidden;
 	padding: 5rem;
 	scroll-behavior: smooth;
-	&::-webkit-scrollbar {
-		width: 0.2rem;
-	}
-
-	&::-webkit-scrollbar-thumb {
-		background-color: $borderColor;
-		border-radius: 5px;
-	}
-
-	&::-webkit-scrollbar-track {
-		background-color: $darkBg;
-	}
+	@include custom-scroll;
 }
 
 .scrollDownIcon {
 	position: absolute;
 	bottom: 5rem;
 	left: 2rem;
-	z-index: 9999;
+	z-index: 99;
 	cursor: pointer;
 	svg {
 		font-size: 1.3rem;
