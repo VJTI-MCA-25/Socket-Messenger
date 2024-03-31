@@ -27,7 +27,8 @@
 	.time {
 		text-align: left;
 		margin-left: 10px;
-		color: $highlight;
+		// color: $highlight;
+		color: $darkerHighlightBg;
 	}
 	.isFirst {
 		border-top-right-radius: 0;

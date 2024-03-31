@@ -16,14 +16,21 @@ const MessageBox = () => {
 	let currentRoomId = location.pathname.split("/").pop();
 
 	const [input, setInput] = useState("");
+	const [media, setMedia] = useState(null);
 	const [groups, sendMessage] = useOutletContext();
 	const [scrollState, setScrollState] = useState({ atTop: messageBoxRef.current?.scrollAtTop === 0, atBottom: true });
 
 	function send(e) {
 		e.preventDefault();
-		if (input === "") return;
-		sendMessage({ content: input, groupId: currentRoomId });
+		if (input === "" && media === null) return;
+		sendMessage({ content: input, groupId: currentRoomId, media: media });
 		setInput("");
+		setMedia(null);
+	}
+
+	function onGifSelect(gif) {
+		gif.type = "gif";
+		setMedia(gif);
 	}
 
 	useEffect(() => {
@@ -63,7 +70,14 @@ const MessageBox = () => {
 						)
 				)}
 			</div>
-			<MessageInput inputState={[input, setInput]} send={send} />
+			<MessageInput
+				input={input}
+				setInput={setInput}
+				send={send}
+				media={media}
+				setMedia={setMedia}
+				onGifSelect={onGifSelect}
+			/>
 		</div>
 	);
 };

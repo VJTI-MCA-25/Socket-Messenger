@@ -129,16 +129,32 @@ sockets.messageIo.on("connection", async (socket) => {
 	});
 
 	socket.on("message send", async (message, callback) => {
-		const { groupId, content } = message;
-
-		let messageData = {
-			groupId: groupId,
-			content: content,
-			sentBy: user.uid,
-			sentAt: FieldValue.serverTimestamp(),
-		};
+		const { groupId, content, media } = message;
 
 		try {
+			let messageData = {
+				groupId: groupId,
+				content: content,
+				sentBy: user.uid,
+				sentAt: FieldValue.serverTimestamp(),
+			};
+
+			if (media) {
+				if (!["gif"].includes(media.type)) throw InvalidMediaTypeError;
+				//TODO Validate media.url and media.preview
+				switch (media.type) {
+					case "gif":
+						messageData.media = {
+							type: media.type,
+							url: media.url,
+							preview: media.preview,
+						};
+						break;
+					default:
+						break;
+				}
+			}
+
 			let groupRef = groupsRef.doc(groupId);
 			let groupDoc = await groupRef.get();
 			if (!groupDoc.exists) return;
@@ -153,6 +169,7 @@ sockets.messageIo.on("connection", async (socket) => {
 			//TODO Write events for received and read messages
 		} catch (error) {
 			logger(error);
+			callback({ error: error.message });
 		}
 	});
 
