@@ -1,5 +1,4 @@
 import { Preview } from "./Preview/Preview.jsx";
-import { Preview } from "./Preview/Preview.jsx";
 import { GifSelector } from "./GifSelector/GifSelector";
 import styles from "./MessageInput.module.scss";
 
