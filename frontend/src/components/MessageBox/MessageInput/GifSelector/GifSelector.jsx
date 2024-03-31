@@ -54,7 +54,13 @@ const GifSelector = ({ onGifSelect }) => {
 						<animated.div
 							style={{ ...anim, transformOrigin: "bottom left" }}
 							className={`${styles.container} z-depth-3`}>
-							<GifPicker tenorApiKey={TENOR_API_KEY} onGifClick={onGifSelect} />
+							<GifPicker
+								tenorApiKey={TENOR_API_KEY}
+								onGifClick={(e) => {
+									setShow(false);
+									onGifSelect(e);
+								}}
+							/>
 						</animated.div>
 					)
 			)}

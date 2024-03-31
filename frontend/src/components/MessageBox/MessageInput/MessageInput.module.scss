@@ -4,12 +4,11 @@
 	justify-content: space-between;
 	gap: 1rem;
 	width: 100%;
-}
-
-.input {
-	&::placeholder {
-		color: $borderColor;
-		padding: 5px;
+	input[type="text"].input {
+		&::placeholder {
+			color: $borderColor;
+			padding: 5px;
+		}
 	}
 }
 
@@ -17,11 +16,23 @@ button.send {
 	border-radius: 2rem;
 }
 
-.container {
+.bar {
 	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	gap: 1rem;
+	width: 100%;
+	background-color: $darkLightBg;
+	padding: 0.5rem 1rem;
+	border-radius: 0.5rem;
+}
+
+.container {
+	position: relative;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	flex-direction: column;
 	width: 100%;
 }

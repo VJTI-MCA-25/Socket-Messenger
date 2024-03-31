@@ -10,7 +10,8 @@
 	width: 100%;
 	left: 0;
 	top: 0;
-	background-image: linear-gradient(to bottom, $darkHighlightBg, transparent);
+	// background-image: linear-gradient(to bottom, $darkHighlightBg, transparent);
+	background-image: linear-gradient(45deg, $darkHighlightBg, $highlight, $darkHighlightBg);
 	z-index: 9999;
 }
 

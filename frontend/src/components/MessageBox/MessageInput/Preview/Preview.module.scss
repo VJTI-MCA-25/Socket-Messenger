@@ -1,0 +1,31 @@
+.container {
+	position: absolute;
+	bottom: 100%;
+	padding: 3rem 3rem;
+	background-color: $darkLightBg;
+	min-height: 200px;
+	display: grid;
+	place-items: center;
+	margin-bottom: 1rem;
+	border-radius: 1rem;
+	&::after {
+		content: "";
+		position: absolute;
+		top: 100%;
+		left: 20%;
+		transform: translateX(-100%);
+		border-width: 15px;
+		border-style: solid;
+		border-color: $darkLightBg transparent transparent transparent;
+	}
+	.icon {
+		position: absolute;
+		z-index: 1;
+		top: 20px;
+		right: 20px;
+		cursor: pointer;
+		&:hover {
+			color: $highlight;
+		}
+	}
+}

@@ -38,25 +38,32 @@ const Home = () => {
 
 		sockets.messages.on("message receive", (messageData) => {
 			setGroups((prev) => {
+				// Create a copy of the previous state
+				let newState = JSON.parse(JSON.stringify(prev));
+
+				// Extract groupId from messageData
 				let { groupId } = messageData;
+
+				// Convert sentAt to a Firebase timestamp and get the time and date string
 				let timestamp = convertToFirebaseTimestamp(messageData.sentAt);
 				let time = timestamp.toDate().getTime();
 				let dateString = dateToString(timestamp);
-				let prevGroup = prev[groupId];
 
-				return {
-					...prev,
-					[groupId]: {
-						...prevGroup,
-						messages: {
-							...prevGroup.messages,
-							[dateString]: [
-								...(prevGroup.messages[dateString] || []),
-								{ ...messageData, time, isUserSent: false },
-							],
-						},
-					},
+				// Create a new message
+				let newMessage = {
+					...messageData,
+					time,
+					isUserSent: false,
 				};
+
+				// Add the new message to the correct date in the correct group
+				if (!newState[groupId].messages[dateString]) {
+					newState[groupId].messages[dateString] = [];
+				}
+				newState[groupId].messages[dateString].push(newMessage);
+
+				// Return the new state
+				return newState;
 			});
 		});
 
@@ -72,25 +79,39 @@ const Home = () => {
 		let timestamp = Timestamp.now();
 		let dateString = dateToString(timestamp);
 
-		setGroups((prev) => ({
-			...prev,
-			[message.groupId]: {
-				...prev[message.groupId],
-				messages: {
-					...prev[message.groupId].messages,
-					[dateString]: [
-						...(prev[message.groupId].messages[dateString] || []),
-						{
-							...message,
-							isUserSent: true,
-							time: timestamp,
-							id: tempId,
-						},
-					],
-				},
-			},
-		}));
+		if (message.media) {
+			switch (message.media.type) {
+				case "gif":
+					let { url, preview, type, ...rest } = message.media;
+					message.media = { url, preview: preview.url, type };
+					break;
+				default:
+					message.media = undefined;
+					break;
+			}
+		}
 
+		setGroups((prev) => {
+			// Create a copy of the previous state
+			let newState = JSON.parse(JSON.stringify(prev));
+
+			// Create a new message
+			let newMessage = {
+				...message,
+				isUserSent: true,
+				time: timestamp,
+				id: tempId,
+			};
+
+			// Add the new message to the correct date in the correct group
+			if (!newState[message.groupId].messages[dateString]) {
+				newState[message.groupId].messages[dateString] = [];
+			}
+			newState[message.groupId].messages[dateString].push(newMessage);
+
+			// Return the new state
+			return newState;
+		});
 		sockets.messages.emit("message send", message, (response) => {
 			// Update the message with the id from the server
 			setGroups((prev) => {
