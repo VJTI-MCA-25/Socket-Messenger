@@ -1,6 +1,4 @@
-import { useState } from "react";
 import { Preview } from "./Preview/Preview.jsx";
-import { useState } from "react";
 import { Preview } from "./Preview/Preview.jsx";
 import { GifSelector } from "./GifSelector/GifSelector";
 import styles from "./MessageInput.module.scss";
