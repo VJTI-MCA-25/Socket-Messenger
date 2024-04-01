@@ -1,6 +1,6 @@
 import { usersRef, el } from "../initialize.js";
 import { FieldValue } from "firebase-admin/firestore";
-import { errorHandler, logger } from "../serverHelperFunctions.js";
+import { errorHandler, logger } from "../functions/serverHelperFunctions.js";
 
 const {
 	MissingParametersError,

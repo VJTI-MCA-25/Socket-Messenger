@@ -20,7 +20,13 @@ const MessageItem = ({ message, isFirst }) => {
 			className={`${styles.row} ${message.isUserSent ? styles.right : styles.left}`}>
 			<div className={`${styles.message} ${isFirst ? styles.isFirst : ""} z-depth-3 `}>
 				{message.media && <Media media={message.media} styles={styles} />}
-				{message?.media?.type !== "link" && <div className={styles.content}>{message.content}</div>}
+				{message.media?.type === "link" && message.media?.url ? (
+					<a href={message.media.url} className={styles.contentAnchor} target="_blank" rel="noreferrer">
+						<div className={styles.content}>{message.content}</div>
+					</a>
+				) : (
+					<div className={styles.content}>{message.content}</div>
+				)}
 				<div className={styles.time}>
 					{hour}:{minute}
 				</div>

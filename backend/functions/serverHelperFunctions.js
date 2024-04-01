@@ -1,4 +1,4 @@
-import { auth, usersRef, el } from "./initialize.js";
+import { auth, usersRef, el } from "../initialize.js";
 const { MissingAccessTokenError, MissingParametersError, UserDataNotFoundError, InvalidDisplayNameError } = el;
 
 import fs from "fs";
@@ -32,7 +32,6 @@ function errorHandler(res, error, extraInfo = {}, log = false) {
 	error.code === "auth/invalid-password" && (statusCode = 400); // Bad Request
 	error.code === "auth/user-not-found" && (statusCode = 404); // Not Found
 	if (statusCode >= 500 || log) {
-		console.error(error);
 		logger(typeof error === "string" ? error : JSON.stringify(error));
 	}
 
@@ -111,4 +110,13 @@ async function validateDisplayName(displayName) {
 	else return "user/display-name-available";
 }
 
-export { errorHandler, decodeAndVerify, doesUserDataExists, logger, validateDisplayName };
+function validateUrl(url) {
+	try {
+		new URL(url);
+		return true;
+	} catch (err) {
+		return false;
+	}
+}
+
+export { errorHandler, decodeAndVerify, doesUserDataExists, logger, validateDisplayName, validateUrl };

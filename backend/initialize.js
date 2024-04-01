@@ -10,7 +10,7 @@ import { Server } from "socket.io";
 import cors from "cors";
 
 import el from "./errorList.json" assert { type: "json" };
-import { decodeAndVerify } from "./serverHelperFunctions.js";
+import { decodeAndVerify } from "./functions/serverHelperFunctions.js";
 
 // Initialize dotenv
 config();

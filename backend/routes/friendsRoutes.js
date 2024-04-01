@@ -1,6 +1,6 @@
 import { FieldValue } from "firebase-admin/firestore";
 import { usersRef, el, groupsRef } from "../initialize.js";
-import { errorHandler } from "../serverHelperFunctions.js";
+import { errorHandler } from "../functions/serverHelperFunctions.js";
 
 const {
 	UserNotFoundError,

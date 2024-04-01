@@ -1,5 +1,5 @@
 import { createTransport } from "nodemailer";
-import { auth } from "./initialize.js";
+import { auth } from "../initialize.js";
 
 /**
  * Sends a verification email to the user

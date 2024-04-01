@@ -20,6 +20,7 @@
     "axios": "^1.6.5",
     "firebase": "^10.7.1",
     "gif-picker-react": "^1.3.2",
+    "link-preview-js": "^3.0.5",
     "materialize-css": "^1.0.0-rc.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

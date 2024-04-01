@@ -1,5 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useLocation, useOutletContext } from "react-router-dom";
+import { isValidUrl } from "utilities/helperFunctions";
+import { getLinkPreview } from "services/messageFunctions";
+
 import { Messages } from "./Messages/Messages";
 import { MessageBoxHeader } from "./MessageBoxHeader/MessageBoxHeader";
 
@@ -9,7 +12,6 @@ import { faAngleDoubleDown } from "@fortawesome/free-solid-svg-icons";
 
 import styles from "./MessageBox.module.scss";
 import MessageInput from "./MessageInput/MessageInput";
-import { isValidUrl } from "utilities/helperFunctions";
 
 const MessageBox = () => {
 	const messageBoxRef = useRef(null);
@@ -20,6 +22,24 @@ const MessageBox = () => {
 	const [media, setMedia] = useState(null);
 	const [groups, sendMessage] = useOutletContext();
 	const [scrollState, setScrollState] = useState({ atTop: messageBoxRef.current?.scrollAtTop === 0, atBottom: true });
+
+	useEffect(() => {
+		const timer = setTimeout(async () => {
+			if (input === "") return setMedia(null);
+			if (!isValidUrl(input)) return;
+			try {
+				let linkPreview = await getLinkPreview(input);
+				//TODO add support for link + text messages (Will need to parse input)
+				setMedia({ linkPreview, content: input, type: "link", url: input });
+			} catch (error) {
+				console.error(error);
+			}
+		}, 500);
+
+		return () => {
+			if (timer) clearTimeout(timer);
+		};
+	}, [input]);
 
 	function send(e) {
 		e.preventDefault();
@@ -33,15 +53,6 @@ const MessageBox = () => {
 		gif.type = "gif";
 		setMedia(gif);
 	}
-
-	// On typing a URL
-	useEffect(() => {
-		if (isValidUrl(input)) {
-			setMedia({ type: "link", url: input });
-		} else {
-			setMedia(null);
-		}
-	}, [input]);
 
 	useEffect(() => {
 		messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight;

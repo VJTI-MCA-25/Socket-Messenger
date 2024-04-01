@@ -1,5 +1,5 @@
 import { app, groupsRef, PORT, server, sockets, usersRef } from "./initialize.js";
-import { logger, errorHandler, decodeAndVerify } from "./serverHelperFunctions.js";
+import { logger, errorHandler, decodeAndVerify } from "./functions/serverHelperFunctions.js";
 
 import { noAuthRoutes } from "./routes/noAuthRoutes.js";
 import { userRoutes } from "./routes/userRoutes.js";
@@ -140,19 +140,27 @@ sockets.messageIo.on("connection", async (socket) => {
 			};
 
 			if (media) {
-				if (!["gif"].includes(media.type)) throw InvalidMediaTypeError;
+				if (!["gif", "link"].includes(media.type)) throw InvalidMediaTypeError;
 				//TODO Validate media.url and media.preview
 				switch (media.type) {
 					case "gif":
 						messageData.media = {
-							type: media.type,
+							type: "gif",
 							url: media.url,
 							preview: media.preview,
 						};
 						break;
 					case "link":
 						messageData.media = {
-							type: media.type,
+							audioUrl: media.audioUrl,
+							description: media.description,
+							imageUrl: media.imageUrl,
+							isVideo: media.isVideo,
+							title: media.title,
+							type: "link",
+							videoUrl: media.videoUrl,
+							website: media.website,
+							isVideoEmbed: media.isVideoEmbed,
 							url: media.url,
 						};
 						break;

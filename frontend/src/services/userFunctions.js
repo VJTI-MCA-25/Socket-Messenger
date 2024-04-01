@@ -80,23 +80,4 @@ async function createGroup(friendsId) {
 	}
 }
 
-async function getMessages() {
-	try {
-		const response = await instance.get("/messages/get-messages");
-		return response.data;
-	} catch (error) {
-		throw { ...error.response.data };
-	}
-}
-
-export {
-	getUserData,
-	checkDisplayName,
-	setData,
-	getUsersList,
-	respondInvite,
-	sendInvite,
-	removeFriend,
-	createGroup,
-	getMessages,
-};
+export { getUserData, checkDisplayName, setData, getUsersList, respondInvite, sendInvite, removeFriend, createGroup };

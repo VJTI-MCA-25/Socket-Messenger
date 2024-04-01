@@ -22,10 +22,10 @@ const Media = ({ media }) => {
 	}
 
 	return (
-		<>
+		<div className={styles.container}>
 			{getMediaElem()}
 			{show && <FullPreview media={media} closePreview={closePreview} />}
-		</>
+		</div>
 	);
 };
 
@@ -34,10 +34,37 @@ const GifMedia = ({ media, fullPreview }) => {
 };
 
 const LinkMedia = ({ media }) => {
+	function getMedia() {
+		if (media.isVideo) {
+			if (media.isVideoEmbed) {
+				return (
+					<iframe
+						src={media.videoUrl}
+						title={media.title}
+						className={styles.linkEmbed}
+						frameBorder="0"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share;"
+						referrerPolicy="strict-origin-when-cross-origin"
+						sandbox="allow-scripts allow-same-origin allow-popups allow-presentation"
+						allowFullScreen></iframe>
+				);
+			} else {
+				return <video src={media.url} controls className={styles.linkVideo} />;
+			}
+		} else {
+			return <img src={media.imageUrl} alt="link" className={styles.linkImage} />;
+		}
+	}
+
 	return (
 		<div className={styles.link}>
-			<a href={media.url} target="_blank" rel="noreferrer">
-				{media.url}
+			<a href={media.url} className={styles.linkAnchor} target="_blank" rel="noreferrer">
+				{getMedia()}
+				<div className={styles.linkContent}>
+					{media?.website && <div className={styles.linkWebsite}>{media.website}</div>}
+					<div className={styles.linkTitle}>{media.title}</div>
+					<div className={styles.linkDescription}>{media.description}</div>
+				</div>
 			</a>
 		</div>
 	);

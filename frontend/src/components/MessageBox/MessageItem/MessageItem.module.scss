@@ -22,13 +22,13 @@
 .right {
 	justify-content: flex-end;
 	.message {
-		background-color: $darkHighlightBg;
+		// background-color: $darkHighlightBg;
 	}
 	.time {
 		text-align: left;
 		margin-left: 10px;
 		// color: $highlight;
-		color: $darkerHighlightBg;
+		// color: $darkerHighlightBg;
 	}
 	.isFirst {
 		border-top-right-radius: 0;
@@ -40,7 +40,8 @@
 			right: -10px;
 			border-width: 10px;
 			border-style: solid;
-			border-color: $darkHighlightBg transparent transparent transparent;
+			// border-color: $darkHighlightBg transparent transparent transparent;
+			border-color: $darkLightBg transparent transparent transparent;
 		}
 	}
 }
@@ -60,8 +61,9 @@
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	max-width: 70%;
+	width: max-content;
 	min-width: 10%;
+	max-width: 40%;
 
 	a {
 		color: $lightText;

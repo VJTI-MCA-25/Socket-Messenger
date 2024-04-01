@@ -1,7 +1,7 @@
 import { usersRef, el, bucket, auth } from "../initialize.js";
 import { getDownloadURL } from "firebase-admin/storage";
 import { FieldValue } from "firebase-admin/firestore";
-import { errorHandler, logger } from "../serverHelperFunctions.js";
+import { errorHandler, logger } from "../functions/serverHelperFunctions.js";
 
 const { MissingParametersError, UserNotFoundError } = el;
 

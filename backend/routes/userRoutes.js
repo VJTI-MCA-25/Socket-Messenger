@@ -1,6 +1,6 @@
 import { auth, usersRef, el, index } from "../initialize.js";
 import { FieldPath, FieldValue } from "firebase-admin/firestore";
-import { errorHandler, validateDisplayName } from "../serverHelperFunctions.js";
+import { errorHandler, validateDisplayName } from "../functions/serverHelperFunctions.js";
 
 const { UserNotAuthorizedError, MissingParametersError, InvalidDisplayNameError, DisplayNameTakenError } = el;
 

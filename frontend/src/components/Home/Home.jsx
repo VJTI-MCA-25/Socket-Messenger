@@ -7,7 +7,7 @@ import { UserContext } from "contexts/UserContext";
 import { InvitesContextProvider } from "contexts/InvitesContext";
 import { FriendsContextProvider } from "contexts/FriendsContext";
 import { sockets } from "services/config";
-import { getMessages } from "services/userFunctions";
+import { getMessages } from "services/messageFunctions";
 import { Timestamp } from "firebase/firestore";
 import { convertToFirebaseTimestamp, dateToString, processGroups } from "utilities/helperFunctions";
 
@@ -80,19 +80,16 @@ const Home = () => {
 		let dateString = dateToString(timestamp);
 
 		if (message.media) {
-			switch (message.media.type) {
-				case "gif":
-					let { url, preview, type, ...rest } = message.media;
-					message.media = { url, preview: preview.url, type };
-					break;
-				case "link":
-					break;
-				default:
-					message.media = undefined;
-					break;
+			if (message.media.type === "gif") {
+				let { url, preview, type, ...rest } = message.media;
+				message.media = { url, preview: preview.url, type };
+			} else if (message.media.type === "link") {
+				let { linkPreview, ...rest } = message.media;
+				message.media = { ...linkPreview, ...rest };
+			} else {
+				message.media = undefined;
 			}
 		}
-
 		setGroups((prev) => {
 			// Create a copy of the previous state
 			let newState = JSON.parse(JSON.stringify(prev));
@@ -115,6 +112,10 @@ const Home = () => {
 			return newState;
 		});
 		sockets.messages.emit("message send", message, (response) => {
+			if (response.error) {
+				console.error(response.error);
+				return;
+			}
 			// Update the message with the id from the server
 			setGroups((prev) => {
 				let messages = [...prev[message.groupId].messages[dateString]];

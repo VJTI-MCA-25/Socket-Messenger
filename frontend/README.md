@@ -33,6 +33,7 @@
 -   [x] Check CORS for socket server
 -   [x] Think over on if all invitations should be stored in one collection rather than in the user's collection (User's Collection is already implemented)
 -   [x] Think over the flow of Sign Up
+-   [x] Link Previews
 -   [ ] Add username suggestions
 -   [ ] Seperate socket routes
 -   [ ] Optimize Error Parser and Handling in both client and server
@@ -44,16 +45,21 @@
 -   [ ] Make a About Page or a Landing Page
 -   [ ] Make a footer
 -   [ ] Should I limit the number of invitations a user can see?
--   [ ] Link Previews
 -   [ ] Spotify Integration
 -   [ ] Developer API
 -   [ ] Add testing (Vitest)
--   [ ] Add Media Support (Emojis , Gifs , Video , Audio etc)
+-   [ ] Add Media Support
+    -   [x] Gifs
+    -   [x] Video Link Embed
+    -   [ ] Audio Link Embed
+    -   [ ] Images
+    -   [ ] Documents
+    -   [ ] Emojis
 
 ### Accessibilities
 
 -   [ ] Consider Translate Options (Firebase has a translate API)
--   [x] Add aria-labels to buttons
+-   [ ] Add aria-labels to buttons
 -   [x] Add alt to images
 -   [x] HTML Semantics
 -   [x] Keyboard Navigation

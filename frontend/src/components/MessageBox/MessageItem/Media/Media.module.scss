@@ -1,3 +1,10 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
 .gif {
 	cursor: pointer;
 	transition: opacity 0.3s ease-out;
@@ -18,4 +25,37 @@
 	z-index: 100;
 	cursor: pointer;
 	z-index: 99999999;
+}
+
+.link {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+
+	.linkEmbed,
+	.linkVideo {
+		width: 100%;
+	}
+
+	a.linkAnchor {
+		text-decoration: none;
+	}
+
+	.linkTitle {
+		font-size: 1.5rem;
+		font-weight: 600;
+		color: #fff;
+		padding: 0.5rem;
+	}
+
+	.linkDescription {
+		font-size: 1rem;
+		color: #fff;
+		padding: 0.5rem;
+	}
+
+	.linkImage {
+		width: 100%;
+	}
 }

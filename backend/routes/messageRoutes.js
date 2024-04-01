@@ -1,6 +1,7 @@
 import { el, usersRef, groupsRef } from "../initialize.js";
-import { errorHandler } from "../serverHelperFunctions.js";
+import { errorHandler } from "../functions/serverHelperFunctions.js";
 import { FieldPath } from "firebase-admin/firestore";
+import { createLinkPreview } from "../functions/webScraper.js";
 
 const {} = el;
 
@@ -61,6 +62,16 @@ messages.get("/get-messages", async (req, res) => {
 			groups[doc.id] = data;
 		}
 		return res.status(200).send(groups);
+	} catch (error) {
+		return errorHandler(res, error);
+	}
+});
+
+messages.get("/get-link-preview", async (req, res) => {
+	const url = decodeURIComponent(req.query.url);
+	try {
+		const data = await createLinkPreview(url);
+		return res.status(200).send(data);
 	} catch (error) {
 		return errorHandler(res, error);
 	}

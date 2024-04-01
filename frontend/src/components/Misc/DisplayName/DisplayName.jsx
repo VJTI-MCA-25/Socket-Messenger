@@ -22,7 +22,6 @@ const DisplayName = () => {
 			if (!input) return setLoading(false);
 			try {
 				let response = await checkDisplayName(input);
-				console.log(response);
 				if (response == "user/display-name-available") setStatus("available");
 				else setStatus("taken");
 			} catch (error) {
@@ -87,6 +86,7 @@ const DisplayName = () => {
 			try {
 				const res = await setData({ displayName: input });
 				if (res == "user/data-updated") {
+					//TODO Redirects working, but home sends me back here. Fix that.
 					navigate("/channels", { replace: true });
 				}
 			} catch (error) {
