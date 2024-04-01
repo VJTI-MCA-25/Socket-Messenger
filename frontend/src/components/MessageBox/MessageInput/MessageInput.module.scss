@@ -14,6 +14,10 @@
 
 button.send {
 	border-radius: 2rem;
+	background-color: $darkHighlightBg;
+	&:hover {
+		background-color: $highlight;
+	}
 }
 
 .bar {
@@ -24,8 +28,9 @@ button.send {
 	gap: 1rem;
 	width: 100%;
 	background-color: $darkLightBg;
-	padding: 0.5rem 1rem;
+	padding: 0.2rem 1.2rem;
 	border-radius: 0.5rem;
+	z-index: 99;
 }
 
 .container {

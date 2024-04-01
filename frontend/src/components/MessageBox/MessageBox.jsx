@@ -9,6 +9,7 @@ import { faAngleDoubleDown } from "@fortawesome/free-solid-svg-icons";
 
 import styles from "./MessageBox.module.scss";
 import MessageInput from "./MessageInput/MessageInput";
+import { isValidUrl } from "utilities/helperFunctions";
 
 const MessageBox = () => {
 	const messageBoxRef = useRef(null);
@@ -32,6 +33,15 @@ const MessageBox = () => {
 		gif.type = "gif";
 		setMedia(gif);
 	}
+
+	// On typing a URL
+	useEffect(() => {
+		if (isValidUrl(input)) {
+			setMedia({ type: "link", url: input });
+		} else {
+			setMedia(null);
+		}
+	}, [input]);
 
 	useEffect(() => {
 		messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight;

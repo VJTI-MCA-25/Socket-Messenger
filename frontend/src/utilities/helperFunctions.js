@@ -78,4 +78,19 @@ function processGroups(groups) {
 	return groups;
 }
 
-export { parseError, convertToFirebaseTimestamp, dateToString, processGroups };
+/**
+ * Checks if a given string is a valid URL.
+ *
+ * @param {string} string - The string to be checked.
+ * @returns {boolean} - Returns true if the string is a valid URL, otherwise returns false.
+ */
+function isValidUrl(string) {
+	try {
+		new URL(string);
+		return true;
+	} catch (_) {
+		return false;
+	}
+}
+
+export { parseError, convertToFirebaseTimestamp, dateToString, processGroups, isValidUrl };

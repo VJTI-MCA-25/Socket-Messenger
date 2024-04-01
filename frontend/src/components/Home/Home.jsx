@@ -9,7 +9,7 @@ import { FriendsContextProvider } from "contexts/FriendsContext";
 import { sockets } from "services/config";
 import { getMessages } from "services/userFunctions";
 import { Timestamp } from "firebase/firestore";
-import { convertToFirebaseTimestamp, dateToString, processGroups } from "services/helperFunctions";
+import { convertToFirebaseTimestamp, dateToString, processGroups } from "utilities/helperFunctions";
 
 const Home = () => {
 	const user = useContext(UserContext);
@@ -84,6 +84,8 @@ const Home = () => {
 				case "gif":
 					let { url, preview, type, ...rest } = message.media;
 					message.media = { url, preview: preview.url, type };
+					break;
+				case "link":
 					break;
 				default:
 					message.media = undefined;

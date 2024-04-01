@@ -10,6 +10,9 @@ const MessageInput = ({ input, setInput, media, setMedia, send, onGifSelect }) =
 				<GifSelector onGifSelect={onGifSelect} />
 				<form onSubmit={send} className={styles.form}>
 					<input
+						autoCorrect="true"
+						autoFocus={true}
+						autoComplete="off"
 						name="message"
 						placeholder="Type your message here..."
 						className={styles.input}

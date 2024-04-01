@@ -7,6 +7,14 @@ const Preview = ({ preview, setPreview }) => {
 		switch (preview?.type) {
 			case "gif":
 				return <img src={preview.preview.url} alt="gif" />;
+			case "link":
+				return (
+					<div className={styles.link}>
+						<a href={preview.url} target="_blank" rel="noreferrer">
+							{preview.url}
+						</a>
+					</div>
+				);
 		}
 	}
 

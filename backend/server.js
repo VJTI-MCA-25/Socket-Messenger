@@ -150,6 +150,12 @@ sockets.messageIo.on("connection", async (socket) => {
 							preview: media.preview,
 						};
 						break;
+					case "link":
+						messageData.media = {
+							type: media.type,
+							url: media.url,
+						};
+						break;
 					default:
 						break;
 				}

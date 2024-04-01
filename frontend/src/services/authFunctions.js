@@ -9,7 +9,7 @@ import {
 import { auth, instance, baseURL } from "./config";
 import axios from "axios";
 
-import { parseError } from "./helperFunctions";
+import { parseError } from "utilities/helperFunctions";
 
 // Function to create a user
 async function createUser(email, password) {

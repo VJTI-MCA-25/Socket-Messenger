@@ -5,7 +5,7 @@ import GroupedMessages from "../GroupedMessages/GroupedMessages";
 const Messages = React.memo(({ group }) => {
 	const messagesElements = useMemo(() => {
 		return Object.entries(group.messages)
-			.sort()
+			.sort(([dateA], [dateB]) => new Date(dateA).getTime() - new Date(dateB).getTime())
 			.map(([date, messages]) => {
 				const groupedMessages = messages.reduce((acc, message) => {
 					if (acc.length === 0) {

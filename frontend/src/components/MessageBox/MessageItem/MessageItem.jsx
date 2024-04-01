@@ -1,4 +1,4 @@
-import { convertToFirebaseTimestamp } from "services/helperFunctions";
+import { convertToFirebaseTimestamp } from "utilities/helperFunctions";
 import { useSpring, animated } from "@react-spring/web";
 import { Media } from "./Media/Media";
 import styles from "./MessageItem.module.scss";
@@ -20,7 +20,7 @@ const MessageItem = ({ message, isFirst }) => {
 			className={`${styles.row} ${message.isUserSent ? styles.right : styles.left}`}>
 			<div className={`${styles.message} ${isFirst ? styles.isFirst : ""} z-depth-3 `}>
 				{message.media && <Media media={message.media} styles={styles} />}
-				<div className={styles.content}>{message.content}</div>
+				{message?.media?.type !== "link" && <div className={styles.content}>{message.content}</div>}
 				<div className={styles.time}>
 					{hour}:{minute}
 				</div>
