@@ -48,23 +48,24 @@
 -   [ ] Spotify Integration
 -   [ ] Developer API
 -   [ ] Add testing (Vitest)
+-   [ ] Sanitize data, and make sure redirecting urls are not allowed
 -   [ ] Add Media Support
     -   [x] Gifs
     -   [x] Video Link Embed
+    -   [x] Emojis
     -   [ ] Audio Link Embed
     -   [ ] Images
     -   [ ] Documents
-    -   [ ] Emojis
 
 ### Accessibilities
 
 -   [ ] Consider Translate Options (Firebase has a translate API)
 -   [ ] Add aria-labels to buttons
--   [x] Add alt to images
--   [x] HTML Semantics
--   [x] Keyboard Navigation
--   [x] Focus Management
--   [x] Screen Reader
+-   [ ] Add alt to images
+-   [ ] HTML Semantics
+-   [ ] Keyboard Navigation
+-   [ ] Focus Management
+-   [ ] Screen Reader
 -   [ ] Color Contrast
 -   [ ] Font Size
 -   [ ] Disable Animations

@@ -84,13 +84,20 @@ function processGroups(groups) {
  * @param {string} string - The string to be checked.
  * @returns {boolean} - Returns true if the string is a valid URL, otherwise returns false.
  */
-function isValidUrl(string) {
-	try {
-		new URL(string);
-		return true;
-	} catch (_) {
-		return false;
-	}
+function hasValidUrl(string) {
+	const urlRegex = new RegExp(/(https?:\/\/[^\s]+)/);
+	return urlRegex.test(string);
 }
 
-export { parseError, convertToFirebaseTimestamp, dateToString, processGroups, isValidUrl };
+/**
+ * Extracts links from a given string.
+ *
+ * @param {string} string - The input string to extract links from.
+ * @returns {string[]} An array of links extracted from the input string.
+ */
+function getLinksFromString(string) {
+	const urlRegex = new RegExp(/(https?:\/\/[^\s]+)/g);
+	return string.match(urlRegex);
+}
+
+export { parseError, convertToFirebaseTimestamp, dateToString, processGroups, hasValidUrl, getLinksFromString };

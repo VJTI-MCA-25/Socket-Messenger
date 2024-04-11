@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useLocation, useOutletContext } from "react-router-dom";
-import { isValidUrl } from "utilities/helperFunctions";
+import { hasValidUrl, getLinksFromString } from "helperFunctions";
 import { getLinkPreview } from "services/messageFunctions";
 
 import { Messages } from "./Messages/Messages";
@@ -39,9 +39,10 @@ const MessageBox = () => {
 
 		const timer = setTimeout(async () => {
 			if (input === "") return setMedia(null);
-			if (!isValidUrl(input)) return;
+			if (!hasValidUrl(input)) return;
 			try {
-				let linkPreview = await getLinkPreview(input);
+				let links = getLinksFromString(input);
+				let linkPreview = await getLinkPreview(links[0]);
 				//TODO add support for link + text messages (Will need to parse input)
 				setMedia({ linkPreview, content: input, type: "link", url: input });
 			} catch (error) {

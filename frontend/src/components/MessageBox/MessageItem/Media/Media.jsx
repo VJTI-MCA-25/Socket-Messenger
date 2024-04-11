@@ -1,16 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "./Media.module.scss";
 
 const Media = ({ media }) => {
 	const [show, setShow] = useState(false);
 
-	function fullPreview() {
-		setShow(true);
-	}
-
-	function closePreview() {
-		setShow(false);
-	}
+	const fullPreview = () => setShow(true);
+	const closePreview = () => setShow(false);
 
 	function getMediaElem() {
 		switch (media.type) {
@@ -58,14 +53,14 @@ const LinkMedia = ({ media }) => {
 
 	return (
 		<div className={styles.link}>
-			<a href={media.url} className={styles.linkAnchor} target="_blank" rel="noreferrer">
-				{getMedia()}
-				<div className={styles.linkContent}>
-					{media?.website && <div className={styles.linkWebsite}>{media.website}</div>}
-					<div className={styles.linkTitle}>{media.title}</div>
-					<div className={styles.linkDescription}>{media.description}</div>
-				</div>
-			</a>
+			{/* <a href={media.url} className={styles.linkAnchor} target="_blank" rel="noreferrer"> */}
+			{getMedia()}
+			<div className={styles.linkContent}>
+				{media?.website && <div className={styles.linkWebsite}>{media.website}</div>}
+				<div className={styles.linkTitle}>{media.title}</div>
+				<div className={styles.linkDescription}>{media.description}</div>
+			</div>
+			{/* </a> */}
 		</div>
 	);
 };
