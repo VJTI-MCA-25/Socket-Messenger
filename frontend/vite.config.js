@@ -13,6 +13,7 @@ export default defineConfig({
 			contexts: path.resolve(__dirname, "./src/contexts/"),
 			barrel: path.resolve(__dirname, "./src/components/componentsBarrel.js"),
 			projectConfig: path.resolve(__dirname, "./src/services/config.js"),
+			helperFunctions: path.resolve(__dirname, "./src/utilities/helperFunctions.js"),
 		},
 	},
 	plugins: [react()],

@@ -1,6 +1,6 @@
 import { logoutUser } from "./authFunctions";
 import { instance } from "./config";
-import { parseError } from "utilities/helperFunctions";
+import { parseError } from "helperFunctions";
 
 async function getUserData(user) {
 	try {

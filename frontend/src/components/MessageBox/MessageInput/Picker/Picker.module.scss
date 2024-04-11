@@ -17,6 +17,8 @@
 	z-index: 999;
 	left: 5%;
 	bottom: 100%;
+	background-color: $darkerBg;
+	border-radius: 15px;
 	input {
 		box-sizing: border-box !important;
 		margin: 0 !important;
@@ -33,7 +35,7 @@
 			--gpr-focus-bg-color: #e0f0ff;
 			--gpr-search-input-bg-color: transparent;
 			--gpr-picker-border-color: transparent;
-			--gpr-bg-color: #{$darkLightBg};
+			--gpr-bg-color: #{$darkerBg};
 			--gpr-horizontal-padding: 10px;
 			--gpr-picker-border-radius: 8px;
 
@@ -67,4 +69,8 @@
 			}
 		}
 	}
+}
+
+.window {
+	height: clamp(300px, 50vh, 600px);
 }

@@ -65,21 +65,30 @@ const Picker = ({ onGifSelect, onEmojiSelect }) => {
 									Emoji
 								</div>
 								<div
-									className={`${styles.tab} ${activeTab === "gid" ? styles.active : ""}`}
-									onClick={() => setActiveTab("gid")}>
+									className={`${styles.tab} ${activeTab === "gif" ? styles.active : ""}`}
+									onClick={() => setActiveTab("gif")}>
 									GIF
 								</div>
 							</div>
-							{activeTab === "gid" && (
-								<GifPicker
-									tenorApiKey={TENOR_API_KEY}
-									onGifClick={(e) => {
-										setShow(false);
-										onGifSelect(e);
-									}}
-								/>
-							)}
-							{activeTab === "emoji" && <EmojiPicker showPreview={false} onEmojiSelect={onEmojiSelect} />}
+							<div className={styles.window}>
+								{activeTab === "gif" && (
+									<GifPicker
+										tenorApiKey={TENOR_API_KEY}
+										onGifClick={(e) => {
+											setShow(false);
+											onGifSelect(e);
+										}}
+									/>
+								)}
+								{activeTab === "emoji" && (
+									<EmojiPicker
+										previewPosition="none"
+										skinTonePosition="search"
+										showPreview={false}
+										onEmojiSelect={onEmojiSelect}
+									/>
+								)}
+							</div>
 						</animated.div>
 					)
 			)}

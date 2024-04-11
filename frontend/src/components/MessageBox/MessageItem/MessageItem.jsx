@@ -1,6 +1,8 @@
-import { convertToFirebaseTimestamp } from "utilities/helperFunctions";
+import { Link } from "react-router-dom";
+import { convertToFirebaseTimestamp } from "helperFunctions";
 import { useSpring, animated } from "@react-spring/web";
 import { Media } from "./Media/Media";
+import Linkify from "linkify-react";
 import styles from "./MessageItem.module.scss";
 
 const MessageItem = ({ message, isFirst }) => {
@@ -14,19 +16,24 @@ const MessageItem = ({ message, isFirst }) => {
 		config: { duration: 150 },
 	});
 
+	const renderLink = ({ attributes, content }) => {
+		const { href, ...props } = attributes;
+		return (
+			<Link to={href} {...props} target="_blank" rel="noopener noreferrer">
+				{content}
+			</Link>
+		);
+	};
+
 	return (
 		<animated.div
 			style={enterMessageAnim}
 			className={`${styles.row} ${message.isUserSent ? styles.right : styles.left}`}>
 			<div className={`${styles.message} ${isFirst ? styles.isFirst : ""} z-depth-3 `}>
 				{message.media && <Media media={message.media} styles={styles} />}
-				{message.media?.type === "link" && message.media?.url ? (
-					<a href={message.media.url} className={styles.contentAnchor} target="_blank" rel="noreferrer">
-						<div className={styles.content}>{message.content}</div>
-					</a>
-				) : (
-					<div className={styles.content}>{message.content}</div>
-				)}
+				<div className={styles.content}>
+					<Linkify options={{ render: renderLink }}>{message.content}</Linkify>
+				</div>
 				<div className={styles.time}>
 					{hour}:{minute}
 				</div>

@@ -8,7 +8,8 @@
 			"assets/*": ["./src/assets/*"],
 			"contexts/*": ["./src/contexts/*"],
 			"barrel": ["./src/components/componentsBarrel.js"],
-			"projectConfig": ["./src/services/config.js"]
+			"projectConfig": ["./src/services/config.js"],
+			"helperFunctions": ["./src/utilities/helperFunctions.js"]
 		}
 	},
 	"include": ["src/**/*"],

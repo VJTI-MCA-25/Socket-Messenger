@@ -9,7 +9,7 @@ import { FriendsContextProvider } from "contexts/FriendsContext";
 import { sockets } from "services/config";
 import { getMessages } from "services/messageFunctions";
 import { Timestamp } from "firebase/firestore";
-import { convertToFirebaseTimestamp, dateToString, processGroups } from "utilities/helperFunctions";
+import { convertToFirebaseTimestamp, dateToString, processGroups } from "helperFunctions";
 
 const Home = () => {
 	const user = useContext(UserContext);

@@ -1,3 +1,5 @@
+$messageFontSize: 1rem;
+
 $darkBg: #242424;
 $danger: #dc3545;
 $success: #28a745;
@@ -7,12 +9,11 @@ $highlight: #35bce6;
 // $highlight: #26a69a;
 $borderColor: #585858;
 $darkLightBg: #2c2c2c;
-$messageFontSize: 1rem;
 $darkText: #1c1c1c;
 $darkHighlightBg: #11608f;
 // $darkHighlightBg: #187964;
 $darkerHighlightBg: #142434;
-
+$darkerBg: #151617;
 @mixin custom-scroll {
 	&::-webkit-scrollbar {
 		width: 0.2rem;
