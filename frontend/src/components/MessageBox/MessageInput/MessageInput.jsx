@@ -1,13 +1,14 @@
 import { Preview } from "./Preview/Preview.jsx";
-import { GifSelector } from "./GifSelector/GifSelector";
+import { Picker } from "./Picker/Picker.jsx";
+
 import styles from "./MessageInput.module.scss";
 
-const MessageInput = ({ input, setInput, media, setMedia, send, onGifSelect }) => {
+const MessageInput = ({ input, setInput, media, setMedia, send, onGifSelect, onEmojiSelect }) => {
 	return (
 		<div className={`${styles.container} z-depth-3`}>
 			{media && <Preview preview={media} setPreview={setMedia} />}
 			<div className={styles.bar}>
-				<GifSelector onGifSelect={onGifSelect} />
+				<Picker onGifSelect={onGifSelect} onEmojiSelect={onEmojiSelect} />
 				<form onSubmit={send} className={styles.form}>
 					<input
 						autoCorrect="true"

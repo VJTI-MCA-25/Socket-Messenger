@@ -11,7 +11,7 @@ import { minSidenavOptions as minNavOptions, maxSidenavOptions as maxNavOptions 
 import styles from "./Sidenav.module.scss";
 
 const Sidenav = ({ isNavOpen, setIsNavOpen, groupDetails }) => {
-	const [activeOption, setActiveOption] = useState("friends");
+	const [activeOption, setActiveOption] = useState("messages");
 	const [activeOptionsList, setActiveOptionsList] = useState(maxNavOptions[activeOption]);
 
 	useLayoutEffect(() => {

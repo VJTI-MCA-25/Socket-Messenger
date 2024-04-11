@@ -10,10 +10,14 @@ import { useTransition, animated } from "@react-spring/web";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDoubleDown } from "@fortawesome/free-solid-svg-icons";
 
+import { init, SearchIndex } from "emoji-mart";
+import data from "@emoji-mart/data";
+
 import styles from "./MessageBox.module.scss";
 import MessageInput from "./MessageInput/MessageInput";
 
 const MessageBox = () => {
+	init({ data });
 	const messageBoxRef = useRef(null);
 	const location = useLocation();
 	let currentRoomId = location.pathname.split("/").pop();
@@ -24,6 +28,15 @@ const MessageBox = () => {
 	const [scrollState, setScrollState] = useState({ atTop: messageBoxRef.current?.scrollAtTop === 0, atBottom: true });
 
 	useEffect(() => {
+		const shortCodes = input.match(/:[a-zA-Z0-9_]+:/g);
+		if (shortCodes) {
+			shortCodes.forEach(async (shortCode) => {
+				let code = shortCode.replace(/:/g, "");
+				const emoji = await SearchIndex.search(code);
+				if (emoji.length > 0) setInput(input.replace(shortCode, emoji[0].skins[0].native));
+			});
+		}
+
 		const timer = setTimeout(async () => {
 			if (input === "") return setMedia(null);
 			if (!isValidUrl(input)) return;
@@ -40,6 +53,10 @@ const MessageBox = () => {
 			if (timer) clearTimeout(timer);
 		};
 	}, [input]);
+
+	function onEmojiSelect(emoji) {
+		setInput(input + emoji.native);
+	}
 
 	function send(e) {
 		e.preventDefault();
@@ -98,6 +115,7 @@ const MessageBox = () => {
 				media={media}
 				setMedia={setMedia}
 				onGifSelect={onGifSelect}
+				onEmojiSelect={onEmojiSelect}
 			/>
 		</div>
 	);

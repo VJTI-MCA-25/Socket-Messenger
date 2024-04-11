@@ -1,15 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTransition, animated } from "@react-spring/web";
+
 import GifPicker from "gif-picker-react";
 import { TENOR_API_KEY } from "services/config";
+
+import EmojiPicker from "@emoji-mart/react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFaceSmile } from "@fortawesome/free-regular-svg-icons";
 
-import styles from "./GifSelector.module.scss";
+import styles from "./Picker.module.scss";
 
-const GifSelector = ({ onGifSelect }) => {
+const Picker = ({ onGifSelect, onEmojiSelect }) => {
 	const [show, setShow] = useState(false);
+	const [activeTab, setActiveTab] = useState("emoji");
 
 	const pickerToggle = useTransition(show, {
 		from: { opacity: 0, scale: 0 },
@@ -54,13 +58,28 @@ const GifSelector = ({ onGifSelect }) => {
 						<animated.div
 							style={{ ...anim, transformOrigin: "bottom left" }}
 							className={`${styles.container} z-depth-3`}>
-							<GifPicker
-								tenorApiKey={TENOR_API_KEY}
-								onGifClick={(e) => {
-									setShow(false);
-									onGifSelect(e);
-								}}
-							/>
+							<div className={styles.tabs}>
+								<div
+									className={`${styles.tab} ${activeTab === "emoji" ? styles.active : ""}`}
+									onClick={() => setActiveTab("emoji")}>
+									Emoji
+								</div>
+								<div
+									className={`${styles.tab} ${activeTab === "gid" ? styles.active : ""}`}
+									onClick={() => setActiveTab("gid")}>
+									GIF
+								</div>
+							</div>
+							{activeTab === "gid" && (
+								<GifPicker
+									tenorApiKey={TENOR_API_KEY}
+									onGifClick={(e) => {
+										setShow(false);
+										onGifSelect(e);
+									}}
+								/>
+							)}
+							{activeTab === "emoji" && <EmojiPicker showPreview={false} onEmojiSelect={onEmojiSelect} />}
 						</animated.div>
 					)
 			)}
@@ -68,4 +87,4 @@ const GifSelector = ({ onGifSelect }) => {
 	);
 };
 
-export { GifSelector };
+export { Picker };
