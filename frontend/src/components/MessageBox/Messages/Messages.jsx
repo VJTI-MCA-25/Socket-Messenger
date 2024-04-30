@@ -5,7 +5,15 @@ import GroupedMessages from "../GroupedMessages/GroupedMessages";
 const Messages = React.memo(({ group }) => {
 	const messagesElements = useMemo(() => {
 		return Object.entries(group.messages)
-			.sort(([dateA], [dateB]) => new Date(dateA).getTime() - new Date(dateB).getTime())
+			.sort(([dateA], [dateB]) => {
+				const [dayA, monthA, yearA] = dateA.split("/");
+				const [dayB, monthB, yearB] = dateB.split("/");
+
+				const timeA = new Date(yearA, monthA - 1, dayA).getTime();
+				const timeB = new Date(yearB, monthB - 1, dayB).getTime();
+
+				return timeA - timeB;
+			})
 			.map(([date, messages]) => {
 				const groupedMessages = messages.reduce((acc, message) => {
 					if (acc.length === 0) {
