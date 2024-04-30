@@ -19,6 +19,7 @@ main {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	overflow: hidden;
 	height: 100vh;
 	transition: margin-left 0.3s ease-out;
 	&.shift {

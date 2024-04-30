@@ -1,5 +1,6 @@
 import { Preview } from "./Preview/Preview.jsx";
 import { Picker } from "./Picker/Picker.jsx";
+import { Attach } from "./Attach/Attach.jsx";
 
 import styles from "./MessageInput.module.scss";
 
@@ -9,6 +10,7 @@ const MessageInput = ({ input, setInput, media, setMedia, send, onGifSelect, onE
 			{media && <Preview preview={media} setPreview={setMedia} />}
 			<div className={styles.bar}>
 				<Picker onGifSelect={onGifSelect} onEmojiSelect={onEmojiSelect} />
+				<Attach />
 				<form onSubmit={send} className={styles.form}>
 					<input
 						autoCorrect="true"
