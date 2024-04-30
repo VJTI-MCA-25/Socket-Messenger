@@ -34,6 +34,11 @@ const Picker = ({ onGifSelect, onEmojiSelect }) => {
 
 		if (show) {
 			document.addEventListener("mouseup", handleClickOutside);
+			document.addEventListener("keyup", (e) => {
+				if (e.key === "Escape") {
+					setShow(false);
+				}
+			});
 		} else {
 			document.removeEventListener("mouseup", handleClickOutside);
 		}
@@ -43,7 +48,7 @@ const Picker = ({ onGifSelect, onEmojiSelect }) => {
 	}, [show]);
 
 	return (
-		<>
+		<div className={styles.main}>
 			<FontAwesomeIcon
 				icon={faFaceSmile}
 				onClick={(e) => {
@@ -92,7 +97,7 @@ const Picker = ({ onGifSelect, onEmojiSelect }) => {
 						</animated.div>
 					)
 			)}
-		</>
+		</div>
 	);
 };
 
