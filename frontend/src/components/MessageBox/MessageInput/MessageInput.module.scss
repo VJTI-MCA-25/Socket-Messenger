@@ -9,6 +9,10 @@
 			color: $borderColor;
 			padding: 5px;
 		}
+		&:focus {
+			border-color: $highlight !important;
+			box-shadow: 0 1px 0 0 $highlight !important;
+		}
 	}
 }
 

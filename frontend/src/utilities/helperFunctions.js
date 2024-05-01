@@ -100,4 +100,46 @@ function getLinksFromString(string) {
 	return string.match(urlRegex);
 }
 
-export { parseError, convertToFirebaseTimestamp, dateToString, processGroups, hasValidUrl, getLinksFromString };
+function formatToJSDate(date) {
+	const [day, month, year] = date.split("/");
+
+	return new Date(year, month - 1, day).getTime();
+}
+
+function dateStringFromDate(date) {
+	function pad(n) {
+		return n < 10 ? "0" + n : n;
+	}
+
+	date = formatToJSDate(date);
+	let dateObject = new Date(date);
+
+	let day = dateObject.getDate();
+	let month = dateObject.getMonth() + 1;
+	let year = dateObject.getFullYear();
+
+	let today = new Date();
+
+	let string = `${pad(day)}/${pad(month)}/${year}`;
+
+	if (day === today.getDate() && month === today.getMonth() + 1 && year === today.getFullYear()) {
+		string = "Today";
+	}
+
+	if (day === today.getDate() - 1 && month === today.getMonth() + 1 && year === today.getFullYear()) {
+		string = "Yesterday";
+	}
+
+	return string;
+}
+
+export {
+	parseError,
+	convertToFirebaseTimestamp,
+	dateToString,
+	processGroups,
+	hasValidUrl,
+	getLinksFromString,
+	formatToJSDate,
+	dateStringFromDate,
+};

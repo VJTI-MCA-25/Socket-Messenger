@@ -1,16 +1,17 @@
 import React, { useMemo } from "react";
-import styles from "./Messages.module.scss";
+
 import GroupedMessages from "../GroupedMessages/GroupedMessages";
+
+import { formatToJSDate, dateStringFromDate } from "helperFunctions";
+
+import styles from "./Messages.module.scss";
 
 const Messages = React.memo(({ group }) => {
 	const messagesElements = useMemo(() => {
 		return Object.entries(group.messages)
 			.sort(([dateA], [dateB]) => {
-				const [dayA, monthA, yearA] = dateA.split("/");
-				const [dayB, monthB, yearB] = dateB.split("/");
-
-				const timeA = new Date(yearA, monthA - 1, dayA).getTime();
-				const timeB = new Date(yearB, monthB - 1, dayB).getTime();
+				let timeA = formatToJSDate(dateA);
+				let timeB = formatToJSDate(dateB);
 
 				return timeA - timeB;
 			})
@@ -31,7 +32,7 @@ const Messages = React.memo(({ group }) => {
 				}, []);
 				return (
 					<div key={date}>
-						<div className={styles.separator}>{date}</div>
+						<div className={styles.separator}>{dateStringFromDate(date)}</div>
 						{groupedMessages.map((messages, index) => (
 							<GroupedMessages key={index} messages={messages} group={group} />
 						))}
