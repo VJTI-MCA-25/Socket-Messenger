@@ -33,7 +33,7 @@ const MinNav = ({ rainIcons, slideNav, minNavSlide, sidenavOptions, setActiveOpt
 		<animated.div style={minNavSlide} className={`${styles.sidenavMin} z-depth-1-half`} role="navigation">
 			<animated.li style={rainIcons[0]}>
 				<a
-					className="waves-effect"
+					className="waves-effect sidenav-trigger"
 					onClick={slideNav}
 					onKeyDown={(e) => e.key === "Enter" && slideNav()}
 					role="menuitem"

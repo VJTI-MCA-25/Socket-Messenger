@@ -5,12 +5,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
 import { faLocationDot as faLD, faFile, faImage } from "@fortawesome/free-solid-svg-icons";
 
+import { Modal, ImagesModal } from "barrel";
+
 import M from "materialize-css";
 import styles from "./Attach.module.scss";
 
 function Attach() {
-	const [show, setShow] = useState(false);
+	const [showAttach, setShowAttach] = useState(false);
+	const [modalContent, setModalContent] = useState(null);
+	const [showModal, setShowModal] = useState(false);
 
+	function closeModal() {
+		setShowModal(false);
+	}
+
+	// This function handles the click event for the icons in the Attach Picker
 	const onClickHandler = (id, e) => {
 		switch (id) {
 			case "location":
@@ -20,35 +29,39 @@ function Attach() {
 				console.log("Documents");
 				break;
 			case "images":
-				console.log("Images");
+				setModalContent(<ImagesModal />);
 				break;
 			default:
 				break;
 		}
+
+		setShowModal(true);
+		setShowAttach(false);
 	};
 
-	const attachToggle = useTransition(show, {
+	const attachToggle = useTransition(showAttach, {
 		from: { opacity: 0, scale: 0 },
 		enter: { opacity: 1, scale: 1 },
 		leave: { opacity: 0, scale: 0 },
 		config: { tension: 300, friction: 20 },
 	});
 
+	// Handles Click Outside for the Attach Picker
 	useEffect(() => {
 		const handleClickOutside = (e) => {
 			if (e.target.closest(`.${styles.attach}`)) {
 				return;
 			}
-			if (show && e.target.closest(`.${styles.container}`) === null) {
-				setShow(false);
+			if (showAttach && e.target.closest(`.${styles.container}`) === null) {
+				setShowAttach(false);
 			}
 		};
 
-		if (show) {
+		if (showAttach) {
 			document.addEventListener("mouseup", handleClickOutside);
 			document.addEventListener("keyup", (e) => {
 				if (e.key === "Escape") {
-					setShow(false);
+					setShowAttach(false);
 				}
 			});
 			M.Tooltip.init(document.querySelectorAll(".tooltipped"), {}); // Initialize tooltips here
@@ -57,17 +70,23 @@ function Attach() {
 		}
 		return () => {
 			document.removeEventListener("mouseup", handleClickOutside);
+			document.querySelectorAll(".tooltipped").forEach((tooltip) => {
+				const instance = M.Tooltip.getInstance(tooltip);
+				if (instance) {
+					instance.destroy();
+				}
+			});
 		};
-	}, [show]);
+	}, [showAttach]);
 
 	return (
 		<div className={styles.main}>
 			<FontAwesomeIcon
 				icon={faPaperclip}
-				className={`${styles.attach} ${show ? styles.active : ""}`}
+				className={`${styles.attach} ${showAttach ? styles.active : ""}`}
 				onClick={(e) => {
 					e.stopPropagation();
-					setShow(!show);
+					setShowAttach(!showAttach);
 				}}
 			/>
 			{attachToggle(
@@ -98,6 +117,9 @@ function Attach() {
 						</animated.div>
 					)
 			)}
+			<Modal show={showModal} closeModal={closeModal}>
+				{modalContent}
+			</Modal>
 		</div>
 	);
 }
@@ -105,7 +127,9 @@ function Attach() {
 const Icon = ({ tooltip, id, onClickHandler, ...props }) => {
 	return (
 		<div
-			onClick={(e) => onClickHandler(id, e)}
+			onClick={(e) => {
+				onClickHandler(id, e);
+			}}
 			className={`${styles.icon} z-depth-3 waves-effect waves-light tooltipped`}
 			data-position="right"
 			data-tooltip={tooltip}>
