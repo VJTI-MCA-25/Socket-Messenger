@@ -34,6 +34,15 @@
 	justify-content: center;
 	flex-direction: column;
 
+	&.imageLink {
+		flex-direction: row;
+		gap: 1rem;
+
+		.linkImage {
+			width: 50%;
+		}
+	}
+
 	.linkEmbed,
 	.linkVideo {
 		width: 100%;
@@ -55,9 +64,5 @@
 		font-size: 1rem;
 		color: #fff;
 		padding: 0.5rem;
-	}
-
-	.linkImage {
-		width: 100%;
 	}
 }

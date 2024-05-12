@@ -1,5 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+
+import { LinkPreview } from "./LinkPreview/LinkPreview";
+import { TabsPreview } from "./TabsPreview/TabsPreview";
+
 import styles from "./Preview.module.scss";
 
 const Preview = ({ preview, setPreview }) => {
@@ -11,30 +15,18 @@ const Preview = ({ preview, setPreview }) => {
 				if (preview?.linkPreview) {
 					return <LinkPreview preview={preview} />;
 				}
+			case "list":
+				let files = preview.list;
+				return <TabsPreview files={files} />;
 		}
 	}
 
 	return (
 		<div className={`${styles.container} z-depth-3`}>
-			<FontAwesomeIcon icon={faTimesCircle} className={styles.icon} onClick={() => setPreview(null)} />
-			{previewElem()}
-		</div>
-	);
-};
-
-const LinkPreview = ({ preview }) => {
-	if (!preview.linkPreview) return null;
-	if (!preview.linkPreview.title && !preview.linkPreview.description) return null;
-	return (
-		<div className={styles.linkPreview}>
-			{preview.linkPreview.imageUrl && (
-				<img src={preview.linkPreview.imageUrl} alt="preview" className={styles.linkImage} />
-			)}
-			<div>
-				{preview.linkPreview.website && <span className={styles.website}>{preview.linkPreview.website}</span>}
-				<div className={styles.title}>{preview.linkPreview.title}</div>
-				<p>{preview.linkPreview.description}</p>
+			<div className={styles.controls}>
+				<FontAwesomeIcon icon={faTimes} className={styles.icon} onClick={() => setPreview(null)} />
 			</div>
+			{previewElem()}
 		</div>
 	);
 };

@@ -1,0 +1,53 @@
+.container {
+	position: relative;
+	display: flex;
+	flex-direction: column-reverse;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	width: 100%;
+	gap: 1rem;
+}
+.tabs {
+	@include custom-scroll;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	max-width: 100%;
+	max-height: 100%;
+	list-style: none;
+	gap: 0.5rem;
+	overflow-x: scroll;
+	padding: 1rem;
+	position: relative;
+}
+
+.tab {
+	position: relative;
+	&.active {
+		&::after {
+			content: "";
+			position: absolute;
+			bottom: 0;
+			height: 2px;
+			left: 0;
+			background: $highlight;
+			width: 100%;
+		}
+	}
+}
+
+.indicator {
+	position: absolute;
+	bottom: 0;
+	height: 2px;
+	background: $highlight;
+}
+
+.panel {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	max-width: 100%;
+	max-height: 100%;
+}

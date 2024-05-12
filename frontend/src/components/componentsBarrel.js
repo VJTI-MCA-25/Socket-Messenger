@@ -12,8 +12,7 @@ export { MessageBox } from "./MessageBox/MessageBox";
 export { Preloader } from "./Misc/Preloader/Preloader";
 export { DisplayName } from "./Misc/DisplayName/DisplayName";
 export { Menu } from "./Misc/Menu/Menu";
-
-export { ImagesModal } from "./ModalComponents/ImagesModal/ImagesModal";
+export { Tabs } from "./Misc/Tabs/Tabs";
 
 export { Login } from "./Auth/Login/Login";
 export { Signup } from "./Auth/Signup/Signup";

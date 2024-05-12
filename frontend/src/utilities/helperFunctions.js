@@ -122,14 +122,21 @@ function dateStringFromDate(date) {
 
 	let string = `${pad(day)}/${pad(month)}/${year}`;
 
-	if (day === today.getDate() && month === today.getMonth() + 1 && year === today.getFullYear()) {
-		string = "Today";
+	function withinWeek() {
+		let days = Math.floor((today - dateObject) / (1000 * 60 * 60 * 24));
+		return days <= 7;
 	}
 
-	if (day === today.getDate() - 1 && month === today.getMonth() + 1 && year === today.getFullYear()) {
-		string = "Yesterday";
+	if (withinWeek()) {
+		let days = Math.floor((today - dateObject) / (1000 * 60 * 60 * 24));
+		if (days === 0) {
+			string = "Today";
+		} else if (days === 1) {
+			string = "Yesterday";
+		} else {
+			string = dateObject.toLocaleDateString("en-GB", { weekday: "long" });
+		}
 	}
-
 	return string;
 }
 

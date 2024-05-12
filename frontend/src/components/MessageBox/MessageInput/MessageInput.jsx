@@ -10,7 +10,7 @@ const MessageInput = ({ input, setInput, media, setMedia, send, onGifSelect, onE
 			{media && <Preview preview={media} setPreview={setMedia} />}
 			<div className={styles.bar}>
 				<Picker onGifSelect={onGifSelect} onEmojiSelect={onEmojiSelect} />
-				<Attach />
+				<Attach setMedia={setMedia} />
 				<form onSubmit={send} className={styles.form}>
 					<input
 						autoCorrect="true"
@@ -22,6 +22,7 @@ const MessageInput = ({ input, setInput, media, setMedia, send, onGifSelect, onE
 						type="text"
 						onChange={(e) => setInput(e.target.value)}
 						value={input}
+						multiple
 					/>
 					<button type="submit" className={`${styles.send} waves-effect waves-light btn`}>
 						Send

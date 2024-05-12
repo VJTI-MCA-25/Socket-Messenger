@@ -5,39 +5,39 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
 import { faLocationDot as faLD, faFile, faImage } from "@fortawesome/free-solid-svg-icons";
 
-import { Modal, ImagesModal } from "barrel";
+import { Modal } from "barrel";
 
 import M from "materialize-css";
 import styles from "./Attach.module.scss";
 
-function Attach() {
+function Attach({ setMedia }) {
 	const [showAttach, setShowAttach] = useState(false);
-	const [modalContent, setModalContent] = useState(null);
-	const [showModal, setShowModal] = useState(false);
 
-	function closeModal() {
-		setShowModal(false);
-	}
+	function photosAndVideosHandler(e) {
+		e.stopPropagation();
 
-	// This function handles the click event for the icons in the Attach Picker
-	const onClickHandler = (id, e) => {
-		switch (id) {
-			case "location":
-				console.log("Location");
-				break;
-			case "documents":
-				console.log("Documents");
-				break;
-			case "images":
-				setModalContent(<ImagesModal />);
-				break;
-			default:
-				break;
+		function handleList(files) {
+			files = Array.from(files);
+			const media = files.map((file) => {
+				return { file, type: file.type.split("/")[0] };
+			});
+			setMedia({ type: "list", list: media });
 		}
 
-		setShowModal(true);
+		const fileInput = document.createElement("input");
+		fileInput.type = "file";
+		fileInput.accept =
+			"image/jpeg, image/jpg, image/png, video/mp4, video/avi, video/3gp, video/wmv, video/mov, video/x-matroska, video/webm";
+		fileInput.multiple = true;
+		fileInput.onchange = (e) => {
+			const files = e.target.files;
+			if (files.length === 0) return;
+			handleList(files);
+		};
+		fileInput.click();
+
 		setShowAttach(false);
-	};
+	}
 
 	const attachToggle = useTransition(showAttach, {
 		from: { opacity: 0, scale: 0 },
@@ -93,33 +93,18 @@ function Attach() {
 				(anim, item) =>
 					item && (
 						<animated.div style={{ ...anim, transformOrigin: "bottom" }} className={styles.container}>
+							<Icon icon={faLD} id="location" tooltip="Location" className={styles.location} />
+							<Icon icon={faFile} id="documents" tooltip="Documents" className={styles.file} />
 							<Icon
-								onClickHandler={onClickHandler}
-								icon={faLD}
-								id="location"
-								tooltip="Location"
-								className={styles.location}
-							/>
-							<Icon
-								onClickHandler={onClickHandler}
-								icon={faFile}
-								id="documents"
-								tooltip="Documents"
-								className={styles.file}
-							/>
-							<Icon
-								onClickHandler={onClickHandler}
+								onClickHandler={photosAndVideosHandler}
 								icon={faImage}
-								id="images"
-								tooltip="Images"
+								id="images-and-videos"
+								tooltip="Images & Videos"
 								className={styles.image}
 							/>
 						</animated.div>
 					)
 			)}
-			<Modal show={showModal} closeModal={closeModal}>
-				{modalContent}
-			</Modal>
 		</div>
 	);
 }
@@ -127,9 +112,7 @@ function Attach() {
 const Icon = ({ tooltip, id, onClickHandler, ...props }) => {
 	return (
 		<div
-			onClick={(e) => {
-				onClickHandler(id, e);
-			}}
+			onClick={onClickHandler}
 			className={`${styles.icon} z-depth-3 waves-effect waves-light tooltipped`}
 			data-position="right"
 			data-tooltip={tooltip}>
