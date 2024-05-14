@@ -38,12 +38,12 @@ const MessageBox = () => {
 		}
 
 		const timer = setTimeout(async () => {
+			if (media && media.type === "list") return;
 			if (input === "") return setMedia(null);
 			if (!hasValidUrl(input)) return;
 			try {
 				let links = getLinksFromString(input);
 				let linkPreview = await getLinkPreview(links[0]);
-				//TODO add support for link + text messages (Will need to parse input)
 				setMedia({ linkPreview, content: input, type: "link", url: input });
 			} catch (error) {
 				console.error(error);
@@ -61,8 +61,21 @@ const MessageBox = () => {
 
 	function send(e) {
 		e.preventDefault();
-		if (input === "" && media === null) return;
-		sendMessage({ content: input, groupId: currentRoomId, media: media });
+
+		if (!input && !media) return;
+
+		const baseMessage = { content: input, groupId: currentRoomId };
+
+		if (media?.type === "list") {
+			media.list.forEach((mediaItem) => {
+				const newMessage = { ...baseMessage, media: mediaItem };
+				sendMessage(newMessage);
+			});
+		} else {
+			const newMessage = media ? { ...baseMessage, media } : baseMessage;
+			sendMessage(newMessage);
+		}
+
 		setInput("");
 		setMedia(null);
 	}
@@ -92,6 +105,12 @@ const MessageBox = () => {
 		config: { duration: 200 },
 	});
 
+	function shouldDisableInput() {
+		let status = false;
+		if (media && media.type === "list" && media.list.length > 1) status = true;
+		return status;
+	}
+
 	return (
 		<div className={styles.container}>
 			<MessageBoxHeader group={groups[currentRoomId]} scrollAtTop={scrollState.scrollAtTop} />
@@ -117,6 +136,7 @@ const MessageBox = () => {
 				setMedia={setMedia}
 				onGifSelect={onGifSelect}
 				onEmojiSelect={onEmojiSelect}
+				disableInput={shouldDisableInput()}
 			/>
 		</div>
 	);

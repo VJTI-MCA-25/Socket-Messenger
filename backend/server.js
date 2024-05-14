@@ -140,7 +140,7 @@ sockets.messageIo.on("connection", async (socket) => {
 			};
 
 			if (media) {
-				if (!["gif", "link"].includes(media.type)) throw InvalidMediaTypeError;
+				if (!["gif", "link", "image"].includes(media.type)) throw InvalidMediaTypeError;
 				//TODO Validate media.url and media.preview
 				switch (media.type) {
 					case "gif":
@@ -162,6 +162,13 @@ sockets.messageIo.on("connection", async (socket) => {
 							website: media.website,
 							isVideoEmbed: media.isVideoEmbed,
 							url: media.url,
+						};
+						break;
+					case "image":
+						messageData.media = {
+							type: "image",
+							url: media.url,
+							fileName: media.fileName,
 						};
 						break;
 					default:

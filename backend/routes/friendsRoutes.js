@@ -30,6 +30,7 @@ friends.delete("/:uid", async (req, res) => {
 		if (!friendDoc.exists) throw UserNotFoundError;
 		if (!userFriendsList.includes(uid)) throw ProvidedUidNotAFriendError;
 
+		//! This is a hard delete
 		let newFriendsList_user = userFriendsList.reduce((acc, friendUid) => {
 			if (friendUid !== uid) {
 				acc[friendUid] = userData.friends[friendUid];
@@ -60,6 +61,7 @@ friends.delete("/:uid", async (req, res) => {
 });
 
 friends.post("/create-group", async (req, res) => {
+	//TODO: Handle the case where a friend was unfriended and then refriended, should rejoin the group
 	const user = req.user;
 	let list = req.body.list;
 

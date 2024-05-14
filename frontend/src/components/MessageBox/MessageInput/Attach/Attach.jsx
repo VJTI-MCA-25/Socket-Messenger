@@ -5,10 +5,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperclip } from "@fortawesome/free-solid-svg-icons";
 import { faLocationDot as faLD, faFile, faImage } from "@fortawesome/free-solid-svg-icons";
 
-import { Modal } from "barrel";
-
 import M from "materialize-css";
 import styles from "./Attach.module.scss";
+import { readFile } from "utilities/helperFunctions";
 
 function Attach({ setMedia }) {
 	const [showAttach, setShowAttach] = useState(false);
@@ -16,11 +15,18 @@ function Attach({ setMedia }) {
 	function photosAndVideosHandler(e) {
 		e.stopPropagation();
 
-		function handleList(files) {
+		async function handleList(files) {
 			files = Array.from(files);
-			const media = files.map((file) => {
-				return { file, type: file.type.split("/")[0] };
-			});
+			const media = await Promise.all(
+				files.map(async (file) => {
+					try {
+						let url = await readFile(file);
+						return { file, type: file.type.split("/")[0], url };
+					} catch (error) {
+						console.error(error);
+					}
+				})
+			);
 			setMedia({ type: "list", list: media });
 		}
 

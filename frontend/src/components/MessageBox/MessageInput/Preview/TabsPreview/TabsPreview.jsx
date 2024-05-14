@@ -3,6 +3,9 @@ import { useState, useEffect } from "react";
 import { Tabs } from "barrel";
 
 import styles from "./TabsPreview.module.scss";
+import { bytesToSize, getVideoThumbnail } from "utilities/helperFunctions";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileVideo } from "@fortawesome/free-solid-svg-icons";
 
 const TabsPreview = ({ files }) => {
 	const [media, setMedia] = useState([]);
@@ -22,47 +25,65 @@ const TabsPreview = ({ files }) => {
 	];
 
 	useEffect(() => {
-		setMedia([]);
-		files.forEach((file, index) => {
-			if (!acceptedTypes.includes(file.file.type)) return;
-			const blob = file.file;
-			const url = URL.createObjectURL(blob);
-			const type = file.type;
-			const name = file.file.name;
-			const size = file.file.size;
-			const key = index;
+		const generateMedia = async () => {
+			const newMedia = [];
+			for (const [index, file] of files.entries()) {
+				if (!acceptedTypes.includes(file.file.type)) continue;
 
-			const media = { url, type, name, size, key, blob };
+				const media = {
+					blob: file.file,
+					url: file.url,
+					type: file.type,
+					name: file.file.name,
+					size: file.file.size,
+					key: index,
+				};
 
-			if (file.type === "video") {
-				const video = document.createElement("video");
-				video.src = url;
-				video.addEventListener("loadeddata", () => {
-					video.currentTime = 0;
-				});
-				video.addEventListener("seeked", () => {
-					const canvas = document.createElement("canvas");
-					canvas.width = video.videoWidth;
-					canvas.height = video.videoHeight;
-					const context = canvas.getContext("2d");
-					context.drawImage(video, 0, 0, canvas.width, canvas.height);
-					const thumbnailUrl = canvas.toDataURL();
-					media.thumbnailUrl = thumbnailUrl;
-					setMedia((prevMedia) => [...prevMedia, media]);
-				});
-			} else {
-				setMedia((prevMedia) => [...prevMedia, media]);
+				if (file.type === "video") {
+					try {
+						const thumbnail = await getVideoThumbnail(media);
+						media.thumbnailUrl = thumbnail;
+					} catch (error) {
+						console.error(error);
+					}
+				}
+				newMedia.push(media);
 			}
-		});
+			setMedia(newMedia);
+		};
+
+		generateMedia();
 	}, [files]);
 
 	useEffect(() => {
-		const tabs = media.map((file) => {
-			return {
-				tab: <img src={file.thumbnailUrl || file.url} alt={file.name} height={30} width={30} />,
-				panel: <img src={file.thumbnailUrl || file.url} alt={file.name} className={styles.panelImage} />,
-			};
-		});
+		const tabs = media.map((file) => ({
+			tab: (
+				<div style={{ height: 30, width: 30, display: "grid", placeItems: "center" }}>
+					{file.type === "video" ? (
+						<FontAwesomeIcon icon={faFileVideo} size="lg" />
+					) : (
+						<img src={file.thumbnailUrl || file.url} alt={file.name} height={30} width={30} />
+					)}
+				</div>
+			),
+			panel:
+				file.type === "video" ? (
+					<div className={styles.videoContainer}>
+						{file?.thumbnailUrl ? (
+							<img src={file.thumbnailUrl} alt={file.name} className={styles.thumbnail} />
+						) : (
+							<FontAwesomeIcon icon={faFileVideo} className={styles.videoIcon} size="5x" />
+						)}
+						<div className={styles.videoDetails}>
+							<div className={styles.videoName}>{file.name}</div>
+							<div className={styles.size}>{bytesToSize(file.size)}</div>
+						</div>
+					</div>
+				) : (
+					<img src={file.url} alt={file.name} className={styles.panelImage} />
+				),
+		}));
+
 		setTabs(tabs);
 	}, [media]);
 

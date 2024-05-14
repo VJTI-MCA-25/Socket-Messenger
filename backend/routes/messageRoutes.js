@@ -1,4 +1,4 @@
-import { el, usersRef, groupsRef } from "../initialize.js";
+import { el, usersRef, groupsRef, bucket, upload } from "../initialize.js";
 import { errorHandler } from "../functions/serverHelperFunctions.js";
 import { FieldPath } from "firebase-admin/firestore";
 import { createLinkPreview } from "../functions/webScraper.js";
@@ -75,6 +75,32 @@ messages.get("/get-link-preview", async (req, res) => {
 	} catch (error) {
 		return errorHandler(res, error);
 	}
+});
+
+messages.post("/upload-media", upload.single("media"), async (req, res) => {
+	const user = req.user;
+	const groupId = req.body.groupId;
+	const media = req.file;
+
+	const file = bucket.file(`media/${groupId}/${media.originalname}`);
+	const writeStream = file.createWriteStream({
+		metadata: {
+			contentType: media.mimetype,
+			groupId: groupId,
+			owner: user.uid,
+		},
+	});
+
+	writeStream.on("error", (error) => {
+		return errorHandler(res, error);
+	});
+
+	writeStream.on("finish", async () => {
+		const url = await file.getSignedUrl({ action: "read", expires: "03-09-2491" });
+		return res.status(200).send({ url: url[0] });
+	});
+
+	writeStream.end(media.buffer);
 });
 
 export { messages as messageRoutes };

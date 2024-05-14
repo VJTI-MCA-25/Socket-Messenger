@@ -8,6 +8,7 @@ import { getStorage } from "firebase-admin/storage";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import cors from "cors";
+import multer from "multer";
 
 import el from "./errorList.json" assert { type: "json" };
 import { decodeAndVerify } from "./functions/serverHelperFunctions.js";
@@ -34,6 +35,9 @@ db.settings({ ignoreUndefinedProperties: true });
 
 const usersRef = db.collection("users");
 const groupsRef = db.collection("groups");
+
+// Multer
+const upload = multer();
 
 // Algolia
 const APP_ID = process.env.ALGOLIA_APP_ID;
@@ -87,4 +91,4 @@ const sockets = {
 	messageIo: io.of("/messages"),
 };
 
-export { app, auth, db, usersRef, PORT, server, sockets, el, index, bucket, groupsRef };
+export { app, auth, db, usersRef, PORT, server, sockets, el, index, bucket, groupsRef, upload };

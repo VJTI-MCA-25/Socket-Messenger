@@ -1,5 +1,4 @@
-import { useState, useRef, useEffect } from "react";
-import { animated, useSpring, to } from "@react-spring/web";
+import { useState, useRef } from "react";
 import styles from "./Tabs.module.scss";
 
 const Tabs = ({ list, tabsPosition = "bottom" }) => {

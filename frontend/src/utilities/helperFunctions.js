@@ -140,6 +140,46 @@ function dateStringFromDate(date) {
 	return string;
 }
 
+function bytesToSize(bytes) {
+	const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+	if (bytes === 0) return "0 Byte";
+	const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+	return Math.round(bytes / Math.pow(1024, i), 2) + " " + sizes[i];
+}
+
+function getVideoThumbnail(video) {
+	return new Promise((resolve, reject) => {
+		const videoElement = document.createElement("video");
+		videoElement.src = video.url;
+
+		videoElement.addEventListener("loadeddata", () => {
+			videoElement.currentTime = 0;
+		});
+
+		videoElement.addEventListener("seeked", () => {
+			const canvas = document.createElement("canvas");
+			canvas.width = videoElement.videoWidth;
+			canvas.height = videoElement.videoHeight;
+			const context = canvas.getContext("2d");
+			context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+			resolve(canvas.toDataURL());
+		});
+
+		videoElement.addEventListener("error", () => {
+			reject(new Error("Failed to load video for thumbnail creation."));
+		});
+	});
+}
+
+function readFile(file) {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onload = (event) => resolve(event.target.result);
+		reader.onerror = (error) => reject(error);
+		reader.readAsDataURL(file);
+	});
+}
+
 export {
 	parseError,
 	convertToFirebaseTimestamp,
@@ -149,4 +189,7 @@ export {
 	getLinksFromString,
 	formatToJSDate,
 	dateStringFromDate,
+	bytesToSize,
+	getVideoThumbnail,
+	readFile,
 };

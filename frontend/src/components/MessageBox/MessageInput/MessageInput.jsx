@@ -4,7 +4,7 @@ import { Attach } from "./Attach/Attach.jsx";
 
 import styles from "./MessageInput.module.scss";
 
-const MessageInput = ({ input, setInput, media, setMedia, send, onGifSelect, onEmojiSelect }) => {
+const MessageInput = ({ input, setInput, media, setMedia, send, onGifSelect, onEmojiSelect, disableInput }) => {
 	return (
 		<div className={`${styles.container} z-depth-3`}>
 			{media && <Preview preview={media} setPreview={setMedia} />}
@@ -17,12 +17,15 @@ const MessageInput = ({ input, setInput, media, setMedia, send, onGifSelect, onE
 						autoFocus={true}
 						autoComplete="off"
 						name="message"
-						placeholder="Type your message here..."
+						placeholder={
+							!disableInput ? "Type your message here..." : "Can't send text with multiple media"
+						}
 						className={styles.input}
 						type="text"
 						onChange={(e) => setInput(e.target.value)}
 						value={input}
 						multiple
+						disabled={disableInput}
 					/>
 					<button type="submit" className={`${styles.send} waves-effect waves-light btn`}>
 						Send

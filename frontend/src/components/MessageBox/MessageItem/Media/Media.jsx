@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "./Media.module.scss";
+import { Preloader } from "components/componentsBarrel";
 
 // Media component
 const Media = ({ media }) => {
@@ -15,6 +16,17 @@ const Media = ({ media }) => {
 				return <GifMedia media={media} fullPreview={fullPreview} />;
 			case "link":
 				return <LinkMedia media={media} />;
+			case "image":
+				return (
+					<div className={styles.imageWithLoader}>
+						<img src={media.url} alt="image" className={styles.image} onClick={fullPreview} />
+						{media.loading && (
+							<div className={styles.preloaderWrapper}>
+								<Preloader />
+							</div>
+						)}
+					</div>
+				);
 			default:
 				return null;
 		}

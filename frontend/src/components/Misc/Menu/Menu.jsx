@@ -19,9 +19,9 @@ import styles from "./Menu.module.scss";
  */
 const Menu = forwardRef(({ options, showMenu, friend }, ref) => {
 	const menuAnim = useTransition(showMenu, {
-		from: { opacity: 0, transform: "scale(0)" },
-		enter: { opacity: 1, transform: "scale(1)" },
-		leave: { opacity: 0, transform: "scale(0)" },
+		from: { opacity: 0, scale: 0 },
+		enter: { opacity: 1, scale: 1 },
+		leave: { opacity: 0, scale: 0 },
 		config: { tension: 300, friction: 20 },
 	});
 
